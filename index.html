@@ -152,9 +152,10 @@ let curSport = 'cardinals';
 let statsData = null;
 let qaHistory = JSON.parse(localStorage.getItem('sai_history') || '[]');
 
-// Route MLB calls through Vercel proxy to avoid CORS blocks
-function espn(path, qs) {
-  const url = ESPN_PROXY + '?path=' + encodeURIComponent(path) + (qs ? '&qs=' + encodeURIComponent(qs) : '');
+// Route ESPN calls through Vercel proxy to avoid CORS blocks
+function espn(path, qs, web) {
+  const base = web ? 'https://site.web.api.espn.com/apis/v2/sports' : 'https://site.api.espn.com/apis/site/v2/sports';
+  const url = ESPN_PROXY + '?base=' + encodeURIComponent(base) + '&path=' + encodeURIComponent(path) + (qs ? '&qs=' + encodeURIComponent(qs) : '');
   return getJSON(url);
 }
 
@@ -316,41 +317,32 @@ async function buildCity() {
 // ── BUILD LEAGUE CONTEXT ──
 async function buildLeague() {
   try {
-    const [standData, scoreData, leadData, eraData, whipData] = await Promise.allSettled([
-      espn('/baseball/mlb/standings'),
-      espn('/baseball/mlb/scoreboard'),
-      espn('/baseball/mlb/leaders'),
-      espn('/baseball/mlb/leaders', 'categories=earnedRunAverage'),
-      espn('/baseball/mlb/leaders', 'categories=walksAndHitsPerInningPitched')
+    const [scoreData] = await Promise.allSettled([
+      espn('/baseball/mlb/scoreboard')
     ]);
 
     let ctx = 'MLB 2026 Season — League-Wide Data\n\n';
 
-    // Standings — recursive tree walker
-    if (standData.status === 'fulfilled') {
+    // Standings — MLB Stats API (CORS-open)
+    const DIV_NAMES = {200:'AL West',201:'AL East',202:'AL Central',203:'NL West',204:'NL East',205:'NL Central'};
+    try {
+      const sData = await getJSON('https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&season=2026&standingsTypes=regularSeason');
+      const divOrder = [201,202,200,204,205,203];
+      const divMap = {};
+      (sData.records||[]).forEach(rec => { divMap[rec.division.id] = rec.teamRecords||[]; });
       ctx += 'STANDINGS:\n';
-      const allDivs = [];
-      const walkStand = (node) => {
-        if (!node || typeof node !== 'object') return;
-        const entries = (node.standings && node.standings.entries) || node.entries || [];
-        if (entries.length && entries[0] && entries[0].team) {
-          allDivs.push({name: node.name || node.abbreviation || '', entries});
-          return;
-        }
-        (node.children || []).forEach(walkStand);
-      };
-      (standData.value.children || [standData.value]).forEach(walkStand);
-      allDivs.forEach(div => {
-        ctx += '\n' + div.name + ':\n';
-        div.entries.forEach((e,i) => {
-          const t = e.team || {};
-          const name = t.shortDisplayName || t.displayName || '?';
-          const stats = e.stats || [];
-          const gs = n => (stats.find(s=>s.name===n||s.abbreviation===n)||{}).displayValue||'—';
-          ctx += (i+1)+'. '+name+': '+(gs('wins')||gs('W'))+'-'+(gs('losses')||gs('L'))+' ('+(gs('winPercent')||gs('PCT'))+') GB:'+(gs('gamesBehind')||gs('GB'))+'\n';
+      divOrder.forEach(divId => {
+        const teams = divMap[divId]; if(!teams||!teams.length) return;
+        ctx += '\n' + (DIV_NAMES[divId]||divId) + ':\n';
+        teams.forEach((t,i) => {
+          const name = t.team.name||'?';
+          const w = t.leagueRecord.wins; const l = t.leagueRecord.losses;
+          const pct = t.leagueRecord.pct||t.winningPercentage||'—';
+          const gb = t.gamesBack||'—';
+          ctx += (i+1)+'. '+name+': '+w+'-'+l+' ('+pct+') GB:'+gb+'\n';
         });
       });
-    }
+    } catch(e) { ctx += 'Standings unavailable.\n'; }
 
     // Today's scores
     if (scoreData.status === 'fulfilled') {
@@ -373,23 +365,31 @@ async function buildLeague() {
       }
     }
 
-    // Batting + pitching leaders
-    [leadData, eraData, whipData].forEach(d => {
-      if (d.status !== 'fulfilled') return;
-      const cats = d.value.categories || [];
-      cats.slice(0,10).forEach(cat => {
-        const name = cat.displayName || cat.name || '';
-        const leaders = (cat.leaders || []).slice(0, 10);
-        if (!leaders.length) return;
-        ctx += '\n'+name+':\n';
-        leaders.forEach((l, i) => {
-          const ath = l.athlete || {};
-          const team = (l.team && l.team.abbreviation) || '';
-          const val = l.displayValue || l.value || '—';
-          ctx += (i+1)+'. '+(ath.displayName||'?')+' ('+team+'): '+val+'\n';
+    // Extract pitcher ERA from scoreboard probables
+    if (scoreData.status === 'fulfilled') {
+      const pitchers = [];
+      (scoreData.value.events||[]).forEach(ev => {
+        const comp = (ev.competitions&&ev.competitions[0])||{};
+        (comp.competitors||[]).forEach(team => {
+          const abbr = (team.team&&team.team.abbreviation)||'?';
+          (team.probables||[]).forEach(p => {
+            if (!p.athlete) return;
+            const stats = p.statistics||[];
+            const era = (stats.find(s=>s.abbreviation==='ERA')||{}).displayValue||'';
+            const wins = (stats.find(s=>s.abbreviation==='W')||{}).displayValue||'0';
+            const losses = (stats.find(s=>s.abbreviation==='L')||{}).displayValue||'0';
+            if (era) pitchers.push({name: p.athlete.displayName||'?', team: abbr, era: parseFloat(era), eraStr: era, record: wins+'-'+losses});
+          });
         });
       });
-    });
+      if (pitchers.length) {
+        pitchers.sort((a,b)=>a.era-b.era);
+        ctx += '\nTODAY\'S STARTERS BY ERA:\n';
+        pitchers.slice(0,15).forEach((p,i) => {
+          ctx += (i+1)+'. '+p.name+' ('+p.team+'): ERA '+p.eraStr+', '+p.record+'\n';
+        });
+      }
+    }
 
     return ctx;
   } catch(e) { return 'MLB league data unavailable.'; }
