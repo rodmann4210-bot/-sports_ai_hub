@@ -170,7 +170,7 @@ const JGR = {'747':'Denny Hamlin','4773':'Chase Briscoe','4700':'Christopher Bel
 const $ = id => document.getElementById(id);
 let curSport = 'cardinals';
 let statsData = null;
-let history = JSON.parse(localStorage.getItem('sai_history') || '[]');
+let qaHistory = JSON.parse(localStorage.getItem('sai_history') || '[]');
 
 const SPORT_CFG = {
   cardinals: {
@@ -451,9 +451,9 @@ async function runQuery(question) {
 
     // Save to history
     const entry = {sport:curSport, sportLabel:SPORT_CFG[curSport].tag, question, answer:text, time:Date.now()};
-    history.unshift(entry);
-    if(history.length>10) history=history.slice(0,10);
-    localStorage.setItem('sai_history', JSON.stringify(history));
+    qaHistory.unshift(entry);
+    if(qaHistory.length>10) qaHistory=qaHistory.slice(0,10);
+    localStorage.setItem('sai_history', JSON.stringify(qaHistory));
     renderHistory();
   } catch(e) {
     txt.innerHTML = '<span style="color:#ff8275">Could not reach the AI. Check your connection.</span>';
@@ -476,9 +476,9 @@ function switchSport(sport) {
 
 // ── HISTORY ──
 function renderHistory() {
-  if(!history.length){$('historySection').style.display='none';return;}
+  if(!qaHistory.length){$('historySection').style.display='none';return;}
   $('historySection').style.display='block';
-  $('historyList').innerHTML = history.slice(0,5).map((h,i)=>`
+  $('historyList').innerHTML = qaHistory.slice(0,5).map((h,i)=>`
     <div class="history-item" data-idx="${i}">
       <div class="history-q">${h.question}</div>
       <div class="history-meta">${h.sportLabel} · ${new Date(h.time).toLocaleString(undefined,{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}</div>
@@ -498,12 +498,12 @@ $('queryInput').addEventListener('input',function(){this.style.height='auto';thi
 $('chips').addEventListener('click',e=>{const c=e.target.closest('.chip');if(!c)return;$('queryInput').value=c.textContent;runQuery(c.textContent);});
 $('historyList').addEventListener('click',e=>{
   const item=e.target.closest('.history-item');if(!item)return;
-  const h=history[item.dataset.idx];if(!h)return;
+  const h=qaHistory[item.dataset.idx];if(!h)return;
   switchSport(h.sport);
   $('queryInput').value=h.question;
   runQuery(h.question);
 });
-$('historyClear').addEventListener('click',()=>{history=[];localStorage.removeItem('sai_history');renderHistory();});
+$('historyClear').addEventListener('click',()=>{qaHistory=[];localStorage.removeItem('sai_history');renderHistory();});
 
 // ── INIT ──
 renderHistory();
