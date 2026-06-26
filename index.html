@@ -344,6 +344,48 @@ async function buildLeague() {
       });
     } catch(e) { ctx += 'Standings unavailable.\n'; }
 
+    // MLB Stats API batting leaders (CORS-open)
+    try {
+      const lData = await getJSON('https://statsapi.mlb.com/api/v1/stats/leaders?leaderCategories=homeRuns,runsBattedIn,battingAverage,stolenBases,sluggingPercentage&season=2026&limit=10&sportId=1');
+      const cats = lData.leagueLeaders || [];
+      if (cats.length) {
+        ctx += '\nBATTING LEADERS:\n';
+        cats.forEach(cat => {
+          const name = cat.leaderCategory || '';
+          const leaders = cat.leaders || [];
+          if (!leaders.length) return;
+          ctx += '\n' + name + ':\n';
+          leaders.slice(0,10).forEach((l,i) => {
+            const p = l.person || {};
+            const team = (l.team && l.team.abbreviation) || '';
+            const val = l.value || '—';
+            ctx += (i+1)+'. '+(p.fullName||'?')+' ('+team+'): '+val+'\n';
+          });
+        });
+      }
+    } catch(e) { ctx += 'Batting leaders unavailable.\n'; }
+
+    // Pitching leaders
+    try {
+      const pData = await getJSON('https://statsapi.mlb.com/api/v1/stats/leaders?leaderCategories=earnedRunAverage,strikeouts,wins,whip&season=2026&limit=10&sportId=1&statGroup=pitching');
+      const cats = pData.leagueLeaders || [];
+      if (cats.length) {
+        ctx += '\nPITCHING LEADERS:\n';
+        cats.forEach(cat => {
+          const name = cat.leaderCategory || '';
+          const leaders = cat.leaders || [];
+          if (!leaders.length) return;
+          ctx += '\n' + name + ':\n';
+          leaders.slice(0,10).forEach((l,i) => {
+            const p = l.person || {};
+            const team = (l.team && l.team.abbreviation) || '';
+            const val = l.value || '—';
+            ctx += (i+1)+'. '+(p.fullName||'?')+' ('+team+'): '+val+'\n';
+          });
+        });
+      }
+    } catch(e) { ctx += 'Pitching leaders unavailable.\n'; }
+
     // Today's scores
     if (scoreData.status === 'fulfilled') {
       const events = scoreData.value.events || [];
