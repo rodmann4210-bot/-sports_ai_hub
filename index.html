@@ -21,6 +21,7 @@
   body.sport-cardinals{--accent:#c41e3a;--accent-2:#7a0c1f;--glow:rgba(196,30,58,.35)}
   body.sport-nascar{--accent:#FF7A29;--accent-2:#cc5500;--glow:rgba(255,122,41,.3)}
   body.sport-city{--accent:#E0314B;--accent-2:#a01e31;--glow:rgba(224,49,75,.3)}
+  body.sport-league{--accent:#2980d4;--accent-2:#1a5fa0;--glow:rgba(41,128,212,.3)}
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
   body{background:radial-gradient(1000px 500px at 70% -10%,var(--glow),transparent 60%),repeating-linear-gradient(135deg,var(--stripe) 0 2px,transparent 2px 26px),var(--bg);background-attachment:fixed;padding:0 0 60px;transition:background .4s}
@@ -110,6 +111,10 @@
         <span class="tab-icon">⚽</span>
         <span class="tab-label">City SC</span>
       </button>
+      <button class="sport-tab" data-sport="league">
+        <span class="tab-icon">🌐</span>
+        <span class="tab-label">MLB League</span>
+      </button>
     </div>
   </header>
 
@@ -188,6 +193,13 @@ const SPORT_CFG = {
     icon: '⚽',
     bodyClass: 'sport-city',
     chips: ['Recent results','Next match','Current conference position','How many points do we have?','Recent form','Next opponent']
+  },
+  league: {
+    label: 'Ask about MLB League-Wide',
+    tag: 'MLB 2026 · All Teams',
+    icon: '🌐',
+    bodyClass: 'sport-league',
+    chips: ['Who leads MLB in home runs?','Best ERA in baseball','NL Central standings','AL standings','Cardinals vs league average','Top 5 pitchers by ERA','Who has the most stolen bases?','Best team record in baseball']
   }
 };
 
@@ -312,6 +324,100 @@ async function buildCity() {
   } catch(e) { return 'City SC data unavailable.'; }
 }
 
+// ── BUILD LEAGUE CONTEXT ──
+async function buildLeague() {
+  const MLB = 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb';
+  try {
+    const [standData, scoreData, leadData] = await Promise.allSettled([
+      getJSON(`${MLB}/standings`),
+      getJSON(`${MLB}/scoreboard`),
+      getJSON(`${MLB}/leaders`)
+    ]);
+
+    let ctx = 'MLB 2026 Season — League-Wide Data
+
+';
+
+    // Standings
+    if (standData.status === 'fulfilled') {
+      const groups = standData.value.children || standData.value.standings || [];
+      ctx += 'STANDINGS:
+';
+      groups.forEach(lg => {
+        const lgName = lg.abbreviation || lg.name || '';
+        (lg.children || [lg]).forEach(div => {
+          const divName = div.abbreviation || div.name || '';
+          ctx += `
+${lgName} ${divName}:
+`;
+          const entries = (div.standings && div.standings.entries) || div.entries || [];
+          entries.forEach((e,i) => {
+            const t = e.team || {};
+            const name = t.shortDisplayName || t.displayName || '?';
+            const stats = e.stats || [];
+            const gs = n => (stats.find(s=>s.name===n||s.abbreviation===n)||{}).displayValue||'—';
+            const wins = gs('wins')||gs('W');
+            const losses = gs('losses')||gs('L');
+            const pct = gs('winPercent')||gs('PCT');
+            const gb = gs('gamesBehind')||gs('GB');
+            ctx += `${i+1}. ${name}: ${wins}-${losses} (${pct}) GB:${gb}
+`;
+          });
+        });
+      });
+    }
+
+    // Today's scores
+    if (scoreData.status === 'fulfilled') {
+      const events = scoreData.value.events || [];
+      if (events.length) {
+        ctx += '
+TODAY'S SCORES:
+';
+        events.forEach(ev => {
+          const comp = (ev.competitions && ev.competitions[0]) || {};
+          const cs = comp.competitors || [];
+          const away = cs.find(c=>c.homeAway==='away')||{};
+          const home = cs.find(c=>c.homeAway==='home')||{};
+          const awayName = (away.team&&away.team.abbreviation)||'?';
+          const homeName = (home.team&&home.team.abbreviation)||'?';
+          const status = comp.status&&comp.status.type&&comp.status.type.shortDetail||'';
+          const score = (comp.status&&comp.status.type&&comp.status.type.completed)
+            ? `${away.score}-${home.score} Final`
+            : status;
+          ctx += `${awayName} @ ${homeName}: ${score}
+`;
+        });
+      }
+    }
+
+    // League leaders
+    if (leadData.status === 'fulfilled') {
+      const cats = leadData.value.categories || [];
+      ctx += '
+LEAGUE LEADERS:
+';
+      cats.slice(0, 8).forEach(cat => {
+        const name = cat.displayName || cat.name || '';
+        const leaders = (cat.leaders || []).slice(0, 5);
+        if (!leaders.length) return;
+        ctx += `
+${name}:
+`;
+        leaders.forEach((l, i) => {
+          const ath = l.athlete || {};
+          const team = (l.team && l.team.abbreviation) || '';
+          const val = l.displayValue || l.value || '—';
+          ctx += `${i+1}. ${ath.displayName||'?'} (${team}): ${val}
+`;
+        });
+      });
+    }
+
+    return ctx;
+  } catch(e) { return 'MLB league data unavailable.'; }
+}
+
 // ── QUERY ──
 async function runQuery(question) {
   const btn = $('queryBtn');
@@ -330,6 +436,7 @@ async function runQuery(question) {
     if (curSport === 'cardinals') context = await buildCardinals();
     else if (curSport === 'nascar') context = await buildNASCAR();
     else if (curSport === 'city') context = await buildCity();
+    else if (curSport === 'league') context = await buildLeague();
 
     const resp = await fetch(SPORTS_AI_URL, {
       method: 'POST',
