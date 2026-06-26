@@ -328,39 +328,43 @@ async function buildCity() {
 async function buildLeague() {
   const MLB = 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb';
   try {
+    const MLB_WEB = 'https://site.web.api.espn.com/apis/site/v2/sports/baseball/mlb';
     const [standData, scoreData, leadData, eraData, whipData] = await Promise.allSettled([
       getJSON(`${MLB}/standings`),
       getJSON(`${MLB}/scoreboard`),
-      getJSON(`${MLB}/leaders`),
-      getJSON(`${MLB}/leaders?categories=earnedRunAverage`),
-      getJSON(`${MLB}/leaders?categories=walksAndHitsPerInningPitched`)
+      getJSON(`${MLB_WEB}/leaders`),
+      getJSON(`${MLB_WEB}/leaders?categories=earnedRunAverage`),
+      getJSON(`${MLB_WEB}/leaders?categories=walksAndHitsPerInningPitched`)
     ]);
 
     let ctx = 'MLB 2026 Season — League-Wide Data\n\n';
 
-    // Standings
+    // Standings — walk tree to find all entry arrays
     if (standData.status === 'fulfilled') {
-      const groups = standData.value.children || standData.value.standings || [];
       ctx += 'STANDINGS:\n';
-      groups.forEach(lg => {
-        const lgName = lg.abbreviation || lg.name || '';
-        (lg.children || [lg]).forEach(div => {
-          const divName = div.abbreviation || div.name || '';
-          ctx += `
-${lgName} ${divName}:
-`;
-          const entries = (div.standings && div.standings.entries) || div.entries || [];
-          entries.forEach((e,i) => {
-            const t = e.team || {};
-            const name = t.shortDisplayName || t.displayName || '?';
-            const stats = e.stats || [];
-            const gs = n => (stats.find(s=>s.name===n||s.abbreviation===n)||{}).displayValue||'—';
-            const wins = gs('wins')||gs('W');
-            const losses = gs('losses')||gs('L');
-            const pct = gs('winPercent')||gs('PCT');
-            const gb = gs('gamesBehind')||gs('GB');
-            ctx += `${i+1}. ${name}: ${wins}-${losses} (${pct}) GB:${gb}\n`;
-          });
+      const allDivs = [];
+      const walkStand = (node) => {
+        if (!node || typeof node !== 'object') return;
+        const entries = (node.standings && node.standings.entries) || node.entries || [];
+        if (entries.length && entries[0] && entries[0].team) {
+          allDivs.push({name: node.name || node.abbreviation || '', entries});
+          return;
+        }
+        (node.children || []).forEach(walkStand);
+      };
+      (standData.value.children || [standData.value]).forEach(walkStand);
+      allDivs.forEach(div => {
+        ctx += '\n' + div.name + ':\n';
+        div.entries.forEach((e,i) => {
+          const t = e.team || {};
+          const name = t.shortDisplayName || t.displayName || '?';
+          const stats = e.stats || [];
+          const gs = n => (stats.find(s=>s.name===n||s.abbreviation===n)||{}).displayValue||'—';
+          const wins = gs('wins')||gs('W');
+          const losses = gs('losses')||gs('L');
+          const pct = gs('winPercent')||gs('PCT');
+          const gb = gs('gamesBehind')||gs('GB');
+          ctx += (i+1) + '. ' + name + ': ' + wins + '-' + losses + ' (' + pct + ') GB:' + gb + '\n';
         });
       });
     }
