@@ -328,10 +328,12 @@ async function buildCity() {
 async function buildLeague() {
   const MLB = 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb';
   try {
-    const [standData, scoreData, leadData] = await Promise.allSettled([
+    const [standData, scoreData, leadData, eraData, whipData] = await Promise.allSettled([
       getJSON(`${MLB}/standings`),
       getJSON(`${MLB}/scoreboard`),
-      getJSON(`${MLB}/leaders`)
+      getJSON(`${MLB}/leaders`),
+      getJSON(`${MLB}/leaders?categories=earnedRunAverage`),
+      getJSON(`${MLB}/leaders?categories=walksAndHitsPerInningPitched`)
     ]);
 
     let ctx = 'MLB 2026 Season — League-Wide Data\n\n';
@@ -403,6 +405,24 @@ ${lgName} ${divName}:
         });
       });
     }
+
+    // ERA and WHIP leaders
+    [eraData, whipData].forEach(d => {
+      if (d.status !== 'fulfilled') return;
+      const cats = d.value.categories || [];
+      cats.forEach(cat => {
+        const name = cat.displayName || cat.name || '';
+        const leaders = (cat.leaders || []).slice(0, 10);
+        if (!leaders.length) return;
+        ctx += '\n' + name + ':\n';
+        leaders.forEach((l, i) => {
+          const ath = l.athlete || {};
+          const team = (l.team && l.team.abbreviation) || '';
+          const val = l.displayValue || l.value || '\u2014';
+          ctx += (i+1) + '. ' + (ath.displayName||'?') + ' (' + team + '): ' + val + '\n';
+        });
+      });
+    });
 
     return ctx;
   } catch(e) { return 'MLB league data unavailable.'; }
