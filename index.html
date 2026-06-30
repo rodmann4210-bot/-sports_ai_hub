@@ -1,3 +1,4 @@
+<!-- © 2026 Roderick Grimes. All rights reserved. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,7 +66,6 @@
   .pos{font-family:'Barlow Condensed';font-weight:600;letter-spacing:1px;font-size:13px;color:var(--muted);background:rgba(255,255,255,.05);padding:2px 8px;border-radius:4px}
   .badge{font-family:'Barlow Condensed';font-weight:700;letter-spacing:.5px;font-size:11px;padding:2px 8px;border-radius:4px;text-transform:uppercase}
   .badge.out{background:rgba(226,87,76,.18);color:var(--red);border:1px solid rgba(226,87,76,.45)}
-  .badge.q{background:rgba(255,182,18,.16);color:var(--gold);border:1px solid rgba(255,182,18,.4)}
   .news a{display:block;padding:11px 16px;border-bottom:1px solid rgba(255,255,255,.04);transition:background .15s}
   .news a:hover{background:rgba(255,255,255,.04)}
   .news .hl{font-family:'Oswald';font-weight:500;font-size:15.5px;line-height:1.25}
@@ -178,7 +178,7 @@
       <div class="p-head">
         <span class="bar"></span>
         <h2>Deep-Dive Database Records</h2>
-        <span class="ct">Local B-Ref Data Core</span>
+        <span class="ct" id="coreLabel">Local B-Ref Data Core</span>
         <button class="stats-reset-btn" id="statsReset">↻ Reset Table</button>
       </div>
       <div class="stats-tabs" id="statsTabs">
@@ -187,9 +187,9 @@
         <button class="stab" data-pane="fielding">Fielding</button>
         <button class="stab" data-pane="valueBatting">WAR · Batting</button>
         <button class="stab" data-pane="valuePitching">WAR · Pitching</button>
-        <button class="stab" data-pane="appearances">Appearances</button>
         <button class="stab" data-pane="fortyMan">40-Man Roster</button>
-        <button class="stab" data-pane="schedule">Schedule</button>
+        <button class="stab" data-pane="nascarLeaderboard">NASCAR Leaders</button>
+        <button class="stab" data-pane="nascarTracks">Track Map</button>
       </div>
       <div class="stats-scroll" id="statsBody"><div class="loading">Connecting to data tables...</div></div>
       <div class="stats-updated" id="statsUpdated">Interactive columns activated.</div>
@@ -201,7 +201,7 @@
   </div>
   <footer>
     <div>Systems: <span class="g">ESPN Developer Network</span> · <span class="g">Baseball Reference API</span> · <span class="g">Apple Pod Database</span>.</div>
-    <div>Multi-Sport Engine v2.0 · Live Data Intercept Activated</div>
+    <div>Multi-Sport Engine v2.1 · Live Data Intercept Activated</div>
   </footer>
 </div>
 <script>
@@ -296,19 +296,53 @@ const STATS_CFG={
   fielding:{sheet:'Cardinals_Fielding',cols:['Player','Pos','G','Inn','PO','A','E','DP','Fld%','RF/G'],sort:'G',dir:-1},
   valueBatting:{sheet:'value_batting',cols:['Player','Age','PA','Rbat','Rbaser','Rdp','Rfield','Rpos','RAA','WAA','Rrep','RAR','WAR','oWAR','dWAR','Pos'],sort:'WAR',dir:-1},
   valuePitching:{sheet:'value_pitching',cols:['Player','Age','IP','G','GS','RA9','RA9opp','PPFp','RA9avg','RAA','WAA','WAR','RAR'],sort:'WAR',dir:-1},
-  appearances:{sheet:'Appearances',cols:['Player','Age','G','GS','P','C','1B','2B','3B','SS','LF','CF','RF','OF','DH'],sort:'G',dir:-1},
-  fortyMan:{sheet:'40Man',cols:['Rk','Uni','Player','Birth','OnActv','IL','Age','B','T','Ht','Wt','DoB','1stYr'],sort:'Rk',dir:1},
-  schedule:{sheet:'Schedule',cols:['Gm#','Date','Tm','Opp','W/L','R','RA','Inn','W-L','Rank','GB','Win','Loss','Save','Time','D/N','Streak'],sort:'Gm#',dir:1}
+  fortyMan:{sheet:'40Man',cols:['Rk','Uni','Player','Birth','OnActv','IL','Age','B','T','Ht','Wt','DoB','1stYr'],sort:'Rk',dir:1}
 };
 let statsData=null,curPane='batting';const sortState={};
 function fmt(v){return v===null||v===undefined||String(v).trim()===''?'—':String(v).trim();}
 
-function renderStats(pane){
-  if(!statsData)return;const cfg=STATS_CFG[pane];
-  const rows=(statsData[cfg.sheet]||[]).filter(r=>{
-    if(pane==='schedule') return r['Gm#']!==undefined&&r['Gm#']!=='';
-    return (r['Player']||r['Name']||'')!=='Team Totals';
+async function fetchNascarLeaderboard() {
+  try {
+    $('statsBody').innerHTML = '<div class="loading">Querying active NASCAR Cup Series standings...</div>';
+    const res = await getJSON('https://site.api.espn.com/apis/site/v2/sports/racing/nascar-cup/standings');
+    const drivers = res.standings?.entries || [];
+    if(!drivers.length) throw new Error();
+    let h = '<table class="stats-tbl"><thead><tr><th>Rank</th><th>Driver</th><th>Points</th><th>Wins</th><th>Top 5</th><th>Top 10</th></tr></thead><tbody>';
+    drivers.forEach(e => {
+      const d = e.athlete || {};
+      const stats = e.stats || [];
+      const pts = stats.find(s=>s.name==='points')?.value ?? '—';
+      const wins = stats.find(s=>s.name==='wins')?.value ?? '0';
+      const top5 = stats.find(s=>s.name==='topFive')?.value ?? '0';
+      const top10 = stats.find(s=>s.name==='topTen')?.value ?? '0';
+      h += `<tr><td>${e.stats.find(s=>s.name==='rank')?.value ?? '—'}</td><td><strong>${d.displayName || 'Unknown'}</strong></td><td>${pts}</td><td>${wins}</td><td>${top5}</td><td>${top10}</td></tr>`;
+    });
+    $('statsBody').innerHTML = h + '</tbody></table>';
+  } catch(e) {
+    $('statsBody').innerHTML = '<div class="stats-err">NASCAR stream momentarily unreached. Resetting connection pipeline.</div>';
+  }
+}
+
+function renderNascarTracks() {
+  const tracks = [
+    {name: "Martinsville Speedway", type: "Short Track", len: "0.526 Miles", shape: "Paperclip", surface: "Asphalt/Concrete"},
+    {name: "World Wide Technology Raceway", type: "Intermediate Oval", len: "1.250 Miles", shape: "Egg-Shape Oval", surface: "Asphalt"},
+    {name: "Daytona International Speedway", type: "Superspeedway", len: "2.500 Miles", shape: "Tri-Oval", surface: "Asphalt"},
+    {name: "Talladega Superspeedway", type: "Superspeedway", len: "2.660 Miles", shape: "Tri-Oval", surface: "Asphalt"},
+    {name: "Bristol Motor Speedway", type: "Short Track", len: "0.533 Miles", shape: "High-Banked Oval", surface: "Concrete/Dirt"}
+  ];
+  let h = '<table class="stats-tbl"><thead><tr><th>Track Name</th><th>Configuration Type</th><th>Track Length</th><th>Track Shape</th><th>Surface Type</th></tr></thead><tbody>';
+  tracks.forEach(t => {
+    h += `<tr><td><strong>${t.name}</strong></td><td>${t.type}</td><td>${t.len}</td><td>${t.shape}</td><td>${t.surface}</td></tr>`;
   });
+  $('statsBody').innerHTML = h + '</tbody></table>';
+}
+
+function renderStats(pane){
+  if(pane === 'nascarLeaderboard') { fetchNascarLeaderboard(); return; }
+  if(pane === 'nascarTracks') { renderNascarTracks(); return; }
+  if(!statsData)return;const cfg=STATS_CFG[pane];
+  const rows=(statsData[cfg.sheet]||[]).filter(r=>(r['Player']||r['Name']||'')!=='Team Totals');
   if(!rows.length){$('statsBody').innerHTML='<div class="stats-err">No data found in sheet: '+cfg.sheet+'</div>';return;}
   if(!sortState[pane])sortState[pane]={col:cfg.sort,dir:cfg.dir};const {col:sc,dir:sd}=sortState[pane];
   const avail=cfg.cols.filter(c=>rows[0].hasOwnProperty(c)||c==='Player');
@@ -317,20 +351,23 @@ function renderStats(pane){
   h+='</tr></thead><tbody>';
   const sorted=[...rows].sort((a,b)=>{const av=a[sc],bv=b[sc],an=parseFloat(av),bn=parseFloat(bv);return (!isNaN(an)&&!isNaN(bn)?(an-bn):String(av||'').localeCompare(String(bv||'')))*sd;});
   sorted.forEach(row=>{
-    h+='<tr>';avail.forEach(c=>{
-      let val=row[c]||row['Name']||row['Player']||'';
-      h+=`<td>${fmt(val)}</td>`;
-    });h+='</tr>';
+    h+='<tr>';avail.forEach(c=>{let val=row[c]||row['Name']||row['Player']||'';h+=`<td>${fmt(val)}</td>`;});h+='</tr>';
   });
   $('statsBody').innerHTML=h+'</tbody></table>';
   $('statsBody').querySelectorAll('th[data-col]').forEach(th=>{th.addEventListener('click',()=>{const col=th.dataset.col;sortState[pane]={col,dir:sortState[pane]?.col===col?sortState[pane].dir*-1:-1};renderStats(pane);});});
 }
 
 async function loadStats(){try{statsData=await getJSON(STATS_JSON);renderStats(curPane);}catch(e){$('statsBody').innerHTML='<div class="stats-err">Failed to fetch database file.</div>';}}
-$('statsTabs').addEventListener('click',e=>{const b=e.target.closest('.stab');if(!b)return;document.querySelectorAll('.stab').forEach(x=>x.classList.remove('active'));b.classList.add('active');curPane=b.dataset.pane;renderStats(curPane);});
+$('statsTabs').addEventListener('click',e=>{
+  const b=e.target.closest('.stab');if(!b)return;
+  document.querySelectorAll('.stab').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');curPane=b.dataset.pane;
+  if(curPane.startsWith('nascar')) { $('coreLabel').textContent = "Live NASCAR Analytics Feed"; } 
+  else { $('coreLabel').textContent = "Local B-Ref Data Core"; }
+  renderStats(curPane);
+});
 loadStats();
 
-// --- SPORTS HUB INTENT INTERCEPT SEARCH ENGINE ---
 function handleSearch(query) {
   if (!query.trim()) return;
   const ans = $("aiAnswer");
@@ -341,23 +378,18 @@ function handleSearch(query) {
     const q = query.toLowerCase().trim();
     let responseHtml = "";
 
-    // 1. COMMANDERS INTENT ROUTING
     if (q.includes("commanders") || q.includes("washington") || q.includes("nfl")) {
       responseHtml = `<strong>Washington Commanders Intelligence Unit:</strong> Monitoring live training camp and NFC East roster data. The upcoming schedule includes key division battles. Frequencies for Mizzou radio relays are mapped to local stations.`;
     }
-    // 2. NASCAR / RACING INTENT ROUTING
     else if (q.includes("nascar") || q.includes("driver") || q.includes("gibbs") || q.includes("speedway") || q.includes("martinsville")) {
       responseHtml = `<strong>Racing Intelligence Node:</strong> Tracking track coordinates and racing configuration profiles. Ty Gibbs is registered under Joe Gibbs Racing. Martinsville Speedway dimensions (0.526 miles) and World Wide Technology Raceway profiles are locked into memory.`;
     }
-    // 3. SPACEX STARSHIP INTENT ROUTING
     else if (q.includes("starship") || q.includes("spacex") || q.includes("launch") || q.includes("rocket")) {
       responseHtml = `<strong>Aerospace Launch Watch Tracker:</strong> Monitoring upcoming SpaceX Orbital Test Flight schedules and technical profiles directly from active aerospace database triggers. Launch window windows are monitored weekly.`;
     }
-    // 4. FALLBACK TO DETAILED CARDINALS LOCAL B-REF DATA
     else {
-      if (!statsData) {
-        responseHtml = "Database syncing. Please retry your query in a brief moment.";
-      } else {
+      if (!statsData) { responseHtml = "Database syncing. Please retry your query in a brief moment."; } 
+      else {
         if (q.includes("pitching wins") || q.includes("most wins") || (q.includes("wins") && q.includes("pitcher"))) {
           const pitchers = statsData["Cardinals_Pitching"] || [];
           const valid = pitchers.filter(p => p.Player && p.Player !== "Team Totals" && !isNaN(parseFloat(p.W)));
@@ -391,17 +423,11 @@ function handleSearch(query) {
           }
         } 
         else {
-          let foundPlayer = null;
-          let bStats = null;
-          
+          let foundPlayer = null; let bStats = null;
           for (const sheet of ["Batting", "Cardinals_Pitching"]) {
             const match = (statsData[sheet] || []).find(r => r.Player && q.includes(r.Player.toLowerCase()));
-            if (match) {
-              foundPlayer = match.Player;
-              if (sheet === "Batting") bStats = match;
-            }
+            if (match) { foundPlayer = match.Player; if (sheet === "Batting") bStats = match; }
           }
-
           if (foundPlayer && bStats) {
             responseHtml = `<strong>${foundPlayer} Profile:</strong> hitting <strong>.${String(bStats.BA).split('.')[1] || bStats.BA}</strong> with <strong>${bStats.HR} HR</strong>, <strong>${bStats.RBI} RBI</strong>, and a <strong>${bStats.WAR} WAR</strong>.`;
           } else {
@@ -410,7 +436,6 @@ function handleSearch(query) {
         }
       }
     }
-
     ans.innerHTML = responseHtml;
     $("aiFooter").textContent = "Global Router Source Node Connection Active";
   }, 450);
@@ -419,10 +444,8 @@ function handleSearch(query) {
 $("aiBtn").addEventListener("click", () => handleSearch($("aiInput").value));
 $("aiInput").addEventListener("keypress", (e) => { if (e.key === "Enter") { e.preventDefault(); handleSearch($("aiInput").value); } });
 $("aiChips").addEventListener("click", (e) => {
-  const chip = e.target.closest(".ai-chip");
-  if (!chip) return;
-  $("aiInput").value = chip.textContent;
-  handleSearch(chip.textContent);
+  const chip = e.target.closest(".ai-chip"); if (!chip) return;
+  $("aiInput").value = chip.textContent; handleSearch(chip.textContent);
 });
 </script>
 </body>
