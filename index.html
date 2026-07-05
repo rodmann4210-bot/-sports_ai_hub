@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght=300;400;500;600;700&family=Barlow:wght=400;500;600;700&family=Barlow+Condensed:wght=500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{--burgundy:#b3122e;--burgundy-deep:#7a0c1f;--burgundy-bright:#c41e3a;--gold:#f3c14b;--gold-dim:#c79a3a;--bg:#0a0f1c;--bg-2:#0f1526;--panel:#141b30;--panel-2:#18203a;--ink:#f3ece0;--muted:#a9b4c8;--muted-2:#6f7b93;--red:#ff8275;--green:#5fb47a;--line:rgba(243,193,75,.22);--line-soft:rgba(243,193,75,.10);--glow1:rgba(196,30,58,.42);--glow2:rgba(12,26,48,.6);--stripe:rgba(243,193,75,.022)}
+  :root{--burgundy:#b3122e;--burgundy-deep:#7a0c1f;--burgundy-bright:#c41e3a;--gold:#f3c14b;--gold-dim:#c79a3a;--bg:#0a0f1c;--bg-2:#0f1526;--panel:#141b30;--panel-2:#18203a;--ink:#f3ece0;--muted:#a9b4c8;--muted-2:#6f7b93;--red:#ff8275;--green:#5fb47a;--line:rgba(243,193,75,.22);--line-soft:rgba(243,193,75,.10);--glow1:rgba(196,30;58,.42);--glow2:rgba(12,26,48,.6);--stripe:rgba(243,193,75,.022)}
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;-webkit-font-smoothing:antialiased}
   body{min-height:100vh;background:radial-gradient(1200px 600px at 80% -10%,var(--glow1),transparent 60%),radial-gradient(900px 500px at -10% 110%,var(--glow2),transparent 55%),repeating-linear-gradient(135deg,var(--stripe) 0 2px,transparent 2px 26px),var(--bg);background-attachment:fixed;padding:0 0 48px}
@@ -280,78 +280,81 @@ function renderSpaceTable() {
 
 /* ============================================================
    UNIVERSAL DYNAMIC MATRIX EXTRACTION LOGIC
-   Instead of hardcoded strings, it runs data intersections.
+   Fully corrected from STATS variable error with Try/Catch protection.
    ============================================================ */
 function handleSearch(query) {
   if(!query.trim()) return; const ans = $("aiAnswer"); ans.classList.add("visible");
   ans.innerHTML = '<div class="ai-thinking">Scanning Dynamic Cell Registration Map...</div>';
   
   setTimeout(() => {
-    const q = query.toLowerCase().trim();
-    let output = "";
+    try {
+      const q = query.toLowerCase().trim();
+      let output = "";
 
-    /* SECTION 1: SEARCH DYNAMIC CARDINALS DATA AT THE CELL-LEVEL */
-    let handledMlbStat = false;
-    if (statsData) {
-      let targetedMetric = null;
-      for (const [phrase, columnKey] of Object.entries(STATS_METRIC_MAP)) {
-        if (q.includes(phrase)) { targetedMetric = columnKey; break; }
-      }
-
-      /* Core Cell Calculation logic: Scan rows for specific metrics or individual players */
-      if (targetedMetric) {
-        if (q.includes("leader") || q.includes("leads") || q.includes("most") || q.includes("highest")) {
-          let bestVal = -1, bestPlayer = "Unknown";
-          const sheetsToScan = ["Batting", "Cardinals_Pitching"];
-          sheetsToScan.forEach(s => {
-            (statsData[s] || []).forEach(row => {
-              if (row.Player && row.Player !== "Team Totals" && row[targetedMetric] !== undefined) {
-                let v = parseFloat(row[targetedMetric]);
-                if (!isNaN(v) && (targetedMetric === "W" || targetedMetric === "HR" || targetedMetric === "WAR" ? v > bestVal : false)) {
-                  bestVal = v; bestPlayer = row.Player;
-                }
-              }
-            });
-          });
-          output = `<strong>Data Core Calculation [Metric: Max_${targetedMetric}]:</strong> The roster leader is <strong>${bestPlayer}</strong> tracking a metric performance score of <strong>${bestVal}</strong>.`;
-          handledMlbStat = true;
-        } else {
-          /* Check if they asked for a specific player's row property value */
-          let foundRow = null;
-          ["Batting", "Cardinals_Pitching", "40Man"].forEach(s => {
-            (statsData[s] || []).forEach(row => {
-              if (row.Player && q.includes(row.Player.toLowerCase())) { foundRow = row; }
-            });
-          });
-          if (foundRow) {
-            output = `<strong>Data Core Row-Scan [Player: ${foundRow.Player}]:</strong> Cell extraction for **${targetedMetric}** returns a record value of <strong>${foundRow[targetedMetric] ?? 'Unavailable'}</strong>.`;
-            handledMlbStat = true;
-          }
+      /* SECTION 1: SEARCH DYNAMIC CARDINALS DATA AT THE CELL-LEVEL */
+      let handledMlbStat = false;
+      if (statsData) {
+        let targetedMetric = null;
+        for (const [phrase, columnKey] of Object.entries(STAT_METRIC_MAP)) {
+          if (q.includes(phrase)) { targetedMetric = columnKey; break; }
         }
-      } else if (q.includes("40-man") || q.includes("roster") || q.includes("count")) {
-        output = `<strong>Data Core Row-Scan [Roster Size]:</strong> The local active 40-Man matrix framework contains **${(statsData["40Man"] || []).length}** indexed profile lines.`;
-        handledMlbStat = true;
+
+        if (targetedMetric) {
+          if (q.includes("leader") || q.includes("leads") || q.includes("most") || q.includes("highest")) {
+            let bestVal = -1, bestPlayer = "Unknown";
+            const sheetsToScan = ["Batting", "Cardinals_Pitching"];
+            sheetsToScan.forEach(s => {
+              (statsData[s] || []).forEach(row => {
+                if (row.Player && row.Player !== "Team Totals" && row[targetedMetric] !== undefined) {
+                  let v = parseFloat(row[targetedMetric]);
+                  if (!isNaN(v) && (targetedMetric === "W" || targetedMetric === "HR" || targetedMetric === "WAR" ? v > bestVal : false)) {
+                    bestVal = v; bestPlayer = row.Player;
+                  }
+                }
+              });
+            });
+            output = `<strong>Data Core Calculation [Metric: Max_${targetedMetric}]:</strong> The roster leader is <strong>${bestPlayer}</strong> tracking a metric performance score of <strong>${bestVal}</strong>.`;
+            handledMlbStat = true;
+          } else {
+            let foundRow = null;
+            ["Batting", "Cardinals_Pitching", "40Man"].forEach(s => {
+              (statsData[s] || []).forEach(row => {
+                if (row.Player && q.includes(row.Player.toLowerCase())) { foundRow = row; }
+              });
+            });
+            if (foundRow) {
+              output = `<strong>Data Core Row-Scan [Player: ${foundRow.Player}]:</strong> Cell extraction for **${targetedMetric}** returns a record value of <strong>${foundRow[targetedMetric] ?? 'Unavailable'}</strong>.`;
+              handledMlbStat = true;
+            }
+          }
+        } else if (q.includes("40-man") || q.includes("roster") || q.includes("count")) {
+          output = `<strong>Data Core Row-Scan [Roster Size]:</strong> The local active 40-Man matrix framework contains **${(statsData["40Man"] || []).length}** indexed profile lines.`;
+          handledMlbStat = true;
+        }
       }
+
+      /* SECTION 2: REGISTRY DATA SCAN (FOR NASCAR, SPACEX, NFL, AND FRONT OFFICE) */
+      if (!handledMlbStat) {
+        let matchedEntry = null;
+        for (let i = 0; i < UNIVERSAL_REGISTRY.length; i++) {
+          const entry = UNIVERSAL_REGISTRY[i];
+          const match = entry.keys.some(k => q.includes(k));
+          if (match) { matchedEntry = entry; break; }
+        }
+
+        if (matchedEntry) {
+          output = `<strong>System Matrix Lookup [${matchedEntry.label}]:</strong> ${matchedEntry.property}: <strong>${matchedEntry.value}</strong>.`;
+        } else {
+          output = `<strong>Matrix Indexer [Intent: Unresolved]:</strong> Query parameters for "${query}" do not match a row-token or metric-column entry in the registry map. Refine your query.`;
+        }
+      }
+
+      ans.innerHTML = output;
+
+    } catch (err) {
+      /* Emergency Error Catch Intercept to break any unexpected runtime freezes */
+      $("aiAnswer").innerHTML = `<div style="color:var(--red)"><strong>Matrix Extraction Intercept Error:</strong> ${err.message}. Core calculation reset.</div>`;
     }
-
-    /* SECTION 2: REGISTRY DATA SCAN (FOR NASCAR, SPACEX, NFL, AND FRONT OFFICE) */
-    if (!handledMlbStat) {
-      let matchedEntry = null;
-      for (let i = 0; i < UNIVERSAL_REGISTRY.length; i++) {
-        const entry = UNIVERSAL_REGISTRY[i];
-        const match = entry.keys.some(k => q.includes(k));
-        if (match) { matchedEntry = entry; break; }
-      }
-
-      if (matchedEntry) {
-        output = `<strong>System Matrix Lookup [${matchedEntry.label}]:</strong> ${matchedEntry.property}: <strong>${matchedEntry.value}</strong>.`;
-      } else {
-        /* Context Fallback if token lookup boundary is breached */
-        output = `<strong>Matrix Indexer [Intent: Unresolved]:</strong> Query parameters for "${query}" do not match a row-token or metric-column entry in the registry map. Refine your query.`;
-      }
-    }
-
-    ans.innerHTML = output;
   }, 400);
 }
 
