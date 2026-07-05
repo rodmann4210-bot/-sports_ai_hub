@@ -7,7 +7,7 @@
 <title>Sports AI Hub — Ask the Stats</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght=300;400;500;600;700&family=Barlow:wght=400;500;600;700&family=Barlow+Condensed:wght=500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{--burgundy:#b3122e;--burgundy-deep:#7a0c1f;--burgundy-bright:#c41e3a;--gold:#f3c14b;--gold-dim:#c79a3a;--bg:#0a0f1c;--bg-2:#0f1526;--panel:#141b30;--panel-2:#18203a;--ink:#f3ece0;--muted:#a9b4c8;--muted-2:#6f7b93;--red:#ff8275;--green:#5fb47a;--line:rgba(243,193,75,.22);--line-soft:rgba(243,193,75,.10);--glow1:rgba(196,30,58,.42);--glow2:rgba(12,26,48,.6);--stripe:rgba(243,193,75,.022)}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -15,7 +15,6 @@
   body{min-height:100vh;background:radial-gradient(1200px 600px at 80% -10%,var(--glow1),transparent 60%),radial-gradient(900px 500px at -10% 110%,var(--glow2),transparent 55%),repeating-linear-gradient(135deg,var(--stripe) 0 2px,transparent 2px 26px),var(--bg);background-attachment:fixed;padding:0 0 48px}
   .wrap{max-width:1280px;margin:0 auto;padding:0 20px}
   
-  /* League Selector Navigation Tabs */
   .hub-nav{display:flex;gap:8px;margin-top:24px;border-bottom:1px solid var(--line);padding-bottom:12px;overflow-x:auto}
   .hub-btn{background:var(--panel);border:1px solid var(--line-soft);color:var(--muted);font-family:'Oswald';font-weight:600;font-size:14px;letter-spacing:1.5px;text-transform:uppercase;padding:12px 24px;border-radius:6px;cursor:pointer;transition:all .15s;white-space:nowrap}
   .hub-btn:hover{color:var(--ink);border-color:var(--line)}
@@ -42,7 +41,6 @@
   .p-head .ct{font-family:'Oswald';font-weight:600;font-size:13px;color:var(--gold);letter-spacing:1px}
   .p-body{padding:10px 0;flex:1}
   
-  /* Table View System Casing */
   .stats-scroll { display: block !important; max-height: 480px !important; overflow-y: auto !important; overflow-x: auto !important; position: relative !important; }
   .stats-tabs{display:flex;gap:0;border-bottom:1px solid var(--line);overflow-x:auto;padding:0 4px;background:rgba(0,0,0,.15)}
   .stab{font-family:'Oswald';font-weight:600;letter-spacing:1.5px;font-size:12px;text-transform:uppercase;padding:12px 18px;color:var(--muted-2);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all .15s;background:none;border:none}
@@ -51,7 +49,6 @@
   .stats-tbl thead tr{background:rgba(255,255,255,.05);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:2}
   .stats-tbl th{font-family:'Oswald';font-weight:600;letter-spacing:1px;font-size:11px;text-transform:uppercase;color:var(--muted-2);padding:10px 12px;text-align:right;white-space:nowrap;background:var(--panel-2)}
   .stats-tbl th:first-child{text-align:left;position:sticky;left:0;background:var(--panel-2);z-index:3}
-  .stats-tbl th.sorted{color:var(--gold)}
   .stats-tbl td{padding:9px 12px;text-align:right;border-bottom:1px solid rgba(255,255,255,.03);font-family:'Barlow Condensed';font-size:14px;letter-spacing:.3px;white-space:nowrap}
   .stats-tbl td:first-child{text-align:left;font-weight:600;position:sticky;left:0;background:var(--panel);z-index:1}
   .stats-tbl tr:hover td{background:rgba(255,255,255,.04)}
@@ -87,7 +84,6 @@
       <div class="status"><div class="live"><span class="dot"></span> Matrix Online</div><div class="upd" id="updated">Initializing Core...</div></div>
     </div>
 
-    <!-- Universal League Switching Interface -->
     <nav class="hub-nav" id="hubNav">
       <button class="hub-btn active" data-league="mlb">St. Louis Cardinals (MLB)</button>
       <button class="hub-btn" data-league="nfl">Washington Commanders (NFL)</button>
@@ -97,7 +93,6 @@
   </header>
 
   <div class="grid">
-    <!-- AI Query Node Card -->
     <section class="panel">
       <div class="p-head"><span class="bar"></span><h2>Ask the Stats</h2><span class="ct">Query Router Activated</span></div>
       <div class="ai-body">
@@ -105,17 +100,11 @@
           <textarea class="ai-input" id="aiInput" placeholder="Ask about active team assets or circuit statistics..." rows="1"></textarea>
           <button class="ai-btn" id="aiBtn">Run Query</button>
         </div>
-        <div class="ai-chips" id="aiChips">
-          <span class="ai-chip">Who leads the team in HR?</span>
-          <span class="ai-chip">When do the Commanders play?</span>
-          <span class="ai-chip">Who drives the #5 car in NASCAR?</span>
-          <span class="ai-chip">Next Starship launch window</span>
-        </div>
+        <div class="ai-chips" id="aiChips"></div>
         <div class="ai-answer" id="aiAnswer"></div>
       </div>
     </section>
 
-    <!-- Deep Dive Stats Board -->
     <section class="panel" id="statsPanel">
       <div class="p-head"><span class="bar"></span><h2 id="dbLabel">Database Engine Outputs</h2><span class="ct" id="coreLabel">Local Data Core Active</span></div>
       <div class="stats-tabs" id="statsTabs"></div>
@@ -134,20 +123,36 @@
 let currentLeague = "mlb";
 let statsData = null;
 let curPane = "";
-const sortState = {};
 const $=id=>document.getElementById(id);
 
 const STATS_JSON="https://raw.githubusercontent.com/rodmann4210-bot/cardinals_watch/main/cardinals_stats.json";
+
+const LEAGUE_CHIPS = {
+  mlb: ["Who leads the team in HR?", "Who has the most pitching wins?"],
+  nfl: ["When do the Commanders play?", "Show current NFL standings Projections"],
+  nascar: ["Who drives the #5 car in NASCAR?", "Show Martinsville track length"],
+  space: ["Next Starship launch window", "Show Starship Flight 5 goals"]
+};
+
 const MLB_CFG={
-  batting:{sheet:'Batting',cols:['Player','Age','Pos','G','PA','AB','R','H','2B','3B','HR','RBI','SB','CS','BB','SO','BA','OBP','SLG','OPS','OPS+','WAR'],sort:'HR',dir:-1},
-  pitching:{sheet:'Cardinals_Pitching',cols:['Player','Age','Pos','W','L','ERA','G','GS','IP','H','BB','SO','HR','WHIP','SO9','BB9','WAR'],sort:'WAR',dir:-1},
-  fielding:{sheet:'Cardinals_Fielding',cols:['Player','Pos','G','Inn','PO','A','E','DP','Fld%','RF/G'],sort:'G',dir:-1},
-  fortyMan:{sheet:'40Man',cols:['Rk','Uni','Player','Birth','OnActv','IL','Age','B','T','Ht','Wt','DoB','1stYr'],sort:'Rk',dir:1}
+  batting:{sheet:'Batting',cols:['Player','Age','Pos','G','PA','AB','R','H','2B','3B','HR','RBI','SB','CS','BB','SO','BA','OBP','SLG','OPS','WAR']},
+  pitching:{sheet:'Cardinals_Pitching',cols:['Player','Age','Pos','W','L','ERA','G','GS','IP','H','BB','SO','HR','WHIP','WAR']},
+  fielding:{sheet:'Cardinals_Fielding',cols:['Player','Pos','G','Inn','PO','A','E','DP','Fld%']},
+  fortyMan:{sheet:'40Man',cols:['Rk','Uni','Player','Age','B','T','Ht','Wt','1stYr']}
 };
 
 async function getJSON(u){const r=await fetch(u,{cache:"no-store"});if(!r.ok)throw new Error(r.status);return await r.json();}
 
+function updateSuggestedChips() {
+  const chips = LEAGUE_CHIPS[currentLeague] || [];
+  $("aiChips").innerHTML = chips.map(c => `<span class="ai-chip">${c}</span>`).join("");
+}
+
 async function loadLeagueEnvironment() {
+  $("aiAnswer").classList.remove("visible");
+  $("aiInput").value = "";
+  updateSuggestedChips();
+
   if (currentLeague === "mlb") {
     $("statsTabs").innerHTML = '<button class="stab active" data-pane="batting">Batting</button><button class="stab" data-pane="pitching">Pitching</button><button class="stab" data-pane="fielding">Fielding</button><button class="stab" data-pane="fortyMan">40-Man Roster</button>';
     curPane = "batting"; renderMlbTable();
@@ -225,17 +230,16 @@ $("statsTabs").addEventListener("click", e => {
   if(currentLeague === "nascar") renderNascarTable();
 });
 
-// --- CENTRAL AI SEARCH COMPILING ENGINE ---
 function handleSearch(query) {
   if(!query.trim()) return; const ans = $("aiAnswer"); ans.classList.add("visible");
   ans.innerHTML = '<div class="ai-thinking">Scanning Strategic Infrastructure Framework...</div>';
   setTimeout(() => {
     const q = query.toLowerCase().trim(); let responseHtml = "";
-    if (q.includes("commanders") || q.includes("washington") || q.includes("nfl")) {
+    if (q.includes("commanders") || q.includes("washington") || q.includes("nfl") || q.includes("play")) {
       responseHtml = `<strong>NFL Core:</strong> Monitoring Washington Commanders dataset configurations. NFC East records are updated online. Mizzou radio frequencies remain assigned.`;
-    } else if (q.includes("nascar") || q.includes("driver") || q.includes("gibbs") || q.includes("speedway")) {
+    } else if (q.includes("nascar") || q.includes("driver") || q.includes("gibbs") || q.includes("speedway") || q.includes("martinsville")) {
       responseHtml = `<strong>NASCAR Matrix:</strong> Ty Gibbs maps directly to Joe Gibbs Racing. Martinsville Speedway geometry is locked at 0.526 miles. WWT Raceway tracks are logged.`;
-    } else if (q.includes("starship") || q.includes("spacex") || q.includes("launch")) {
+    } else if (q.includes("starship") || q.includes("spacex") || q.includes("launch") || q.includes("flight 5")) {
       responseHtml = `<strong>SpaceX Launchwatch:</strong> Starship test flight parameters are refreshed weekly. Flight windows and pad check nodes are fully active.`;
     } else {
       if (!statsData) { responseHtml = "Local data matrix initializing. Re-run query shortly."; }
