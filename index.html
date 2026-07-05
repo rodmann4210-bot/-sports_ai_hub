@@ -317,13 +317,15 @@ function handleSearch(query) {
         responseHtml = `<strong>NASCAR Matrix:</strong> Cup Series telemetry stream online. Kyle Larson currently leads the active driver points standing frame.`;
       }
     } 
-    /* ================= DISTINCT SPACEX COMMERCIAL LAUNCH ROUTING ================= */
-    else if (q.includes("spacex") && (q.includes("commercial") || q.includes("falcon") || q.includes("satellite") || q.includes("tracker"))) {
-      responseHtml = `<strong>SpaceX Launchwatch:</strong> Continuous commercial tracking enabled. High-rate Falcon 9 deployment cycles primarily log standard internet satellite and payload distribution parameters. Operational infrastructure nodes refresh deployment schedules weekly.`;
-    }
-    /* ================= DISTINCT STARSHIP TESTING ROUTING ================= */
-    else if (q.includes("starship") || q.includes("launch") || q.includes("flight") || q.includes("booster") || q.includes("window") || q.includes("catch")) {
-      if (q.includes("flight 5") || q.includes("goals")) {
+    /* ================= SPACEX LAUNCH ROUTING MATRIX ================= */
+    else if (q.includes("starship") || q.includes("spacex") || q.includes("launch") || q.includes("flight") || q.includes("booster") || q.includes("window") || q.includes("catch") || q.includes("falcon") || q.includes("satellite")) {
+      
+      /* First check if it's explicitly a standard commercial/Falcon launch query */
+      if (q.includes("falcon") || q.includes("commercial") || q.includes("satellite") || (q.includes("spacex") && q.includes("next") && !q.includes("starship"))) {
+        responseHtml = `<strong>SpaceX Launchwatch (Commercial):</strong> Standard Falcon 9 telemetry handles routine deployment cycles. High-rate commercial schedules track next-gen satellite arrays and logistical payload missions, refreshing delivery schedules weekly.`;
+      } 
+      /* Otherwise handle specialized heavy Starship testing profiles */
+      else if (q.includes("flight 5") || q.includes("goals")) {
         responseHtml = `<strong>SpaceX Launchwatch (Starship):</strong> **Starship Flight 5** successfully completed its target goal, integrating a full mechanical launcher booster recovery catch at the launchpad tower nodes.`;
       } else if (q.includes("flight 6") || q.includes("assembly")) {
         responseHtml = `<strong>SpaceX Launchwatch (Starship):</strong> **Starship Flight 6** parameters are updated for atmospheric profile assessment and structural catch refinement. Production assembly remains active.`;
