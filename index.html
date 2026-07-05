@@ -79,9 +79,9 @@
     <div class="head">
       <div class="brand">
         <div class="crest">HUB</div>
-        <div><h1>SPORTS AI <span class="g">HUB</span></h1><div class="sub">Universal Database Engine · Query Framework</div></div>
+        <div><h1>SPORTS AI <span class="g">HUB</span></h1><div class="sub">Dynamic Relational Extraction Node</div></div>
       </div>
-      <div class="status"><div class="live"><span class="dot"></span> Matrix Online</div><div class="upd" id="updated">Initializing Core...</div></div>
+      <div class="status"><div class="live"><span class="dot"></span> Analytical Matrix Online</div><div class="upd" id="updated">Initializing Core...</div></div>
     </div>
 
     <nav class="hub-nav" id="hubNav">
@@ -94,11 +94,11 @@
 
   <div class="grid">
     <section class="panel">
-      <div class="p-head"><span class="bar"></span><h2>Ask the Stats</h2><span class="ct">Query Router Activated</span></div>
+      <div class="p-head"><span class="bar"></span><h2>Ask the Stats</h2><span class="ct">Algorithmic Search Core Active</span></div>
       <div class="ai-body">
         <div class="ai-input-row">
-          <textarea class="ai-input" id="aiInput" placeholder="Ask about active team assets or circuit statistics..." rows="1"></textarea>
-          <button class="ai-btn" id="aiBtn">Run Query</button>
+          <textarea class="ai-input" id="aiInput" placeholder="Ask any question about loaded team profiles or structural statistics..." rows="1"></textarea>
+          <button class="ai-btn" id="aiBtn">Execute</button>
         </div>
         <div class="ai-chips" id="aiChips"></div>
         <div class="ai-answer" id="aiAnswer"></div>
@@ -114,7 +114,7 @@
   </div>
   
   <footer>
-    <div>Systems Environment: <span class="g">Knowledge Matrix Engine v5.0</span> · <span class="g">Token Router Active</span>.</div>
+    <div>Systems Environment: <span class="g">Algorithmic Entity-Attribute Cell Extractor</span>.</div>
     <div>© 2026 Roderick Grimes. All rights reserved.</div>
   </footer>
 </div>
@@ -128,10 +128,10 @@ const $=id=>document.getElementById(id);
 const STATS_JSON="https://raw.githubusercontent.com/rodmann4210-bot/cardinals_watch/main/cardinals_stats.json";
 
 const LEAGUE_CHIPS = {
-  mlb: ["Who leads the team in HR?", "Who has the most pitching wins?", "Show active 40-Man roster count"],
-  nfl: ["When do the Commanders play?", "Show current NFC East standings Projections", "Who is the primary division rival?"],
-  nascar: ["Who drives the #5 car?", "Who is Denny Hamlin's crew chief?", "Show Martinsville track length"],
-  space: ["When is the next SpaceX launch?", "Show Starship Flight 5 goals", "Flight 6 assembly status"]
+  mlb: ["Who leads the team in HR?", "Who manages the team?", "Show active 40-man roster count"],
+  nfl: ["When do the Commanders play?", "Show radio frequency", "Who is the primary division rival?"],
+  nascar: ["Who drives car #11?", "Who is Denny Hamlin's crew chief?", "Show Martinsville track length"],
+  space: ["When is the next Falcon 9 launch?", "Show Starship Flight 5 goals", "Flight 6 facility status"]
 };
 
 const MLB_CFG={
@@ -142,38 +142,39 @@ const MLB_CFG={
 };
 
 /* ============================================================
-   HIGH-DENSITY STRUCTURED KNOWLEDGE ARRAYS
-   Our query engine reads from these objects dynamically.
+   RELATIONAL MASTER DATA FRAMEWORKS
+   We treat these as clean database rows and columns.
    ============================================================ */
-const KNOWLEDGE_BASE = {
-  nfl: {
-    schedule: "The Washington Commanders next scheduled match parameter kicks off **September 10, 2026** against division opposition. Full schedule profiles update weekly.",
-    rivals: "Primary structural rivals flagged in the NFC East database are the **Dallas Cowboys** and **Philadelphia Eagles**.",
-    radio: "Commanders regional audio broadcasts route live through local network affiliates at **BIG 100.3 FM**.",
-    standings: "Standby Projections rank Dallas Cowboys (#1: .688), Washington Commanders (#2: .625), Philadelphia Eagles (#3: .563)."
-  },
-  nascar: {
-    drivers: {
-      "5": { name: "Kyle Larson", team: "Hendrick Motorsports", chief: "Cliff Daniels", points: 685, wins: 3 },
-      "11": { name: "Denny Hamlin", team: "Joe Gibbs Racing", chief: "Chris Gabehart", points: 642, wins: 2 },
-      "54": { name: "Ty Gibbs", team: "Joe Gibbs Racing", chief: "Chris Gayle", points: 598, wins: 1 }
-    },
-    tracks: {
-      "martinsville": { name: "Martinsville Speedway", length: "0.526 Miles", layout: "Paperclip Short-Track Framework" },
-      "wwt": { name: "World Wide Technology Raceway", length: "1.250 Miles", layout: "Egg-Shape Oval Framework" },
-      "daytona": { name: "Daytona International Speedway", length: "2.500 Miles", layout: "Superspeedway Tri-Oval" }
-    }
-  },
-  space: {
-    launches: {
-      commercial: { vehicle: "Falcon 9", next_date: "July 9, 2026", payload: "Next-Gen Commercial Satellite Array Grid", status: "Pad Assembly Complete" },
-      starship: { vehicle: "Starship Heavy", next_date: "August 2026 Flight Window", payload: "Atmospheric Profile Assessment & Catch Refinement", status: "Starbase Node Production Assembly Active" }
-    },
-    milestones: {
-      flight5: "Starship Flight 5 completely verified its structural design goals, completing an integrated booster mechanical tower catch at the launchpad.",
-      flight6: "Starship Flight 6 assembly is active at Starbase. Operational vectors focus on upper stage ignition checks and precision tower catch expansion parameters."
-    }
-  }
+const UNIVERSAL_REGISTRY = [
+  /* MLB Organization Layer */
+  { type: "mlb", id: "marmol", keys: ["manager", "manages", "marmol", "oli"], label: "Manager Profile", property: "Manager", value: "Oliver 'Oli' Marmol (#37), under contract through the 2028 operational season framework" },
+  { type: "mlb", id: "descalso", keys: ["bench", "descalso", "coach"], label: "Coach Profile", property: "Bench Coach", value: "Daniel Descalso" },
+  { type: "mlb", id: "central", keys: ["division", "alignment", "central"], label: "NL Central Matrix", property: "Teams Locked", value: "St. Louis Cardinals, Chicago Cubs, Milwaukee Brewers, Cincinnati Reds, Pittsburgh Pirates" },
+
+  /* NFL Organization Layer */
+  { type: "nfl", id: "schedule", keys: ["play", "when", "schedule", "match", "date"], label: "Commanders Schedule", property: "Next Kickoff", value: "September 10, 2026 against NFC East division opposition" },
+  { type: "nfl", id: "rivals", keys: ["rival", "cowboys", "eagles", "opposition"], label: "NFC East Grid", property: "Primary Competitors", value: "Dallas Cowboys and Philadelphia Eagles" },
+  { type: "nfl", id: "radio", keys: ["radio", "frequency", "broadcast", "fm", "station"], label: "Audio Relay Affiliation", property: "Broadcast Relay", value: "BIG 100.3 FM Regional Network" },
+
+  /* NASCAR Core Matrix */
+  { type: "nascar", id: "11", keys: ["11", "denny", "hamlin"], label: "Denny Hamlin Profile", property: "Driver Info", value: "Car: #11 | Team: Joe Gibbs Racing | Crew Chief: Chris Gabehart | Standing: 2nd (642 pts, 2 wins)" },
+  { type: "nascar", id: "54", keys: ["54", "ty", "gibbs"], label: "Ty Gibbs Profile", property: "Ty Gibbs Info", value: "Car: #54 | Team: Joe Gibbs Racing | Crew Chief: Chris Gayle | Standing: 3rd (598 pts, 1 win)" },
+  { type: "nascar", id: "5", keys: ["5", "kyle", "larson"], label: "Kyle Larson Profile", property: "Driver Info", value: "Car: #5 | Team: Hendrick Motorsports | Crew Chief: Cliff Daniels | Standing: 1st (685 pts, 3 wins)" },
+  { type: "nascar", id: "martinsville", keys: ["martinsville", "paperclip"], label: "Martinsville Profile", property: "Track Geometry", value: "Length: 0.526 Miles | Configuration: Paperclip Short-Track Layout" },
+  { type: "nascar", id: "wwt", keys: ["wwt", "world wide", "gateway"], label: "WWT Raceway Profile", property: "Track Geometry", value: "Length: 1.250 Miles | Configuration: Egg-Shape Oval Layout" },
+
+  /* SpaceX Telemetry Manifest */
+  { type: "space", id: "falcon", keys: ["falcon", "commercial", "satellite", "spacex next"], label: "Falcon 9 Commercial Stream", property: "Next Mission Launch Profile", value: "Date: July 9, 2026 | Payload: Next-Gen Satellite Array Grid | Status: Pad Assembly Complete" },
+  { type: "space", id: "flight5", keys: ["flight 5", "goal", "catch"], label: "Starship Flight 5 Log", property: "Mission Achievement", value: "Successfully executed full booster recovery mechanical catch utilizing the Mechazilla launchpad tower arms" },
+  { type: "space", id: "flight6", keys: ["flight 6", "assembly", "status", "window"], label: "Starship Flight 6 Matrix", property: "Launch Target Profile", value: "Window: August 2026 Target | Focus: Upper-stage ignition maps & tower catch tolerances | Status: Production Assembly Active" }
+];
+
+/* Dictionary maps generic questions to technical database abbreviations */
+const STAT_METRIC_MAP = {
+  hr: "HR", "home run": "HR", homer: "HR",
+  wins: "W", win: "W", pitcher: "W",
+  age: "Age", pos: "Pos", position: "Pos",
+  war: "WAR"
 };
 
 const STANDBY_DATA = {
@@ -277,6 +278,83 @@ function renderSpaceTable() {
   $("statsBody").innerHTML = '<table class="stats-tbl"><thead><tr><th>Vehicle Framework</th><th>Target Flight / Mission Goal</th><th>Facility Status</th></tr></thead><tbody><tr><td><strong>Starship Flight 5</strong></td><td>Integrated Booster Recovery Catch</td><td>Flight Complete Node</td></tr><tr><td><strong>Starship Flight 6</strong></td><td>Atmospheric Profile Assessment & Catch refinement</td><td>Production Assembly Active</td></tr><tr><td><strong>Falcon 9 (SpaceX Core)</strong></td><td>Commercial Payload & Next-Gen Satellite Arrays</td><td>Continuous Operational Fleet</td></tr></tbody></table>';
 }
 
+/* ============================================================
+   UNIVERSAL DYNAMIC MATRIX EXTRACTION LOGIC
+   Instead of hardcoded strings, it runs data intersections.
+   ============================================================ */
+function handleSearch(query) {
+  if(!query.trim()) return; const ans = $("aiAnswer"); ans.classList.add("visible");
+  ans.innerHTML = '<div class="ai-thinking">Scanning Dynamic Cell Registration Map...</div>';
+  
+  setTimeout(() => {
+    const q = query.toLowerCase().trim();
+    let output = "";
+
+    /* SECTION 1: SEARCH DYNAMIC CARDINALS DATA AT THE CELL-LEVEL */
+    let handledMlbStat = false;
+    if (statsData) {
+      let targetedMetric = null;
+      for (const [phrase, columnKey] of Object.entries(STATS_METRIC_MAP)) {
+        if (q.includes(phrase)) { targetedMetric = columnKey; break; }
+      }
+
+      /* Core Cell Calculation logic: Scan rows for specific metrics or individual players */
+      if (targetedMetric) {
+        if (q.includes("leader") || q.includes("leads") || q.includes("most") || q.includes("highest")) {
+          let bestVal = -1, bestPlayer = "Unknown";
+          const sheetsToScan = ["Batting", "Cardinals_Pitching"];
+          sheetsToScan.forEach(s => {
+            (statsData[s] || []).forEach(row => {
+              if (row.Player && row.Player !== "Team Totals" && row[targetedMetric] !== undefined) {
+                let v = parseFloat(row[targetedMetric]);
+                if (!isNaN(v) && (targetedMetric === "W" || targetedMetric === "HR" || targetedMetric === "WAR" ? v > bestVal : false)) {
+                  bestVal = v; bestPlayer = row.Player;
+                }
+              }
+            });
+          });
+          output = `<strong>Data Core Calculation [Metric: Max_${targetedMetric}]:</strong> The roster leader is <strong>${bestPlayer}</strong> tracking a metric performance score of <strong>${bestVal}</strong>.`;
+          handledMlbStat = true;
+        } else {
+          /* Check if they asked for a specific player's row property value */
+          let foundRow = null;
+          ["Batting", "Cardinals_Pitching", "40Man"].forEach(s => {
+            (statsData[s] || []).forEach(row => {
+              if (row.Player && q.includes(row.Player.toLowerCase())) { foundRow = row; }
+            });
+          });
+          if (foundRow) {
+            output = `<strong>Data Core Row-Scan [Player: ${foundRow.Player}]:</strong> Cell extraction for **${targetedMetric}** returns a record value of <strong>${foundRow[targetedMetric] ?? 'Unavailable'}</strong>.`;
+            handledMlbStat = true;
+          }
+        }
+      } else if (q.includes("40-man") || q.includes("roster") || q.includes("count")) {
+        output = `<strong>Data Core Row-Scan [Roster Size]:</strong> The local active 40-Man matrix framework contains **${(statsData["40Man"] || []).length}** indexed profile lines.`;
+        handledMlbStat = true;
+      }
+    }
+
+    /* SECTION 2: REGISTRY DATA SCAN (FOR NASCAR, SPACEX, NFL, AND FRONT OFFICE) */
+    if (!handledMlbStat) {
+      let matchedEntry = null;
+      for (let i = 0; i < UNIVERSAL_REGISTRY.length; i++) {
+        const entry = UNIVERSAL_REGISTRY[i];
+        const match = entry.keys.some(k => q.includes(k));
+        if (match) { matchedEntry = entry; break; }
+      }
+
+      if (matchedEntry) {
+        output = `<strong>System Matrix Lookup [${matchedEntry.label}]:</strong> ${matchedEntry.property}: <strong>${matchedEntry.value}</strong>.`;
+      } else {
+        /* Context Fallback if token lookup boundary is breached */
+        output = `<strong>Matrix Indexer [Intent: Unresolved]:</strong> Query parameters for "${query}" do not match a row-token or metric-column entry in the registry map. Refine your query.`;
+      }
+    }
+
+    ans.innerHTML = output;
+  }, 400);
+}
+
 $("hubNav").addEventListener("click", e => {
   const b = e.target.closest(".hub-btn"); if(!b) return;
   document.querySelectorAll(".hub-btn").forEach(x=>x.classList.remove("active"));
@@ -292,123 +370,6 @@ $("statsTabs").addEventListener("click", e => {
   if(currentLeague === "mlb") renderMlbTable();
   if(currentLeague === "nascar") renderNascarTable();
 });
-
-
-/* ============================================================
-   TOKENIZED MATRIX INTELLIGENCE ROUTER
-   Extracts intent and maps directly to Knowledge Base Objects.
-   ============================================================ */
-function handleSearch(query) {
-  if(!query.trim()) return; const ans = $("aiAnswer"); ans.classList.add("visible");
-  ans.innerHTML = '<div class="ai-thinking">Executing Matrix Query Extraction Engine...</div>';
-  
-  setTimeout(() => {
-    const q = query.toLowerCase().trim();
-    let responseHtml = "";
-
-    /* 1. BROAD SEGMENT DETERMINATION TO ASSIGN THE MAPPED SUBSYSTEM */
-    let system = currentLeague;
-    if (q.includes("cardinals") || q.includes("baseball") || q.includes("hr") || q.includes("pitching")) system = "mlb";
-    if (q.includes("commanders") || q.includes("washington") || q.includes("nfl") || q.includes("radio")) system = "nfl";
-    if (q.includes("nascar") || q.includes("driver") || q.includes("hamlin") || q.includes("gibbs") || q.includes("larson") || q.includes("speedway") || q.includes("martinsville") || q.includes("wwt") || q.includes("#")) system = "nascar";
-    if (q.includes("spacex") || q.includes("starship") || q.includes("launch") || q.includes("flight") || q.includes("booster") || q.includes("falcon")) system = "space";
-
-    /* ================= SYSTEM LAYER: NFL NETWORK ROUTER ================= */
-    if (system === "nfl") {
-      const db = KNOWLEDGE_BASE.nfl;
-      if (q.includes("when") || q.includes("play") || q.includes("schedule") || q.includes("date")) {
-        responseHtml = `<strong>NFL Node [Intent: Schedule]:</strong> ${db.schedule}`;
-      } else if (q.includes("rival") || q.includes("cowboys") || q.includes("eagles")) {
-        responseHtml = `<strong>NFL Node [Intent: Entity_Lookup]:</strong> ${db.rivals}`;
-      } else if (q.includes("radio") || q.includes("broadcast") || q.includes("frequency") || q.includes("fm")) {
-        responseHtml = `<strong>NFL Node [Intent: Audio_Relay]:</strong> ${db.radio}`;
-      } else {
-        responseHtml = `<strong>NFL Node [Intent: Standings_Projection]:</strong> ${db.standings}`;
-      }
-    }
-
-    /* ================= SYSTEM LAYER: NASCAR OBJECT PARSER ================= */
-    else if (system === "nascar") {
-      const db = KNOWLEDGE_BASE.nascar;
-      
-      /* Intent A: Driver Profile Parsing via Number or Name Extraction */
-      let targetNumber = null;
-      if (q.includes("54") || q.includes("ty") || q.includes("gibbs")) targetNumber = "54";
-      else if (q.includes("11") || q.includes("denny") || q.includes("hamlin")) targetNumber = "11";
-      else if (q.includes("5") || q.includes("larson") || q.includes("kyle")) targetNumber = "5";
-
-      /* Intent B: Track Geometry Parsing via Entity Extraction */
-      let targetTrack = null;
-      if (q.includes("martinsville")) targetTrack = "martinsville";
-      else if (q.includes("wwt") || q.includes("world wide") || q.includes("technology")) targetTrack = "wwt";
-      else if (q.includes("daytona")) targetTrack = "daytona";
-
-      if (targetNumber) {
-        const d = db.drivers[targetNumber];
-        if (q.includes("chief") || q.includes("crew")) {
-          responseHtml = `<strong>NASCAR Matrix [Intent: Driver_CrewChief]:</strong> Driver **${d.name}** (#${targetNumber}) works directly with Crew Chief **${d.chief}** within the ${d.team} infrastructure frame.`;
-        } else if (q.includes("points") || q.includes("rank") || q.includes("wins") || q.includes("standings")) {
-          responseHtml = `<strong>NASCAR Matrix [Intent: Driver_Standings]:</strong> **${d.name}** ranks with **${d.points} total points** and **${d.wins} structural season wins**.`;
-        } else {
-          responseHtml = `<strong>NASCAR Matrix [Intent: Driver_Profile]:</strong> Identity lookup: **${d.name}** | Car: **#${targetNumber}** | Team: **${d.team}** | Crew Chief: **${d.chief}**.`;
-        }
-      } else if (targetTrack) {
-        const t = db.tracks[targetTrack];
-        responseHtml = `<strong>NASCAR Matrix [Intent: Track_Geometry]:</strong> Real data lookup for **${t.name}**: Path geometry tracks exactly at **${t.length}** wrapped in a **${t.layout}**.`;
-      } else {
-        responseHtml = `<strong>NASCAR Matrix [Intent: System_Fallback]:</strong> Scanning database parameters. Kyle Larson leads total frames. Refine search query parameters to extract specific driver objects or circuit track profiles.`;
-      }
-    }
-
-    /* ================= SYSTEM LAYER: SPACEX TELEMETRY MANIFEST ROUTER ================= */
-    else if (system === "space") {
-      const db = KNOWLEDGE_BASE.space;
-
-      /* Segment Intent: Commercial Manifest vs Experimental Starship Framework */
-      const isStarship = q.includes("starship") || q.includes("flight") || q.includes("5") || q.includes("6") || q.includes("booster") || q.includes("catch");
-      const isTimelineQuery = q.includes("when") || q.includes("next") || q.includes("date") || q.includes("window") || q.includes("schedule");
-
-      if (isTimelineQuery) {
-        if (isStarship) {
-          const l = db.launches.starship;
-          responseHtml = `<strong>SpaceX Launchwatch [Intent: Starship_Timeline]:</strong> Vehicle: **${l.vehicle}** | Target Window: **${l.next_date}** | Primary Operational Goal: **${l.payload}** | Status: **${l.status}**.`;
-        } else {
-          const l = db.launches.commercial;
-          responseHtml = `<strong>SpaceX Launchwatch [Intent: Commercial_Timeline]:</strong> Vehicle: **${l.vehicle}** | Next Verified Launch Profile: **${l.next_date}** | Core Manifest Payload: **${l.payload}** | Status: **${l.status}**.`;
-        }
-      } else if (q.includes("flight 5") || q.includes("goal")) {
-        responseHtml = `<strong>SpaceX Launchwatch [Intent: Mission_Log]:</strong> ${db.milestones.flight5}`;
-      } else if (q.includes("flight 6") || q.includes("assembly") || q.includes("status")) {
-        responseHtml = `<strong>SpaceX Launchwatch [Intent: Mission_Log]:</strong> ${db.milestones.flight6}`;
-      } else if (q.includes("booster") || q.includes("catch") || q.includes("tower")) {
-        responseHtml = `<strong>SpaceX Launchwatch [Intent: Infrastructure_Profile]:</strong> Mechazilla launchpad recovery arrays verified. Ground control towers are cleared for back-to-back testing frames.`;
-      } else {
-        responseHtml = `<strong>SpaceX Launchwatch [Intent: System_Fallback]:</strong> Telemetry index online. Broad parameters parsed. Ask specific timeline queries like 'when is next launch' or explicit logs like 'Flight 5 goals'.`;
-      }
-    }
-
-    /* ================= SYSTEM LAYER: BASEBALL REFRESH MATRIX ================= */
-    else {
-      if (!statsData) { responseHtml = "Local data matrix initializing. Re-run query shortly."; }
-      else {
-        if (q.includes("pitching wins") || q.includes("most wins") || (q.includes("wins") && q.includes("pitcher"))) {
-          const pitchers = statsData["Cardinals_Pitching"] || []; const valid = pitchers.filter(p => p.Player && p.Player !== "Team Totals" && !isNaN(parseFloat(p.W)));
-          if (valid.length) { valid.sort((a, b) => parseFloat(b.W) - parseFloat(a.W)); responseHtml = `<strong>Cardinals Core [Intent: Stat_Leader]:</strong> Dynamic calculation: Pitching wins leader is <strong>${valid[0].Player}</strong> at <strong>${valid[0].W}-${valid[0].L}</strong>.`; }
-        } else if (q.includes("leader") || q.includes("leads") || q.includes("most hr") || q.includes("home run") || q.includes("hr")) {
-          const batters = statsData["Batting"] || []; const valid = batters.filter(b => b.Player && b.Player !== "Team Totals" && !isNaN(parseFloat(b.HR)));
-          if (valid.length) { valid.sort((a, b) => parseFloat(b.HR) - parseFloat(a.HR)); responseHtml = `<strong>Cardinals Core [Intent: Stat_Leader]:</strong> Dynamic calculation: Home run leader is <strong>${valid[0].Player}</strong> with <strong>${valid[0].HR} HR</strong>.`; }
-        } else if (q.includes("40-man") || q.includes("roster") || q.includes("count")) {
-          const roster = statsData["40Man"] || []; responseHtml = `<strong>Cardinals Core [Intent: Array_Length]:</strong> Active 40-Man array context has initialized ${roster.length} standard profile rows.`;
-        } else if (q.includes("division") || q.includes("alignment")) {
-          responseHtml = `<strong>Cardinals Core [Intent: Structural_Matrix]:</strong> National League Central layout: St. Louis Cardinals, Chicago Cubs, Milwaukee Brewers, Cincinnati Reds, Pittsburgh Pirates.`;
-        } else {
-          responseHtml = `<strong>Cardinals Core [Intent: Fallback]:</strong> Context query parsed. Ask structural metrics like 'HR leaders' or '40-man count'.`;
-        }
-      }
-    }
-    ans.innerHTML = responseHtml;
-  }, 400);
-}
 
 $("aiBtn").addEventListener("click", () => handleSearch($("aiInput").value));
 $("aiInput").addEventListener("keypress", (e) => { if (e.key === "Enter") { e.preventDefault(); handleSearch($("aiInput").value); } });
