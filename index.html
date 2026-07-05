@@ -115,7 +115,7 @@
   
   <footer>
     <div>Systems Environment: <span class="g">ESPN API Core</span> · <span class="g">Local B-Ref JSON Array</span>.</div>
-    <div>Sports AI Hub Platform v4.0 · High Density Data Frame</div>
+    <div>© 2026 Roderick Grimes. All rights reserved.</div>
   </footer>
 </div>
 
@@ -290,13 +290,45 @@ function handleSearch(query) {
   ans.innerHTML = '<div class="ai-thinking">Scanning Strategic Infrastructure Framework...</div>';
   setTimeout(() => {
     const q = query.toLowerCase().trim(); let responseHtml = "";
-    if (q.includes("commanders") || q.includes("washington") || q.includes("nfl") || q.includes("play") || q.includes("standings")) {
-      responseHtml = `<strong>NFL Core:</strong> Monitoring Washington Commanders dataset configurations. NFC East projections rank the roster highly for the 2026 season framework. Primary target rivals remain the Dallas Cowboys and Philadelphia Eagles. Local radio relays route seamlessly through assigned regional networks.`;
-    } else if (q.includes("nascar") || q.includes("driver") || q.includes("gibbs") || q.includes("speedway") || q.includes("martinsville") || q.includes("wwt") || q.includes("milestones")) {
-      responseHtml = `<strong>NASCAR Matrix:</strong> Driver Ty Gibbs maps directly to the Joe Gibbs Racing stable. Track geometry profiles: Martinsville Speedway is locked precisely at 0.526 miles (paperclip framework). World Wide Technology Raceway logs at 1.250 miles egg-shape oval layout. Kyle Larson leads the active Cup standings frame.`;
-    } else if (q.includes("starship") || q.includes("spacex") || q.includes("launch") || q.includes("flight") || q.includes("booster")) {
-      responseHtml = `<strong>SpaceX Launchwatch:</strong> Starship testing matrices active. Flight 5 successfully integrated full launcher recovery catch mechanics at the launchpad tower nodes. Flight 6 parameters are updated for atmospheric profile assessment. Booster catch structures are cleared for consecutive test frames.`;
-    } else {
+    
+    /* ================= NFL TARGET ROUTING ================= */
+    if (q.includes("commanders") || q.includes("washington") || q.includes("nfl") || q.includes("play") || q.includes("standings") || q.includes("rival") || q.includes("frequency") || q.includes("radio")) {
+      if (q.includes("play") || q.includes("when")) {
+        responseHtml = `<strong>NFL Core:</strong> The Washington Commanders 2026 schedule parameters are active. Upcoming match configurations and kickoff timelines are refreshed weekly.`;
+      } else if (q.includes("rival")) {
+        responseHtml = `<strong>NFL Core:</strong> Primary division target rivals are flagged as the **Dallas Cowboys** and **Philadelphia Eagles** within the NFC East structural layout.`;
+      } else if (q.includes("radio") || q.includes("frequency")) {
+        responseHtml = `<strong>NFL Core:</strong> Regional audio relays are assigned. Local broadcast streams route through standard regional network frequencies.`;
+      } else {
+        responseHtml = `<strong>NFL Core:</strong> Monitoring Washington Commanders dataset configurations. NFC East projections rank the roster highly for the 2026 season framework.`;
+      }
+    } 
+    /* ================= NASCAR TARGET ROUTING ================= */
+    else if (q.includes("nascar") || q.includes("driver") || q.includes("gibbs") || q.includes("speedway") || q.includes("martinsville") || q.includes("wwt") || q.includes("milestones")) {
+      if (q.includes("martinsville") || q.includes("length")) {
+        responseHtml = `<strong>NASCAR Matrix:</strong> **Martinsville Speedway** geometry is verified and locked precisely at **0.526 miles** using a paperclip short-track framework.`;
+      } else if (q.includes("wwt") || q.includes("track profile") || q.includes("world wide")) {
+        responseHtml = `<strong>NASCAR Matrix:</strong> **World Wide Technology Raceway** profile is logged at **1.250 miles** utilizing an egg-shape oval layout.`;
+      } else if (q.includes("gibbs") || q.includes("milestones")) {
+        responseHtml = `<strong>NASCAR Matrix:</strong> Driver **Ty Gibbs** maps directly to the Joe Gibbs Racing stable. Active milestones track continuous career progress metrics.`;
+      } else {
+        responseHtml = `<strong>NASCAR Matrix:</strong> Cup Series telemetry stream online. Kyle Larson currently leads the active driver points standing frame.`;
+      }
+    } 
+    /* ================= SPACEX TARGET ROUTING ================= */
+    else if (q.includes("starship") || q.includes("spacex") || q.includes("launch") || q.includes("flight") || q.includes("booster") || q.includes("window") || q.includes("catch")) {
+      if (q.includes("flight 5") || q.includes("goals")) {
+        responseHtml = `<strong>SpaceX Launchwatch:</strong> **Starship Flight 5** successfully completed its target goal, integrating a full mechanical launcher booster recovery catch at the launchpad tower nodes.`;
+      } else if (q.includes("flight 6") || q.includes("assembly")) {
+        responseHtml = `<strong>SpaceX Launchwatch:</strong> **Starship Flight 6** parameters are updated for atmospheric profile assessment and structural catch refinement. Production assembly remains active.`;
+      } else if (q.includes("booster") || q.includes("catch")) {
+        responseHtml = `<strong>SpaceX Launchwatch:</strong> Mechazilla tower launchpad catch parameters are verified. Systems cleared for consecutive launcher recovery frames.`;
+      } else {
+        responseHtml = `<strong>SpaceX Launchwatch:</strong> Starship test flight parameters are refreshed weekly. Live countdown windows and pad check nodes are fully active.`;
+      }
+    } 
+    /* ================= CARDINALS TARGET ROUTING ================= */
+    else {
       if (!statsData) { responseHtml = "Local data matrix initializing. Re-run query shortly."; }
       else {
         if (q.includes("pitching wins") || q.includes("most wins") || (q.includes("wins") && q.includes("pitcher"))) {
@@ -310,7 +342,7 @@ function handleSearch(query) {
         } else if (q.includes("division") || q.includes("alignment")) {
           responseHtml = `<strong>Cardinals Data Core:</strong> National League Central structural matrix locked: St. Louis Cardinals, Chicago Cubs, Milwaukee Brewers, Cincinnati Reds, Pittsburgh Pirates.`;
         } else {
-          responseHtml = `<strong>Sports Hub Intelligence:</strong> Parsed query context for "${query}". Re-route your search query parameters to look for specific metrics like 'NASCAR drivers' or 'Cardinals HR leaders'.`;
+          responseHtml = ` ================= Dynamic Calculations Ready ================= `;
         }
       }
     }
