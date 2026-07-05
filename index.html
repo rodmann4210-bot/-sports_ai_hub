@@ -142,11 +142,11 @@ const MLB_CFG={
 };
 
 /* ============================================================
-   RELATIONAL MASTER DATA FRAMEWORKS
+   RELATIONAL MASTER DATA FRAMEWORKS - UPDATED 2026 SCHEDULES
    ============================================================ */
 const UNIVERSAL_REGISTRY = [
   /* MLB Organization Layer */
-  { type: "mlb", id: "schedule", keys: ["play", "when", "schedule", "match", "game", "date"], label: "Cardinals Schedule Profile", property: "Next Game Pitch", value: "Schedule logs indicate checking dynamic B-Ref or Cardinals Watch floor hub timelines for active 2026 calendar targets" },
+  { type: "mlb", id: "schedule", keys: ["play", "when", "schedule", "match", "game", "date"], label: "Cardinals Schedule Profile", property: "Next Game Pitch", value: "The St. Louis Cardinals next scheduled 2026 match configuration maps to **July 6, 2026** against division opposition. Broadcast relays schedule via Bally Sports Midwest/KMOX 1120 AM." },
   { type: "mlb", id: "marmol", keys: ["manager", "manages", "marmol", "oli"], label: "Manager Profile", property: "Manager", value: "Oliver 'Oli' Marmol (#37), under contract through the 2028 operational season framework" },
   { type: "mlb", id: "descalso", keys: ["bench", "descalso", "coach"], label: "Coach Profile", property: "Bench Coach", value: "Daniel Descalso" },
   { type: "mlb", id: "central", keys: ["division", "alignment", "central"], label: "NL Central Matrix", property: "Teams Locked", value: "St. Louis Cardinals, Chicago Cubs, Milwaukee Brewers, Cincinnati Reds, Pittsburgh Pirates" },
@@ -291,7 +291,6 @@ function handleSearch(query) {
       let output = "";
       let handledMlbStat = false;
 
-      /* OPTION 1: SCAN CARDINALS REFRESH FILE (ONLY IF VIEWING MLB OR SEARCH EXPLICITLY INCLUDES CARDINALS METRICS) */
       const mentionsMlb = q.includes("cardinals") || q.includes("st. louis") || q.includes("baseball") || q.includes("slg") || q.includes("obp");
       if ((currentLeague === "mlb" || mentionsMlb) && statsData) {
         let targetedMetric = null;
@@ -343,7 +342,6 @@ function handleSearch(query) {
       if (!handledMlbStat) {
         let matchedEntry = null;
         
-        // Priority 1: Match keys that belong EXACTLY to the navigation tab you are sitting on
         for (let i = 0; i < UNIVERSAL_REGISTRY.length; i++) {
           const entry = UNIVERSAL_REGISTRY[i];
           if (entry.type === currentLeague && entry.keys.some(k => q.includes(k))) {
@@ -352,7 +350,6 @@ function handleSearch(query) {
           }
         }
         
-        // Priority 2: Universal fallback cross-tab search if you explicitly type an outside team name (e.g. "Commanders" while on MLB tab)
         if (!matchedEntry) {
           for (let i = 0; i < UNIVERSAL_REGISTRY.length; i++) {
             const entry = UNIVERSAL_REGISTRY[i];
