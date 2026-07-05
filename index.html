@@ -304,8 +304,10 @@ function handleSearch(query) {
       }
     } 
     /* ================= NASCAR TARGET ROUTING ================= */
-    else if (q.includes("nascar") || q.includes("driver") || q.includes("gibbs") || q.includes("speedway") || q.includes("martinsville") || q.includes("wwt") || q.includes("milestones")) {
-      if (q.includes("martinsville") || q.includes("length")) {
+    else if (q.includes("nascar") || q.includes("driver") || q.includes("gibbs") || q.includes("speedway") || q.includes("martinsville") || q.includes("wwt") || q.includes("milestones") || q.includes("hamlin") || q.includes("denny") || q.includes("crew chief") || q.includes("gabehart")) {
+      if (q.includes("hamlin") || q.includes("denny") || q.includes("crew chief") || q.includes("gabehart")) {
+        responseHtml = `<strong>NASCAR Matrix:</strong> Driver **Denny Hamlin** maps to Joe Gibbs Racing in the #11 car. His veteran crew chief is ** Chris Gabehart**, managing active track adjustments.`;
+      } else if (q.includes("martinsville") || q.includes("length")) {
         responseHtml = `<strong>NASCAR Matrix:</strong> **Martinsville Speedway** geometry is verified and locked precisely at **0.526 miles** using a paperclip short-track framework.`;
       } else if (q.includes("wwt") || q.includes("track profile") || q.includes("world wide")) {
         responseHtml = `<strong>NASCAR Matrix:</strong> **World Wide Technology Raceway** profile is logged at **1.250 miles** utilizing an egg-shape oval layout.`;
@@ -329,8 +331,7 @@ function handleSearch(query) {
     } 
     /* ================= CARDINALS TARGET ROUTING ================= */
     else {
-      if (!statsData) { responseHtml = "Local data matrix initializing. Re-run query shortly."; }
-      else {
+      if (currentLeague === "mlb" && statsData) {
         if (q.includes("pitching wins") || q.includes("most wins") || (q.includes("wins") && q.includes("pitcher"))) {
           const pitchers = statsData["Cardinals_Pitching"] || []; const valid = pitchers.filter(p => p.Player && p.Player !== "Team Totals" && !isNaN(parseFloat(p.W)));
           if (valid.length) { valid.sort((a, b) => parseFloat(b.W) - parseFloat(a.W)); responseHtml = `<strong>Cardinals Data Core:</strong> Team pitching wins leader is <strong>${valid[0].Player}</strong> at <strong>${valid[0].W}-${valid[0].L}</strong>.`; }
@@ -342,7 +343,18 @@ function handleSearch(query) {
         } else if (q.includes("division") || q.includes("alignment")) {
           responseHtml = `<strong>Cardinals Data Core:</strong> National League Central structural matrix locked: St. Louis Cardinals, Chicago Cubs, Milwaukee Brewers, Cincinnati Reds, Pittsburgh Pirates.`;
         } else {
-          responseHtml = ` ================= Dynamic Calculations Ready ================= `;
+          responseHtml = `<strong>Cardinals Data Core:</strong> Context query parsed. Ask about specific stats records like 'HR leaders' or 'pitching wins'.`;
+        }
+      } else {
+        /* Smarter, context-aware fallback based on which tab you are sitting on */
+        if (currentLeague === "nfl") {
+          responseHtml = `<strong>NFL Core:</strong> Unmapped context parameters for "${query}". Try searching active targets like 'Commanders schedule' or 'NFC East rivals'.`;
+        } else if (currentLeague === "nascar") {
+          responseHtml = `<strong>NASCAR Matrix:</strong> Unmapped context parameters for "${query}". Try searching circuit targets like 'Ty Gibbs', 'Denny Hamlin', or 'Martinsville track length'.`;
+        } else if (currentLeague === "space") {
+          responseHtml = `<strong>SpaceX Launchwatch:</strong> Unmapped context parameters for "${query}". Try searching mission targets like 'Flight 5 goals' or 'Flight 6 windows'.`;
+        } else {
+          responseHtml = `<strong>Sports Hub Intelligence:</strong> Parsed parameter space for "${query}". Re-route your parameters to search explicit circuit targets.`;
         }
       }
     }
