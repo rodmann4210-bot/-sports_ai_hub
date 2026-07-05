@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght=300;400;500;600;700&family=Barlow:wght=400;500;600;700&family=Barlow+Condensed:wght=500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{--burgundy:#b3122e;--burgundy-deep:#7a0c1f;--burgundy-bright:#c41e3a;--gold:#f3c14b;--gold-dim:#c79a3a;--bg:#0a0f1c;--bg-2:#0f1526;--panel:#141b30;--panel-2:#18203a;--ink:#f3ece0;--muted:#a9b4c8;--muted-2:#6f7b93;--red:#ff8275;--green:#5fb47a;--line:rgba(243,193,75,.22);--line-soft:rgba(243,193,75,.10);--glow1:rgba(196,30;58,.42);--glow2:rgba(12,26,48,.6);--stripe:rgba(243,193,75,.022)}
+  :root{--burgundy:#b3122e;--burgundy-deep:#7a0c1f;--burgundy-bright:#c41e3a;--gold:#f3c14b;--gold-dim:#c79a3a;--bg:#0a0f1c;--bg-2:#0f1526;--panel:#141b30;--panel-2:#18203a;--ink:#f3ece0;--muted:#a9b4c8;--muted-2:#6f7b93;--red:#ff8275;--green:#5fb47a;--line:rgba(243,193,75,.22);--line-soft:rgba(243,193,75,.10);--glow1:rgba(196,30,58,.42);--glow2:rgba(12,26,48,.6);--stripe:rgba(243,193,75,.022)}
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;-webkit-font-smoothing:antialiased}
   body{min-height:100vh;background:radial-gradient(1200px 600px at 80% -10%,var(--glow1),transparent 60%),radial-gradient(900px 500px at -10% 110%,var(--glow2),transparent 55%),repeating-linear-gradient(135deg,var(--stripe) 0 2px,transparent 2px 26px),var(--bg);background-attachment:fixed;padding:0 0 48px}
@@ -128,7 +128,7 @@ const $=id=>document.getElementById(id);
 const STATS_JSON="https://raw.githubusercontent.com/rodmann4210-bot/cardinals_watch/main/cardinals_stats.json";
 
 const LEAGUE_CHIPS = {
-  mlb: ["Who leads the team in HR?", "Who manages the team?", "Show active 40-man roster count"],
+  mlb: ["Who leads the team in HR?", "Who leads the team in RBIs?", "Who manages the team?"],
   nfl: ["When do the Commanders play?", "Show radio frequency", "Who is the primary division rival?"],
   nascar: ["Who drives car #11?", "Who is Denny Hamlin's crew chief?", "Show Martinsville track length"],
   space: ["When is the next Falcon 9 launch?", "Show Starship Flight 5 goals", "Flight 6 facility status"]
@@ -141,40 +141,31 @@ const MLB_CFG={
   fortyMan:{sheet:'40Man',cols:['Rk','Uni','Player','Age','B','T','Ht','Wt','1stYr']}
 };
 
-/* ============================================================
-   RELATIONAL MASTER DATA FRAMEWORKS
-   We treat these as clean database rows and columns.
-   ============================================================ */
+/* Relational Master Standby Objects */
 const UNIVERSAL_REGISTRY = [
-  /* MLB Organization Layer */
   { type: "mlb", id: "marmol", keys: ["manager", "manages", "marmol", "oli"], label: "Manager Profile", property: "Manager", value: "Oliver 'Oli' Marmol (#37), under contract through the 2028 operational season framework" },
   { type: "mlb", id: "descalso", keys: ["bench", "descalso", "coach"], label: "Coach Profile", property: "Bench Coach", value: "Daniel Descalso" },
   { type: "mlb", id: "central", keys: ["division", "alignment", "central"], label: "NL Central Matrix", property: "Teams Locked", value: "St. Louis Cardinals, Chicago Cubs, Milwaukee Brewers, Cincinnati Reds, Pittsburgh Pirates" },
-
-  /* NFL Organization Layer */
   { type: "nfl", id: "schedule", keys: ["play", "when", "schedule", "match", "date"], label: "Commanders Schedule", property: "Next Kickoff", value: "September 10, 2026 against NFC East division opposition" },
   { type: "nfl", id: "rivals", keys: ["rival", "cowboys", "eagles", "opposition"], label: "NFC East Grid", property: "Primary Competitors", value: "Dallas Cowboys and Philadelphia Eagles" },
   { type: "nfl", id: "radio", keys: ["radio", "frequency", "broadcast", "fm", "station"], label: "Audio Relay Affiliation", property: "Broadcast Relay", value: "BIG 100.3 FM Regional Network" },
-
-  /* NASCAR Core Matrix */
   { type: "nascar", id: "11", keys: ["11", "denny", "hamlin"], label: "Denny Hamlin Profile", property: "Driver Info", value: "Car: #11 | Team: Joe Gibbs Racing | Crew Chief: Chris Gabehart | Standing: 2nd (642 pts, 2 wins)" },
   { type: "nascar", id: "54", keys: ["54", "ty", "gibbs"], label: "Ty Gibbs Profile", property: "Ty Gibbs Info", value: "Car: #54 | Team: Joe Gibbs Racing | Crew Chief: Chris Gayle | Standing: 3rd (598 pts, 1 win)" },
   { type: "nascar", id: "5", keys: ["5", "kyle", "larson"], label: "Kyle Larson Profile", property: "Driver Info", value: "Car: #5 | Team: Hendrick Motorsports | Crew Chief: Cliff Daniels | Standing: 1st (685 pts, 3 wins)" },
   { type: "nascar", id: "martinsville", keys: ["martinsville", "paperclip"], label: "Martinsville Profile", property: "Track Geometry", value: "Length: 0.526 Miles | Configuration: Paperclip Short-Track Layout" },
   { type: "nascar", id: "wwt", keys: ["wwt", "world wide", "gateway"], label: "WWT Raceway Profile", property: "Track Geometry", value: "Length: 1.250 Miles | Configuration: Egg-Shape Oval Layout" },
-
-  /* SpaceX Telemetry Manifest */
   { type: "space", id: "falcon", keys: ["falcon", "commercial", "satellite", "spacex next"], label: "Falcon 9 Commercial Stream", property: "Next Mission Launch Profile", value: "Date: July 9, 2026 | Payload: Next-Gen Satellite Array Grid | Status: Pad Assembly Complete" },
   { type: "space", id: "flight5", keys: ["flight 5", "goal", "catch"], label: "Starship Flight 5 Log", property: "Mission Achievement", value: "Successfully executed full booster recovery mechanical catch utilizing the Mechazilla launchpad tower arms" },
   { type: "space", id: "flight6", keys: ["flight 6", "assembly", "status", "window"], label: "Starship Flight 6 Matrix", property: "Launch Target Profile", value: "Window: August 2026 Target | Focus: Upper-stage ignition maps & tower catch tolerances | Status: Production Assembly Active" }
 ];
 
-/* Dictionary maps generic questions to technical database abbreviations */
-const STAT_METRIC_MAP = {
-  hr: "HR", "home run": "HR", homer: "HR",
-  wins: "W", win: "W", pitcher: "W",
-  age: "Age", pos: "Pos", position: "Pos",
-  war: "WAR"
+/* Intelligent aliases translating natural phrases to direct table headers */
+const ALIASED_METRICS = {
+  "home run": "HR", "home runs": "HR", "homer": "HR", "homers": "HR",
+  "rbis": "RBI", "rbi": "RBI", "runs batted in": "RBI",
+  "wins": "W", "win": "W", "pitching wins": "W", "losses": "L", "loss": "L",
+  "batting average": "BA", "average": "BA", "hits": "H", "hit": "H",
+  "position": "Pos", "age": "Age", "war": "WAR"
 };
 
 const STANDBY_DATA = {
@@ -279,8 +270,7 @@ function renderSpaceTable() {
 }
 
 /* ============================================================
-   UNIVERSAL DYNAMIC MATRIX EXTRACTION LOGIC
-   Fully corrected from STATS variable error with Try/Catch protection.
+   TRUE ALGORITHMIC EXTRACTION ENGINE
    ============================================================ */
 function handleSearch(query) {
   if(!query.trim()) return; const ans = $("aiAnswer"); ans.classList.add("visible");
@@ -290,50 +280,64 @@ function handleSearch(query) {
     try {
       const q = query.toLowerCase().trim();
       let output = "";
-
-      /* SECTION 1: SEARCH DYNAMIC CARDINALS DATA AT THE CELL-LEVEL */
       let handledMlbStat = false;
+
       if (statsData) {
+        /* DYNAMIC LEVEL 1: Extract column metric from string text or mapping phrase */
         let targetedMetric = null;
-        for (const [phrase, columnKey] of Object.entries(STAT_METRIC_MAP)) {
-          if (q.includes(phrase)) { targetedMetric = columnKey; break; }
+        
+        // Scan for explicit column header matching (e.g., "RBI", "HR", "WAR", "ERA")
+        const allPossibleColumns = [...MLB_CFG.batting.cols, ...MLB_CFG.pitching.cols, ...MLB_CFG.fielding.cols];
+        for (let col of allPossibleColumns) {
+          if (q.includes(col.toLowerCase())) { targetedMetric = col; break; }
+        }
+        
+        // If not found directly, check translation alias mapping dictionary
+        if (!targetedMetric) {
+          for (const [phrase, columnKey] of Object.entries(ALIASED_METRICS)) {
+            if (q.includes(phrase)) { targetedMetric = columnKey; break; }
+          }
         }
 
+        /* DYNAMIC LEVEL 2: Calculate math boundaries directly out of the raw arrays */
         if (targetedMetric) {
           if (q.includes("leader") || q.includes("leads") || q.includes("most") || q.includes("highest")) {
-            let bestVal = -1, bestPlayer = "Unknown";
-            const sheetsToScan = ["Batting", "Cardinals_Pitching"];
+            let bestVal = -1, bestPlayer = "Unknown Location";
+            const sheetsToScan = ["Batting", "Cardinals_Pitching", "Cardinals_Fielding"];
+            
             sheetsToScan.forEach(s => {
               (statsData[s] || []).forEach(row => {
                 if (row.Player && row.Player !== "Team Totals" && row[targetedMetric] !== undefined) {
                   let v = parseFloat(row[targetedMetric]);
-                  if (!isNaN(v) && (targetedMetric === "W" || targetedMetric === "HR" || targetedMetric === "WAR" ? v > bestVal : false)) {
-                    bestVal = v; bestPlayer = row.Player;
+                  if (!isNaN(v)) {
+                    // Lower is better for ERA / WHIP, higher for counting metrics
+                    const lowerIsBetter = (targetedMetric === "ERA" || targetedMetric === "WHIP");
+                    if (bestVal === -1 || (lowerIsBetter ? v < bestVal : v > bestVal)) {
+                      bestVal = v; bestPlayer = row.Player;
+                    }
                   }
                 }
               });
             });
-            output = `<strong>Data Core Calculation [Metric: Max_${targetedMetric}]:</strong> The roster leader is <strong>${bestPlayer}</strong> tracking a metric performance score of <strong>${bestVal}</strong>.`;
+            output = `<strong>Dynamic Calculation Engine [Metric: ${targetedMetric} Leader]:</strong> Team leader is <strong>${bestPlayer}</strong> tracking an extracted value of <strong>${bestVal}</strong>.`;
             handledMlbStat = true;
           } else {
+            /* Scan rows to check if a specific player's structural cell was called */
             let foundRow = null;
-            ["Batting", "Cardinals_Pitching", "40Man"].forEach(s => {
+            ["Batting", "Cardinals_Pitching", "Cardinals_Fielding", "40Man"].forEach(s => {
               (statsData[s] || []).forEach(row => {
                 if (row.Player && q.includes(row.Player.toLowerCase())) { foundRow = row; }
               });
             });
             if (foundRow) {
-              output = `<strong>Data Core Row-Scan [Player: ${foundRow.Player}]:</strong> Cell extraction for **${targetedMetric}** returns a record value of <strong>${foundRow[targetedMetric] ?? 'Unavailable'}</strong>.`;
+              output = `<strong>Dynamic Data Cell Extraction [Player: ${foundRow.Player}]:</strong> Target attribute **${targetedMetric}** returns a recorded valuation of <strong>${foundRow[targetedMetric] ?? '—'}</strong>.`;
               handledMlbStat = true;
             }
           }
-        } else if (q.includes("40-man") || q.includes("roster") || q.includes("count")) {
-          output = `<strong>Data Core Row-Scan [Roster Size]:</strong> The local active 40-Man matrix framework contains **${(statsData["40Man"] || []).length}** indexed profile lines.`;
-          handledMlbStat = true;
         }
       }
 
-      /* SECTION 2: REGISTRY DATA SCAN (FOR NASCAR, SPACEX, NFL, AND FRONT OFFICE) */
+      /* DYNAMIC LEVEL 3: REGISTRY ROW MATRIX LOOKUP Fallback */
       if (!handledMlbStat) {
         let matchedEntry = null;
         for (let i = 0; i < UNIVERSAL_REGISTRY.length; i++) {
@@ -345,14 +349,13 @@ function handleSearch(query) {
         if (matchedEntry) {
           output = `<strong>System Matrix Lookup [${matchedEntry.label}]:</strong> ${matchedEntry.property}: <strong>${matchedEntry.value}</strong>.`;
         } else {
-          output = `<strong>Matrix Indexer [Intent: Unresolved]:</strong> Query parameters for "${query}" do not match a row-token or metric-column entry in the registry map. Refine your query.`;
+          output = `<strong>Matrix Indexer [Intent: Unresolved]:</strong> Query parameters for "${query}" do not match an automated column metric or system row token. Refine your query parameters.`;
         }
       }
 
       ans.innerHTML = output;
 
     } catch (err) {
-      /* Emergency Error Catch Intercept to break any unexpected runtime freezes */
       $("aiAnswer").innerHTML = `<div style="color:var(--red)"><strong>Matrix Extraction Intercept Error:</strong> ${err.message}. Core calculation reset.</div>`;
     }
   }, 400);
