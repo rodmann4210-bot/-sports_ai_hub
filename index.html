@@ -155,7 +155,7 @@ const LEAGUE_CHIPS = {
   space: [
     "Next Starship launch window", 
     "Show Starship Flight 5 goals", 
-    "Flight 6 assembly status",
+    "SpaceX commercial launch trackers",
     "Booster catch system parameters"
   ]
 };
@@ -209,7 +209,7 @@ async function loadLeagueEnvironment() {
     curPane = "nascarLeader"; renderNascarTable();
   }
   else if (currentLeague === "space") {
-    $("statsTabs").innerHTML = '<button class="stab active" data-pane="spaceMissions">Starship Orbital Testing Log</button>';
+    $("statsTabs").innerHTML = '<button class="stab active" data-pane="spaceMissions">Starship & SpaceX Core Testing Log</button>';
     curPane = "spaceMissions"; renderSpaceTable();
   }
   $("updated").textContent = "Updated " + new Date().toLocaleTimeString();
@@ -266,7 +266,7 @@ async function renderNascarTable() {
 }
 
 function renderSpaceTable() {
-  $("statsBody").innerHTML = '<table class="stats-tbl"><thead><tr><th>Vehicle Framework</th><th>Target Flight Goal</th><th>Facility Status</th></tr></thead><tbody><tr><td><strong>Starship Flight 5</strong></td><td>Integrated Booster Recovery Catch</td><td>Flight Complete Node</td></tr><tr><td><strong>Starship Flight 6</strong></td><td>Atmospheric Profile Assessment & Catch refinement</td><td>Production Assembly Active</td></tr></tbody></table>';
+  $("statsBody").innerHTML = '<table class="stats-tbl"><thead><tr><th>Vehicle Framework</th><th>Target Flight / Mission Goal</th><th>Facility Status</th></tr></thead><tbody><tr><td><strong>Starship Flight 5</strong></td><td>Integrated Booster Recovery Catch</td><td>Flight Complete Node</td></tr><tr><td><strong>Starship Flight 6</strong></td><td>Atmospheric Profile Assessment & Catch refinement</td><td>Production Assembly Active</td></tr><tr><td><strong>Falcon 9 (SpaceX Core)</strong></td><td>Commercial Payload & Next-Gen Satellite Arrays</td><td>Continuous Operational Fleet</td></tr></tbody></table>';
 }
 
 $("hubNav").addEventListener("click", e => {
@@ -306,7 +306,7 @@ function handleSearch(query) {
     /* ================= NASCAR TARGET ROUTING ================= */
     else if (q.includes("nascar") || q.includes("driver") || q.includes("gibbs") || q.includes("speedway") || q.includes("martinsville") || q.includes("wwt") || q.includes("milestones") || q.includes("hamlin") || q.includes("denny") || q.includes("crew chief") || q.includes("gabehart")) {
       if (q.includes("hamlin") || q.includes("denny") || q.includes("crew chief") || q.includes("gabehart")) {
-        responseHtml = `<strong>NASCAR Matrix:</strong> Driver **Denny Hamlin** maps to Joe Gibbs Racing in the #11 car. His veteran crew chief is ** Chris Gabehart**, managing active track adjustments.`;
+        responseHtml = `<strong>NASCAR Matrix:</strong> Driver **Denny Hamlin** maps to Joe Gibbs Racing in the #11 car. His veteran crew chief is **Chris Gabehart**, managing active track adjustments.`;
       } else if (q.includes("martinsville") || q.includes("length")) {
         responseHtml = `<strong>NASCAR Matrix:</strong> **Martinsville Speedway** geometry is verified and locked precisely at **0.526 miles** using a paperclip short-track framework.`;
       } else if (q.includes("wwt") || q.includes("track profile") || q.includes("world wide")) {
@@ -317,16 +317,20 @@ function handleSearch(query) {
         responseHtml = `<strong>NASCAR Matrix:</strong> Cup Series telemetry stream online. Kyle Larson currently leads the active driver points standing frame.`;
       }
     } 
-    /* ================= SPACEX TARGET ROUTING ================= */
-    else if (q.includes("starship") || q.includes("spacex") || q.includes("launch") || q.includes("flight") || q.includes("booster") || q.includes("window") || q.includes("catch")) {
+    /* ================= DISTINCT SPACEX COMMERCIAL LAUNCH ROUTING ================= */
+    else if (q.includes("spacex") && (q.includes("commercial") || q.includes("falcon") || q.includes("satellite") || q.includes("tracker"))) {
+      responseHtml = `<strong>SpaceX Launchwatch:</strong> Continuous commercial tracking enabled. High-rate Falcon 9 deployment cycles primarily log standard internet satellite and payload distribution parameters. Operational infrastructure nodes refresh deployment schedules weekly.`;
+    }
+    /* ================= DISTINCT STARSHIP TESTING ROUTING ================= */
+    else if (q.includes("starship") || q.includes("launch") || q.includes("flight") || q.includes("booster") || q.includes("window") || q.includes("catch")) {
       if (q.includes("flight 5") || q.includes("goals")) {
-        responseHtml = `<strong>SpaceX Launchwatch:</strong> **Starship Flight 5** successfully completed its target goal, integrating a full mechanical launcher booster recovery catch at the launchpad tower nodes.`;
+        responseHtml = `<strong>SpaceX Launchwatch (Starship):</strong> **Starship Flight 5** successfully completed its target goal, integrating a full mechanical launcher booster recovery catch at the launchpad tower nodes.`;
       } else if (q.includes("flight 6") || q.includes("assembly")) {
-        responseHtml = `<strong>SpaceX Launchwatch:</strong> **Starship Flight 6** parameters are updated for atmospheric profile assessment and structural catch refinement. Production assembly remains active.`;
+        responseHtml = `<strong>SpaceX Launchwatch (Starship):</strong> **Starship Flight 6** parameters are updated for atmospheric profile assessment and structural catch refinement. Production assembly remains active.`;
       } else if (q.includes("booster") || q.includes("catch")) {
-        responseHtml = `<strong>SpaceX Launchwatch:</strong> Mechazilla tower launchpad catch parameters are verified. Systems cleared for consecutive launcher recovery frames.`;
+        responseHtml = `<strong>SpaceX Launchwatch (Starship):</strong> Mechazilla tower launchpad catch parameters are verified. Systems cleared for consecutive launcher recovery frames.`;
       } else {
-        responseHtml = `<strong>SpaceX Launchwatch:</strong> Starship test flight parameters are refreshed weekly. Live countdown windows and pad check nodes are fully active.`;
+        responseHtml = `<strong>SpaceX Launchwatch (Starship):</strong> Starship heavy flight-testing matrices active. Development windows track sub-orbital and orbital launch logs out of Starbase nodes.`;
       }
     } 
     /* ================= CARDINALS TARGET ROUTING ================= */
@@ -346,13 +350,12 @@ function handleSearch(query) {
           responseHtml = `<strong>Cardinals Data Core:</strong> Context query parsed. Ask about specific stats records like 'HR leaders' or 'pitching wins'.`;
         }
       } else {
-        /* Smarter, context-aware fallback based on which tab you are sitting on */
         if (currentLeague === "nfl") {
           responseHtml = `<strong>NFL Core:</strong> Unmapped context parameters for "${query}". Try searching active targets like 'Commanders schedule' or 'NFC East rivals'.`;
         } else if (currentLeague === "nascar") {
           responseHtml = `<strong>NASCAR Matrix:</strong> Unmapped context parameters for "${query}". Try searching circuit targets like 'Ty Gibbs', 'Denny Hamlin', or 'Martinsville track length'.`;
         } else if (currentLeague === "space") {
-          responseHtml = `<strong>SpaceX Launchwatch:</strong> Unmapped context parameters for "${query}". Try searching mission targets like 'Flight 5 goals' or 'Flight 6 windows'.`;
+          responseHtml = `<strong>SpaceX Launchwatch:</strong> Unmapped context parameters for "${query}". Try searching mission targets like 'Falcon launches' or 'Starship Flight 5 goals'.`;
         } else {
           responseHtml = `<strong>Sports Hub Intelligence:</strong> Parsed parameter space for "${query}". Re-route your parameters to search explicit circuit targets.`;
         }
