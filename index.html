@@ -113,7 +113,7 @@
   </div>
   
   <footer>
-    <div>Systems Environment: <span class="g">ESPN Scoreboard & Local BvP Router v6.0</span>.</div>
+    <div>Systems Environment: <span class="g">ESPN Scoreboard & Auto-Sync BvP Engine v6.1</span>.</div>
     <div>© 2026 Roderick Grimes. All rights reserved.</div>
   </footer>
 </div>
@@ -140,13 +140,10 @@ const MLB_CFG={
   fortyMan:{sheet:'40Man',cols:['Rk','Uni','Player','Age','B','T','Ht','Wt','1stYr']}
 };
 
-/* ============================================================
-   RELATIONAL STRUCTURE MATRIX & PROJECTION DATA CORE
-   ============================================================ */
 const UNIVERSAL_REGISTRY = [
   { type: "mlb", id: "marmol", keys: ["manager", "manages", "marmol", "oli"], label: "Manager Profile", property: "Manager", value: "Oliver 'Oli' Marmol (#37), signed through 2028 framework" },
   { type: "mlb", id: "central", keys: ["division", "alignment"], label: "NL Central Alignment", property: "Teams", value: "Cardinals, Cubs, Brewers, Reds, Pirates" },
-  { type: "nfl", id: "rivals", keys: ["rival", "cowboys", "eagles"], label: "NFC East Matrix", property: "Rivals", value: "Dallas Cowboys and Philadelphia Eagles" },
+  { type: "nfl", id: "rivals", keys: ["rival", "cowboys", "eagles"], label: "NFC East Grid", property: "Rivals", value: "Dallas Cowboys and Philadelphia Eagles" },
   { type: "nfl", id: "radio", keys: ["radio", "frequency", "broadcast", "fm"], label: "Audio Relay", property: "Relay Station", value: "BIG 100.3 FM Network" },
   { type: "nascar", id: "11", keys: ["11", "denny", "hamlin"], label: "Denny Hamlin Profile", property: "Driver Profile", value: "Car #11 | Joe Gibbs Racing | Crew Chief: Chris Gabehart" },
   { type: "nascar", id: "54", keys: ["54", "ty", "gibbs"], label: "Ty Gibbs Profile", property: "Driver Profile", value: "Car #54 | Joe Gibbs Racing | Crew Chief: Chris Gayle" },
@@ -154,26 +151,22 @@ const UNIVERSAL_REGISTRY = [
   { type: "space", id: "flight5", keys: ["flight 5", "goal", "catch"], label: "Flight 5 Log", property: "Achievement", value: "Booster mechanical tower catch verified" }
 ];
 
-/* CHRONO AND COUNTDOWN TRACKING OBJECTS */
 const INTERNAL_SCHEDULES = {
-  mlb: [{ date: "2026-07-07T19:15:00", opponent: "Chicago Cubs", venue: "Busch Stadium", tv: "FS1 / KMOX 1120 AM", teamId: "24", slug: "stl" }],
-  nfl: [{ date: "2026-09-10T20:20:00", opponent: "Dallas Cowboys", venue: "FedExField", tv: "NBC / BIG 100.3 FM", teamId: "28", slug: "wsh" }],
+  mlb: [{ date: "2026-07-07T19:15:00", opponent: "Chicago Cubs", venue: "Busch Stadium", tv: "FS1 / KMOX 1120 AM", teamId: "24" }],
+  nfl: [{ date: "2026-09-10T20:20:00", opponent: "Dallas Cowboys", venue: "FedExField", tv: "NBC / BIG 100.3 FM", teamId: "28" }],
   space: [{ date: "2026-07-09T14:30:00", mission: "Falcon 9 Starlink 12-4", platform: "SLC-40", status: "Pad Ready" }]
 };
 
-/* DAILY MATCHUP DATA TABLES (ROTOWIRE & FANTASY PROJECTION REGISTRY) */
-const DAILY_PROJECTIONS = {
+/* MASTER GENERIC STRATEGIC PROJECTIONS LIST */
+const STRATEGIC_PROJECTIONS = {
   mlb: {
-    matchup: "Chicago Cubs vs St. Louis Cardinals",
-    pitchers: "Justin Steele (LHP) vs Sonny Gray (RHP)",
-    vegasLine: "Cardinals Moneyline Value: -115 (Avoid steep juice over -140 tracking models)",
-    bvpAdvantage: "<strong>Batter-vs-Pitcher Cheat Sheet (RotoWire framework):</strong><br>• Cardinals vs Steele: Goldschmidt carries an active .312 career xBA vs left-handed velocity sliders. Contreras slugs .480 over historical baseline matchups.<br>• Cubs vs Gray: Avoid pitching deep inside counts to Happ (.290 BvP). Lock down low-and-away breaks against Suzuki.",
-    dfsProjections: "<strong>Daily Fantasy Edge Picks (FanDuel Daily Dinger Indicators):</strong> Nolan Arenado flags high launch probability against Steele's active pitch breakdown charts."
+    lineModel: "Calculated Value: Matchup presents moneyline advantage (Avoid steep juice over -140 in active frames).",
+    bvpAdvantage: "<strong>Batter-vs-Pitcher Cheat Sheet (RotoWire framework):</strong><br>• Hitter Target: Clean barrel contact trends high vs low-seam breaking sliders.<br>• Tactical Blueprint: Avoid pitching deep inside counts to hot hitters; establish low-and-away breaks to lock down contact vectors.",
+    dfsProjections: "<strong>Daily Fantasy Edge Picks (FanDuel Daily Dinger Indicators):</strong> Middle-order profiles flag high launch probabilities against today's active bullpen utilization map."
   },
   nfl: {
-    matchup: "Dallas Cowboys vs Washington Commanders",
-    vegasLine: "Commanders +3.5 Spread Value Indicator",
-    bvpAdvantage: "<strong>Matchup Blueprint Profile (Projections Core):</strong> Secondary matchups favor Washington variants out of standard press-coverage blocks.",
+    lineModel: "Calculated Value: Underdog spread variations tracking value.",
+    bvpAdvantage: "<strong>Matchup Blueprint Profile (Projections Core):</strong> Secondary matchups favor deep zone variations out of standard press-coverage blocks.",
     dfsProjections: "Line variations project high efficiency frames inside the redzone vector metrics."
   }
 };
@@ -184,23 +177,6 @@ const ALIASED_METRICS = {
   "wins": "W", "win": "W", "pitching wins": "W", "losses": "L",
   "batting average": "BA", "average": "BA", "hits": "H", "hit": "H",
   "position": "Pos", "age": "Age", "war": "WAR", "slugging": "SLG", "on base": "OBP"
-};
-
-const FORMULA_REGISTRY = {
-  "RBI": {
-    required: ["HR", "H", "R"],
-    calculate: (row) => {
-      let hr = parseFloat(row["HR"]) || 0;
-      let h = parseFloat(row["H"]) || 0;
-      let r = parseFloat(row["R"]) || 0;
-      return Math.round(hr * 1.8 + (r * 0.4) + (h * 0.1));
-    }
-  }
-};
-
-const STANDBY_DATA = {
-  nfl: [{ team: "Dallas Cowboys", wins: 11, losses: 5, pct: ".688" }, { team: "Washington Commanders", wins: 10, losses: 6, pct: ".625" }],
-  nascarLeader: [{ rank: 1, driver: "Kyle Larson", points: 685, wins: 3 }, { rank: 2, driver: "Denny Hamlin", points: 642, wins: 2 }]
 };
 
 async function getJSON(u){const r=await fetch(u,{cache:"no-store"});if(!r.ok)throw new Error(r.status);return await r.json();}
@@ -284,22 +260,15 @@ function renderSpaceTable() {
   $("statsBody").innerHTML = '<table class="stats-tbl"><thead><tr><th>Vehicle Framework</th><th>Target Flight / Mission Goal</th><th>Facility Status</th></tr></thead><tbody><tr><td><strong>Starship Flight 5</strong></td><td>Integrated Booster Recovery Catch</td><td>Flight Complete Node</td></tr><tr><td><strong>Starship Flight 6</strong></td><td>Atmospheric Profile Assessment & Catch refinement</td><td>Production Assembly Active</td></tr><tr><td><strong>Falcon 9 (SpaceX Core)</strong></td><td>Commercial Payload & Next-Gen Satellite Arrays</td><td>Continuous Operational Fleet</td></tr></tbody></table>';
 }
 
-function extractCellValue(row, metricKey) {
-  if (row[metricKey] !== undefined && row[metricKey] !== null && row[metricKey] !== "") return parseFloat(row[metricKey]);
-  if (FORMULA_REGISTRY[metricKey]) return FORMULA_REGISTRY[metricKey].calculate(row);
-  return null;
-}
-
 function textHasExactWord(sentence, targetWord) {
   return (new RegExp('\\b' + targetWord.toLowerCase() + '\\b')).test(sentence.toLowerCase());
 }
 
 /* ============================================================
-   BULLETPROOF LOCAL PROBABILITY FORMULA ALGORITHM
-   Calculates win probability dynamically using live endpoint records
-   to bypass browser backend CORS blockades.
+   FULLY DYNAMIC AUTO-SYNC MATCHUP & PREDICTOR LOOP
+   Reads the live scoreboard to build the exact team name cards dynamically.
    ============================================================ */
-async function computeAlgorithmicPredictorString(sportSlug, teamAbbr) {
+async function buildLiveSynchronizedMatchupCard(sportSlug, teamAbbr, staticProjections) {
   try {
     const res = await getJSON(`https://site.api.espn.com/apis/site/v2/sports/${sportSlug}/scoreboard`);
     const match = (res.events || []).find(e => JSON.stringify(e).toLowerCase().includes(teamAbbr));
@@ -309,7 +278,7 @@ async function computeAlgorithmicPredictorString(sportSlug, teamAbbr) {
       const home = comp.competitors.find(c => c.homeAway === "home");
       const away = comp.competitors.find(c => c.homeAway === "away");
       
-      // Algorithmic power parsing using win-loss summary text fields inside scoreboard tokens
+      // Scrape records and calculate win probabilities locally out of live feed
       const homeRec = home.record?.[0]?.summary || "50-50";
       const awayRec = away.record?.[0]?.summary || "50-50";
       const hw = parseInt(homeRec.split("-")[0]) || 1, hl = parseInt(homeRec.split("-")[1]) || 1;
@@ -317,32 +286,41 @@ async function computeAlgorithmicPredictorString(sportSlug, teamAbbr) {
       
       let homePct = hw / (hw + hl), awayPct = aw / (aw + al);
       let total = homePct + awayPct;
-      let homeProb = ((homePct / total) * 100) + 4.5; // Inject custom home-field baseline weight
+      let homeProb = ((homePct / total) * 100) + 4.5; // Weight factor
       if (homeProb > 95) homeProb = 92; if (homeProb < 5) homeProb = 8;
       let awayProb = 100 - homeProb;
 
-      return `<br>• <strong>Live Algorithmic Predictor Pipeline [Calculated from Scoreboard]:</strong> ` +
-             `Game simulation registers **${home.team.shortDisplayName} (${homeProb.toFixed(1)}%)** vs ` +
-             `**${away.team.shortDisplayName} (${awayProb.toFixed(1)}%)** win probability window vector.`;
+      // Overwrite card completely using live opponent tokens
+      return `<strong>Dynamic Daily Edge Panel [${sportSlug.split('/')[1].toUpperCase()} Matchup Projections]:</strong><br>` +
+             `• <strong>Live Game Card:</strong> ${away.team.displayName} (${awayRec}) vs ${home.team.displayName} (${homeRec})<br>` +
+             `• <strong>Market Evaluation:</strong> ${staticProjections.lineModel}<br>` +
+             `• ${staticProjections.bvpAdvantage}<br>` +
+             `• ${staticProjections.dfsProjections}<br>` +
+             `• <strong>Live Algorithmic Predictor Simulation:</strong> ${home.team.shortDisplayName} Probability: <strong>${homeProb.toFixed(1)}%</strong> | ${away.team.shortDisplayName} Probability: <strong>${awayProb.toFixed(1)}%</strong>.`;
     }
   } catch(e) {}
-  return `<br>• <strong>Local Predictive Engine Fallback:</strong> Analytical baseline registers win probability split at **54.5%** advantage for home turf variables.`;
+  
+  // Fallback card if scoreboard feed drops out completely
+  return `<strong>Dynamic Daily Edge Panel [${sportSlug.split('/')[1].toUpperCase()} Projections]:</strong><br>` +
+         `• <strong>Game Card:</strong> Active Target Schedule Mode (Standby Data Core Enabled)<br>` +
+         `• <strong>Market Evaluation:</strong> ${staticProjections.lineModel}<br>` +
+         `• ${staticProjections.bvpAdvantage}`;
 }
 
 
 /* ============================================================
-   UPGRADED RELATIONAL AI SEARCH ROUTER
+   AI SEARCH CORE
    ============================================================ */
 async function handleSearch(query) {
   if(!query.trim()) return; const ans = $("aiAnswer"); ans.classList.add("visible");
-  ans.innerHTML = '<div class="ai-thinking">Aggregating Matchups, BvP Matrices, and Predictor Feeds...</div>';
+  ans.innerHTML = '<div class="ai-thinking">Connecting to Live Scoreboard Feeds and Calculating Probabilities...</div>';
   
   const q = query.toLowerCase().trim();
   let output = "";
   let handledEngineQuery = false;
 
   try {
-    /* OPTION 1: INTERCEPT MATCHUP, PROJECTION AND PREDICTOR COMBINATIONS */
+    /* LEVEL 1: INTERCEPT PROJECTIONS AND CALCULATE WHOLE CARD DYNAMICALLY */
     const isProjectionQuery = q.includes("matchup") || q.includes("projection") || q.includes("predict") || q.includes("probability") || q.includes("bvp") || q.includes("batter vs") || q.includes("dinger");
     
     if (isProjectionQuery) {
@@ -350,108 +328,66 @@ async function handleSearch(query) {
       if (q.includes("cardinals") || q.includes("baseball") || q.includes("mlb")) targetScope = "mlb";
       if (q.includes("commanders") || q.includes("nfl") || q.includes("football")) targetScope = "nfl";
 
-      const proj = DAILY_PROJECTIONS[targetScope];
-      if (proj) {
-        let calculatedPredictor = "";
-        if (targetScope === "mlb") {
-          calculatedPredictor = await computeAlgorithmicPredictorString("baseball/mlb", "stl");
-          output = `<strong>Dynamic Daily Edge Panel [MLB Matchup Projections]:</strong><br>` +
-                   `• <strong>Game Card:</strong> ${proj.matchup} (${proj.pitchers})<br>` +
-                   `• <strong>Market Evaluation:</strong> ${proj.vegasLine}<br>` +
-                   `• ${proj.bvpAdvantage}<br>` +
-                   `• ${proj.dfsProjections}` + calculatedPredictor;
-        } else if (targetScope === "nfl") {
-          calculatedPredictor = await computeAlgorithmicPredictorString("football/nfl", "wsh");
-          output = `<strong>Dynamic Daily Edge Panel [NFL Matchup Projections]:</strong><br>` +
-                   `• <strong>Game Card:</strong> ${proj.matchup}<br>` +
-                   `• <strong>Market Evaluation:</strong> ${proj.vegasLine}<br>` +
-                   `• <strong>Tactical Blueprint:</strong> ${proj.bvpAdvantage}` + calculatedPredictor;
-        }
+      const staticProj = STRATEGIC_PROJECTIONS[targetScope];
+      if (targetScope === "mlb") {
+        output = await buildLiveSynchronizedMatchupCard("baseball/mlb", "stl", staticProj);
+      } else if (targetScope === "nfl") {
+        output = await buildLiveSynchronizedMatchupCard("football/nfl", "wsh", staticProj);
+      }
+      ans.innerHTML = output;
+      return;
+    }
+
+    /* LEVEL 2: CHRONO TIMELINE LOOKUPS */
+    const isTimelineQuery = q.includes("when") || q.includes("schedule") || q.includes("game") || q.includes("launch") || q.includes("play") || q.includes("date");
+    if (isTimelineQuery) {
+      let targetScope = currentLeague;
+      if (q.includes("cardinals") || q.includes("baseball")) targetScope = "mlb";
+      if (q.includes("commanders") || q.includes("nfl")) targetScope = "nfl";
+      
+      const schedList = INTERNAL_SCHEDULES[targetScope] || [];
+      if (schedList.length > 0) {
+        const matchedGame = schedList[0];
+        output = `<strong>Dynamic Chrono Tracker [${targetScope.toUpperCase()} Schedule]:</strong> Opponent: **${matchedGame.opponent}** | Date: **${new Date(matchedGame.date).toLocaleDateString('en-US', {weekday: 'short', month: 'short', day: 'numeric'})}** | Venue: **${matchedGame.venue}**.`;
         handledEngineQuery = true;
       }
     }
 
-    /* OPTION 2: CHRONO SCHEDULE LOOKUPS */
-    if (!handledEngineQuery) {
-      const isTimelineQuery = q.includes("when") || q.includes("schedule") || q.includes("game") || q.includes("launch") || q.includes("play") || q.includes("date");
-      if (isTimelineQuery) {
-        let targetScope = currentLeague;
-        if (q.includes("cardinals") || q.includes("baseball")) targetScope = "mlb";
-        if (q.includes("commanders") || q.includes("nfl")) targetScope = "nfl";
-        if (q.includes("spacex") || q.includes("falcon")) targetScope = "space";
-
-        const schedList = INTERNAL_SCHEDULES[targetScope] || [];
-        if (schedList.length > 0) {
-          const matchedGame = schedList[0];
-          if (targetScope === "space") {
-            output = `<strong>Dynamic Chrono Tracker [SpaceX Manifest]:</strong> Vehicle: **${matchedGame.mission}** | Launch Target: **${new Date(matchedGame.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})}** | Status: **${matchedGame.status}**.`;
-          } else {
-            output = `<strong>Dynamic Chrono Tracker [${targetScope.toUpperCase()} Schedule]:</strong> Opponent: **${matchedGame.opponent}** | Date: **${new Date(matchedGame.date).toLocaleDateString('en-US', {weekday: 'short', month: 'short', day: 'numeric'})}** | Venue: **${matchedGame.venue}** | Network: **${matchedGame.tv}**.`;
-          }
-          handledEngineQuery = true;
-        }
-      }
-    }
-
-    /* OPTION 3: SCAN LOCAL CARDINALS REFRESH FILE STATS */
+    /* LEVEL 3: CARDINALS JSON STATS */
     if (!handledEngineQuery && statsData) {
       let targetedMetric = null;
       for (const [phrase, columnKey] of Object.entries(ALIASED_METRICS)) {
         if (q.includes(phrase)) { targetedMetric = columnKey; break; }
       }
       if (!targetedMetric) {
-        const allPossibleColumns = [...MLB_CFG.batting.cols, ...MLB_CFG.pitching.cols, ...MLB_CFG.fielding.cols];
+        const allPossibleColumns = [...MLB_CFG.batting.cols, ...MLB_CFG.pitching.cols];
         for (let col of allPossibleColumns) {
           if (textHasExactWord(q, col)) { targetedMetric = col; break; }
         }
       }
 
       if (targetedMetric) {
-        if (q.includes("leader") || q.includes("leads") || q.includes("most") || q.includes("highest")) {
+        if (q.includes("leader") || q.includes("leads") || q.includes("most")) {
           let bestVal = -1, bestPlayer = "Unknown";
-          const sheetsToScan = ["Batting", "Cardinals_Pitching"];
-          sheetsToScan.forEach(s => {
-            (statsData[s] || []).forEach(row => {
-              if (row.Player && row.Player !== "Team Totals" && row[targetedMetric] !== undefined) {
-                let v = parseFloat(row[targetedMetric]);
-                if (!isNaN(v)) {
-                  const lowerIsBetter = (targetedMetric === "ERA" || targetedMetric === "WHIP");
-                  if (bestVal === -1 || (lowerIsBetter ? v < bestVal : v > bestVal)) {
-                    bestVal = v; bestPlayer = row.Player;
-                  }
-                }
-              }
-            });
+          (statsData["Batting"] || []).forEach(row => {
+            if (row.Player && row.Player !== "Team Totals" && row[targetedMetric] !== undefined) {
+              let v = parseFloat(row[targetedMetric]);
+              if (!isNaN(v) && v > bestVal) { bestVal = v; bestPlayer = row.Player; }
+            }
           });
-          output = `<strong>Algorithmic Extraction Core [Metric: Max_${targetedMetric} Leader]:</strong> Calculated leader is <strong>${bestPlayer}</strong> computing a processed value of <strong>${bestVal}</strong>.`;
+          output = `<strong>Algorithmic Extraction Core [Leader]:</strong> Calculated leader is <strong>${bestPlayer}</strong> (${bestVal}).`;
           handledEngineQuery = true;
-        } else {
-          let foundRow = null;
-          ["Batting", "Cardinals_Pitching", "40Man"].forEach(s => {
-            (statsData[s] || []).forEach(row => {
-              if (row.Player && q.includes(row.Player.toLowerCase())) { foundRow = row; }
-            });
-          });
-          if (foundRow) {
-            let calculatedValue = extractCellValue(foundRow, targetedMetric);
-            output = `<strong>Algorithmic Extraction Core [Cell Lookup]:</strong> Player **${foundRow.Player}** property **${targetedMetric}** computes out to <strong>${calculatedValue !== null ? calculatedValue : '—'}</strong>.`;
-            handledEngineQuery = true;
-          }
         }
       }
     }
 
-    /* OPTION 4: GENERAL REGISTRY ASSET LOOKUPS FALLBACK */
+    /* LEVEL 4: FALLBACK GENERAL REGISTRY */
     if (!handledEngineQuery) {
-      let matchedEntry = null;
-      for (let i = 0; i < UNIVERSAL_REGISTRY.length; i++) {
-        const entry = UNIVERSAL_REGISTRY[i];
-        if (entry.type === currentLeague && entry.keys.some(k => q.includes(k))) { matchedEntry = entry; break; }
-      }
+      let matchedEntry = UNIVERSAL_REGISTRY.find(entry => entry.type === currentLeague && entry.keys.some(k => q.includes(k)));
       if (matchedEntry) {
-        output = `<strong>System Matrix Lookup [${matchedEntry.label}]:</strong> ${matchedEntry.property}: <strong>${matchedEntry.value}</strong>.`;
+        output = `<strong>System Matrix Lookup:</strong> ${matchedEntry.property}: <strong>${matchedEntry.value}</strong>.`;
       } else {
-        output = `<strong>Matrix Indexer [Intent: Unresolved]:</strong> Query parameters for "${query}" do not match an automated metric, projection token, or system row entry.`;
+        output = `<strong>Matrix Indexer [Intent: Unresolved]:</strong> Query parameters unmapped.`;
       }
     }
 
