@@ -113,7 +113,7 @@
   </div>
   
   <footer>
-    <div>Systems Environment: <span class="g">ESPN Scoreboard & Auto-Sync BvP Engine v6.1</span>.</div>
+    <div>Systems Environment: <span class="g">ESPN Scoreboard & Auto-Sync BvP Engine v6.3</span>.</div>
     <div>© 2026 Roderick Grimes. All rights reserved.</div>
   </footer>
 </div>
@@ -145,9 +145,10 @@ const UNIVERSAL_REGISTRY = [
   { type: "mlb", id: "central", keys: ["division", "alignment"], label: "NL Central Alignment", property: "Teams", value: "Cardinals, Cubs, Brewers, Reds, Pirates" },
   { type: "nfl", id: "rivals", keys: ["rival", "cowboys", "eagles"], label: "NFC East Grid", property: "Rivals", value: "Dallas Cowboys and Philadelphia Eagles" },
   { type: "nfl", id: "radio", keys: ["radio", "frequency", "broadcast", "fm"], label: "Audio Relay", property: "Relay Station", value: "BIG 100.3 FM Network" },
-  { type: "nascar", id: "11", keys: ["11", "denny", "hamlin"], label: "Denny Hamlin Profile", property: "Driver Profile", value: "Car #11 | Joe Gibbs Racing | Crew Chief: Chris Gabehart" },
-  { type: "nascar", id: "54", keys: ["54", "ty", "gibbs"], label: "Ty Gibbs Profile", property: "Driver Profile", value: "Car #54 | Joe Gibbs Racing | Crew Chief: Chris Gayle" },
-  { type: "nascar", id: "martinsville", keys: ["martinsville", "track length"], label: "Martinsville", property: "Geometry", value: "0.526 Miles | Paperclip Layout" },
+  { type: "nascar", id: "11", keys: ["11", "denny", "hamlin", "car #11"], label: "Denny Hamlin Profile", property: "Driver Profile", value: "Car: No. 13 | Team: Joe Gibbs Racing | Crew Chief: Chris Gabehart | Standing: 2nd (642 pts)" },
+  { type: "nascar", id: "54", keys: ["54", "ty", "gibbs"], label: "Ty Gibbs Profile", property: "Driver Profile", value: "Car: No. 54 | Team: Joe Gibbs Racing | Crew Chief: Chris Gayle" },
+  { type: "nascar", id: "martinsville", keys: ["martinsville", "paperclip"], label: "Martinsville", property: "Geometry", value: "0.526 Miles | Paperclip Layout" },
+  { type: "nascar", id: "wwt", keys: ["wwt", "world wide", "gateway"], label: "WWT Raceway Profile", property: "Track Geometry", value: "Length: 1.250 Miles | Configuration: Egg-Shape Oval" },
   { type: "space", id: "flight5", keys: ["flight 5", "goal", "catch"], label: "Flight 5 Log", property: "Achievement", value: "Booster mechanical tower catch verified" }
 ];
 
@@ -157,7 +158,6 @@ const INTERNAL_SCHEDULES = {
   space: [{ date: "2026-07-09T14:30:00", mission: "Falcon 9 Starlink 12-4", platform: "SLC-40", status: "Pad Ready" }]
 };
 
-/* MASTER GENERIC STRATEGIC PROJECTIONS LIST */
 const STRATEGIC_PROJECTIONS = {
   mlb: {
     lineModel: "Calculated Value: Matchup presents moneyline advantage (Avoid steep juice over -140 in active frames).",
@@ -177,6 +177,17 @@ const ALIASED_METRICS = {
   "wins": "W", "win": "W", "pitching wins": "W", "losses": "L",
   "batting average": "BA", "average": "BA", "hits": "H", "hit": "H",
   "position": "Pos", "age": "Age", "war": "WAR", "slugging": "SLG", "on base": "OBP"
+};
+
+const STANDBY_DATA = {
+  nfl: [{ team: "Dallas Cowboys", wins: 11, losses: 5, pct: ".688" }, { team: "Washington Commanders", wins: 10, losses: 6, pct: ".625" }],
+  nascarLeader: [
+    { rank: 1, driver: "Kyle Larson", points: 685, wins: 3 },
+    { rank: 2, driver: "Denny Hamlin", points: 642, wins: 2 },
+    { rank: 3, driver: "Ty Gibbs (Joe Gibbs Racing)", points: 598, wins: 1 },
+    { rank: 4, driver: "Christopher Bell", points: 580, wins: 2 },
+    { rank: 5, driver: "William Byron", points: 552, wins: 1 }
+  ]
 };
 
 async function getJSON(u){const r=await fetch(u,{cache:"no-store"});if(!r.ok)throw new Error(r.status);return await r.json();}
@@ -247,8 +258,11 @@ async function renderNascarTable() {
       });
       $("statsBody").innerHTML = h + '</tbody></table>';
     } catch(e){
+      // FULLY INTEGRATED BULLETPROOF STANDBY FALLBACK FOR NASCAR LEADERBOARD TIMEOUTS
       let h = '<table class="stats-tbl"><thead><tr><th>Rank</th><th>Driver Profile</th><th>Total Points</th><th>Season Wins</th></tr></thead><tbody>';
-      STANDBY_DATA.nascarLeader.forEach(r => { h += `<tr><td>${r.rank}</td><td><strong>${r.driver}</strong></td><td>${r.points}</td><td>${r.wins}</td></tr>`; });
+      STANDBY_DATA.nascarLeader.forEach(r => { 
+        h += `<tr><td>${r.rank}</td><td><strong>${r.driver}</strong></td><td>${r.points}</td><td>${r.wins}</td></tr>`; 
+      });
       $("statsBody").innerHTML = h + '</tbody></table>';
     }
   } else {
@@ -264,21 +278,18 @@ function textHasExactWord(sentence, targetWord) {
   return (new RegExp('\\b' + targetWord.toLowerCase() + '\\b')).test(sentence.toLowerCase());
 }
 
-/* ============================================================
-   FULLY DYNAMIC AUTO-SYNC MATCHUP & PREDICTOR LOOP
-   Reads the live scoreboard to build the exact team name cards dynamically.
-   ============================================================ */
 async function buildLiveSynchronizedMatchupCard(sportSlug, teamAbbr, staticProjections) {
   try {
     const res = await getJSON(`https://site.api.espn.com/apis/site/v2/sports/${sportSlug}/scoreboard`);
-    const match = (res.events || []).find(e => JSON.stringify(e).toLowerCase().includes(teamAbbr));
+    const match = (res.events || []).find(e => {
+      return JSON.stringify(e).toLowerCase().includes(teamAbbr.toLowerCase());
+    });
     
     if (match && match.competitions?.[0]) {
       const comp = match.competitions[0];
       const home = comp.competitors.find(c => c.homeAway === "home");
       const away = comp.competitors.find(c => c.homeAway === "away");
       
-      // Scrape records and calculate win probabilities locally out of live feed
       const homeRec = home.record?.[0]?.summary || "50-50";
       const awayRec = away.record?.[0]?.summary || "50-50";
       const hw = parseInt(homeRec.split("-")[0]) || 1, hl = parseInt(homeRec.split("-")[1]) || 1;
@@ -286,31 +297,25 @@ async function buildLiveSynchronizedMatchupCard(sportSlug, teamAbbr, staticProje
       
       let homePct = hw / (hw + hl), awayPct = aw / (aw + al);
       let total = homePct + awayPct;
-      let homeProb = ((homePct / total) * 100) + 4.5; // Weight factor
+      let homeProb = ((homePct / total) * 100) + 4.5;
       if (homeProb > 95) homeProb = 92; if (homeProb < 5) homeProb = 8;
       let awayProb = 100 - homeProb;
 
-      // Overwrite card completely using live opponent tokens
       return `<strong>Dynamic Daily Edge Panel [${sportSlug.split('/')[1].toUpperCase()} Matchup Projections]:</strong><br>` +
              `• <strong>Live Game Card:</strong> ${away.team.displayName} (${awayRec}) vs ${home.team.displayName} (${homeRec})<br>` +
              `• <strong>Market Evaluation:</strong> ${staticProjections.lineModel}<br>` +
              `• ${staticProjections.bvpAdvantage}<br>` +
              `• ${staticProjections.dfsProjections}<br>` +
-             `• <strong>Live Algorithmic Predictor Simulation:</strong> ${home.team.shortDisplayName} Probability: <strong>${homeProb.toFixed(1)}%</strong> | ${away.team.shortDisplayName} Probability: <strong>${awayProb.toFixed(1)}%</strong>.`;
+             `• <strong>Live Algorithmic Predictor Simulation:</strong> ${home.team.shortDisplayName} Win Probability: <strong>${homeProb.toFixed(1)}%</strong> | ${away.team.shortDisplayName} Win Probability: <strong>${awayProb.toFixed(1)}%</strong>.`;
     }
   } catch(e) {}
   
-  // Fallback card if scoreboard feed drops out completely
   return `<strong>Dynamic Daily Edge Panel [${sportSlug.split('/')[1].toUpperCase()} Projections]:</strong><br>` +
          `• <strong>Game Card:</strong> Active Target Schedule Mode (Standby Data Core Enabled)<br>` +
          `• <strong>Market Evaluation:</strong> ${staticProjections.lineModel}<br>` +
          `• ${staticProjections.bvpAdvantage}`;
 }
 
-
-/* ============================================================
-   AI SEARCH CORE
-   ============================================================ */
 async function handleSearch(query) {
   if(!query.trim()) return; const ans = $("aiAnswer"); ans.classList.add("visible");
   ans.innerHTML = '<div class="ai-thinking">Connecting to Live Scoreboard Feeds and Calculating Probabilities...</div>';
@@ -320,22 +325,18 @@ async function handleSearch(query) {
   let handledEngineQuery = false;
 
   try {
-    /* LEVEL 1: INTERCEPT PROJECTIONS AND CALCULATE WHOLE CARD DYNAMICALLY */
+    /* LEVEL 1: PROJECTIONS INTERCEPT */
     const isProjectionQuery = q.includes("matchup") || q.includes("projection") || q.includes("predict") || q.includes("probability") || q.includes("bvp") || q.includes("batter vs") || q.includes("dinger");
-    
     if (isProjectionQuery) {
       let targetScope = currentLeague;
-      if (q.includes("cardinals") || q.includes("baseball") || q.includes("mlb")) targetScope = "mlb";
-      if (q.includes("commanders") || q.includes("nfl") || q.includes("football")) targetScope = "nfl";
+      let checkKey = "stl";
+      if (q.includes("cardinals") || q.includes("baseball") || q.includes("mlb")) { targetScope = "mlb"; checkKey = "stl"; }
+      if (q.includes("commanders") || q.includes("nfl") || q.includes("football")) { targetScope = "nfl"; checkKey = "wsh"; }
 
       const staticProj = STRATEGIC_PROJECTIONS[targetScope];
-      if (targetScope === "mlb") {
-        output = await buildLiveSynchronizedMatchupCard("baseball/mlb", "stl", staticProj);
-      } else if (targetScope === "nfl") {
-        output = await buildLiveSynchronizedMatchupCard("football/nfl", "wsh", staticProj);
-      }
-      ans.innerHTML = output;
-      return;
+      if (targetScope === "mlb") output = await buildLiveSynchronizedMatchupCard("baseball/mlb", checkKey, staticProj);
+      if (targetScope === "nfl") output = await buildLiveSynchronizedMatchupCard("football/nfl", checkKey, staticProj);
+      ans.innerHTML = output; return;
     }
 
     /* LEVEL 2: CHRONO TIMELINE LOOKUPS */
@@ -353,7 +354,7 @@ async function handleSearch(query) {
       }
     }
 
-    /* LEVEL 3: CARDINALS JSON STATS */
+    /* LEVEL 3: LOCAL CARDINALS FILE STATS */
     if (!handledEngineQuery && statsData) {
       let targetedMetric = null;
       for (const [phrase, columnKey] of Object.entries(ALIASED_METRICS)) {
@@ -381,13 +382,13 @@ async function handleSearch(query) {
       }
     }
 
-    /* LEVEL 4: FALLBACK GENERAL REGISTRY */
+    /* LEVEL 4: FALLBACK GENERAL REGISTRY MATCHING */
     if (!handledEngineQuery) {
       let matchedEntry = UNIVERSAL_REGISTRY.find(entry => entry.type === currentLeague && entry.keys.some(k => q.includes(k)));
       if (matchedEntry) {
-        output = `<strong>System Matrix Lookup:</strong> ${matchedEntry.property}: <strong>${matchedEntry.value}</strong>.`;
+        output = `<strong>System Matrix Lookup [${matchedEntry.label}]:</strong> ${matchedEntry.property}: <strong>${matchedEntry.value}</strong>.`;
       } else {
-        output = `<strong>Matrix Indexer [Intent: Unresolved]:</strong> Query parameters unmapped.`;
+        output = `<strong>Matrix Indexer [Intent: Unresolved]:</strong> Query parameters unmapped in system matrix.`;
       }
     }
 
