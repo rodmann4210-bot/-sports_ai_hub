@@ -40,7 +40,7 @@
   .p-head h2{font-family:'Oswald';font-weight:600;letter-spacing:2px;font-size:16px;text-transform:uppercase;flex:1}
   .p-head .ct{font-family:'Oswald';font-weight:600;font-size:13px;color:var(--gold);letter-spacing:1px}
 
-  /* RECONFIGURED STATIC GAMEDAY WIDGET DECKS */
+  /* STATIC GAMEDAY COMPONENT SLIPS */
   .gameday-row{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:4px}
   @media(max-width:850px){.gameday-row{grid-template-columns:1fr}}
   .preview-box, .boxscore-box{background:var(--panel);border:1px solid var(--line-soft);border-radius:8px;padding:16px;font-family:'Barlow';font-size:14px}
@@ -130,18 +130,13 @@
       </div>
     </section>
 
-    <!-- DYNAMIC GAMEDAY SCOUTING DECKS -->
+    <!-- AUTOMATED MULTI-SPORT SCOUTING ROW -->
     <div class="gameday-row" id="gamedayRow">
-      <div class="preview-box" id="previewBox">
-        <!-- Filled dynamically by JavaScript based on league tab context selection -->
-      </div>
-
-      <div class="boxscore-box" id="boxscoreBox">
-        <!-- Filled dynamically by JavaScript based on league tab context selection -->
-      </div>
+      <div class="preview-box" id="previewBox"></div>
+      <div class="boxscore-box" id="boxscoreBox"></div>
     </div>
 
-    <!-- DYNAMIC LIVE ACCELERATOR LINK -->
+    <!-- DYNAMIC LIVE INTERACTIVE LINK ACCELERATOR -->
     <a href="#" target="_blank" class="gameday-link-btn" id="gamedayLink"></a>
 
     <section class="panel" id="statsPanel">
@@ -153,7 +148,7 @@
   </div>
   
   <footer>
-    <div>Systems Environment: <span class="g">ESPN Scoreboard & Insider Commentary Matrix v7.5</span>.</div>
+    <div>Systems Environment: <span class="g">ESPN Scoreboard & Insider Commentary Matrix v7.6</span>.</div>
     <div>© 2026 Roderick Grimes. All rights reserved.</div>
   </footer>
 </div>
@@ -261,15 +256,13 @@ function updateSuggestedChips() {
 }
 
 /* ============================================================
-   DYNAMIC SCOUTING DECK ENGINE (v7.5 UPDATE)
-   Swaps board components instantly based on active league grid.
+   QUALITATIVE DYNAMIC SCOUTING DECK ENGINE (v7.6 MLS EXPANSION)
    ============================================================ */
 function syncScoutingDeckLayouts() {
   if (currentLeague === "mlb") {
     $("gamedayRow").style.display = "grid";
     $("gamedayLink").style.display = "block";
     
-    // Paste baseball layout structures natively
     $("previewBox").innerHTML = `
       <div class="gd-title"><span>📋 Game Preview Scouting</span> <span style="color:var(--muted-2)">MLB Core</span></div>
       <div class="media-row"><strong>Watch:</strong> <span>Cardinals.TV Presented by bet365 / BravesVision</span></div>
@@ -308,7 +301,6 @@ function syncScoutingDeckLayouts() {
     const spreadVal = isChiefs ? "-3.5 (KC)" : "+3.5 (WSH)";
     const ouTotal = isChiefs ? "47.5 O/U" : "44.5 O/U";
 
-    // Paste premium football consensus spreadsheet layout structures natively
     $("previewBox").innerHTML = `
       <div class="gd-title"><span>🏈 NFL Strategic Match Slip</span> <span style="color:var(--gold-dim)">Consensus Matrix</span></div>
       <div class="media-row"><strong>Roster Target:</strong> <span>${teamTitle} Projections</span></div>
@@ -333,8 +325,36 @@ function syncScoutingDeckLayouts() {
     $("gamedayLink").textContent = `🚀 Launch Official ESPN Live Football Gamecast Core Dashboard`;
     $("gamedayLink").href = "https://www.espn.com/nfl/scoreboard";
 
+  } else if (currentLeague === "mls") {
+    $("gamedayRow").style.display = "grid";
+    $("gamedayLink").style.display = "block";
+
+    // Native MLS tactical grid construction parameters
+    $("previewBox").innerHTML = `
+      <div class="gd-title"><span>⚽ MLS Matchday Lineup Radar</span> <span style="color:var(--muted-2)">Pitch Matrix</span></div>
+      <div class="media-row"><strong>Match Streaming:</strong> <span>Apple TV — MLS Season Pass</span></div>
+      <div class="media-row"><strong>Grounds Venue:</strong> <span>Energizer Park (St. Louis, MO)</span></div>
+      <div class="pitcher-split">
+        <div class="pitcher-card"><strong>Roman Bürki</strong><span>Goalkeeper • #1</span><div class="p-stats">Clean Sheets: 7</div></div>
+        <div class="vs-badge">TACTIC</div>
+        <div class="pitcher-card"><strong>Marcel Hartel</strong><span>Midfielder • #17</span><div class="p-stats">Assists Log: 9</div></div>
+      </div>`;
+
+    $("boxscoreBox").innerHTML = `
+      <div class="gd-title"><span>🏁 Live Derby Form Ledger</span> <span style="color:var(--muted-2)">UPCOMING</span></div>
+      <table class="bs-tbl">
+        <thead><tr><th>CLUB</th><th>POSS</th><th>SHOTS</th><th>FOULS</th><th>CORNERS</th><th class="bold-cell">GOALS</th><th>YELLOW</th><th>RED</th></tr></thead>
+        <tbody>
+          <tr><td><strong>SKC</strong></td><td>—</td><td>—</td><td>—</td><td>—</td><td class="bold-cell">—</td><td>—</td><td>—</td></tr>
+          <tr><td><strong>STL</strong></td><td>—</td><td>—</td><td>—</td><td>—</td><td class="bold-cell">—</td><td><strong>Derby</strong></td><td><strong>Form</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="decision-row"><strong>Derby Context:</strong> Show-Me State Showdown returns to Energizer Park for Rivalry Night.</div>`;
+
+    $("gamedayLink").textContent = `🚀 Launch Official MLS Season Pass Interactive Matchcenter Dashboard`;
+    $("gamedayLink").href = "https://www.mlssoccer.com/schedule";
+
   } else {
-    // Hide component containers on non-styled tracking boards
     $("gamedayRow").style.display = "none";
     $("gamedayLink").style.display = "none";
   }
@@ -612,8 +632,8 @@ $("statsTabs").addEventListener("click", e => {
   document.querySelectorAll(".stab").forEach(x=>x.classList.remove("active"));
   b.classList.add('active'); curPane = b.dataset.pane;
   
-  // Cleanly re-sync layout parameters if flipping sub-panes between Commanders and Chiefs
-  if(currentLeague === "nfl") syncScoutingDeckLayouts();
+  // Cleanly re-sync layout grids on internal pane state adjustments
+  syncScoutingDeckLayouts();
   
   if(currentLeague === "mlb") renderMlbTable();
   if(currentLeague === "nfl") renderNflTable();
