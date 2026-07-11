@@ -40,7 +40,7 @@
   .p-head h2{font-family:'Oswald';font-weight:600;letter-spacing:2px;font-size:16px;text-transform:uppercase;flex:1}
   .p-head .ct{font-family:'Oswald';font-weight:600;font-size:13px;color:var(--gold);letter-spacing:1px}
 
-  /* STATIC GAMEDAY COMPONENT SLIPS */
+  /* STATIC MULTI-SPORT DECK SLIPS */
   .gameday-row{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:4px}
   @media(max-width:850px){.gameday-row{grid-template-columns:1fr}}
   .preview-box, .boxscore-box{background:var(--panel);border:1px solid var(--line-soft);border-radius:8px;padding:16px;font-family:'Barlow';font-size:14px}
@@ -130,13 +130,13 @@
       </div>
     </section>
 
-    <!-- AUTOMATED MULTI-SPORT SCOUTING ROW -->
+    <!-- SYSTEM MULTI-SPORT TRACKING DECK CONTAINER -->
     <div class="gameday-row" id="gamedayRow">
       <div class="preview-box" id="previewBox"></div>
       <div class="boxscore-box" id="boxscoreBox"></div>
     </div>
 
-    <!-- DYNAMIC LIVE INTERACTIVE LINK ACCELERATOR -->
+    <!-- DYNAMIC BROADCAST ACCELERATOR LINK CHANNELS -->
     <a href="#" target="_blank" class="gameday-link-btn" id="gamedayLink"></a>
 
     <section class="panel" id="statsPanel">
@@ -148,7 +148,7 @@
   </div>
   
   <footer>
-    <div>Systems Environment: <span class="g">ESPN Scoreboard & Insider Commentary Matrix v7.6</span>.</div>
+    <div>Systems Environment: <span class="g">ESPN Scoreboard & Insider Commentary Matrix v7.7</span>.</div>
     <div>© 2026 Roderick Grimes. All rights reserved.</div>
   </footer>
 </div>
@@ -256,7 +256,7 @@ function updateSuggestedChips() {
 }
 
 /* ============================================================
-   QUALITATIVE DYNAMIC SCOUTING DECK ENGINE (v7.6 MLS EXPANSION)
+   QUALITATIVE DYNAMIC SCOUTING DECK ENGINE (v7.7 TRACK EXPANSION)
    ============================================================ */
 function syncScoutingDeckLayouts() {
   if (currentLeague === "mlb") {
@@ -329,7 +329,6 @@ function syncScoutingDeckLayouts() {
     $("gamedayRow").style.display = "grid";
     $("gamedayLink").style.display = "block";
 
-    // Native MLS tactical grid construction parameters
     $("previewBox").innerHTML = `
       <div class="gd-title"><span>⚽ MLS Matchday Lineup Radar</span> <span style="color:var(--muted-2)">Pitch Matrix</span></div>
       <div class="media-row"><strong>Match Streaming:</strong> <span>Apple TV — MLS Season Pass</span></div>
@@ -353,6 +352,40 @@ function syncScoutingDeckLayouts() {
 
     $("gamedayLink").textContent = `🚀 Launch Official MLS Season Pass Interactive Matchcenter Dashboard`;
     $("gamedayLink").href = "https://www.mlssoccer.com/schedule";
+
+  } else if (currentLeague === "nascar") {
+    $("gamedayRow").style.display = "grid";
+    $("gamedayLink").style.display = "block";
+
+    const isTracks = curPane === "nascarTracks";
+    const trackTitle = isTracks ? "World Wide Technology Raceway" : "Martinsville Speedway";
+    const trackLen = isTracks ? "1.250 Miles" : "0.526 Miles";
+    const trackShape = isTracks ? "Egg-Shape Oval" : "Paperclip Layout";
+    const activeDriver = isTracks ? "Ty Gibbs" : "Denny Hamlin";
+    const activeCar = isTracks ? "#54" : "#11";
+    const activeCrew = isTracks ? "Chris Gayle" : "Chris Gabehart";
+
+    // Native NASCAR blueprint geometry construction profiles
+    $("previewBox").innerHTML = `
+      <div class="gd-title"><span>🏁 NASCAR Track Geometry Profiler</span> <span style="color:var(--gold)">Specs Blueprint</span></div>
+      <div class="media-row"><strong>Active Blueprint Track:</strong> <span>${trackTitle}</span></div>
+      <div class="media-row"><strong>Geometry Configuration:</strong> <span>${trackShape}</span></div>
+      <div class="pitcher-split">
+        <div class="pitcher-card"><strong>Track Specification Length</strong><span>Distance Node</span><div class="p-stats">${trackLen}</div></div>
+      </div>`;
+
+    $("boxscoreBox").innerHTML = `
+      <div class="gd-title"><span>🛠️ Live Cup Series Garage Log</span> <span style="color:var(--muted-2)">Pit Context</span></div>
+      <table class="bs-tbl">
+        <thead><tr><th>DRIVER TARGET</th><th>CAR</th><th>CREW CHIEF NODE</th><th>TEAM OUTLINE CONTEXT</th></tr></thead>
+        <tbody>
+          <tr><td><strong>${activeDriver}</strong></td><td>${activeCar}</td><td>${activeCrew}</td><td>Joe Gibbs Racing Pipeline Framework</td></tr>
+        </tbody>
+      </table>
+      <div class="decision-row"><strong>Race Radar:</strong> Track configurations and driver metadata synced cleanly to local storage boards.</div>`;
+
+    $("gamedayLink").textContent = "🚀 Launch Official NASCAR Live Race Center Real-Time Leaderboard Feed";
+    $("gamedayLink").href = "https://www.nascar.com/results/live/racecenter/";
 
   } else {
     $("gamedayRow").style.display = "none";
@@ -623,6 +656,7 @@ $("hubNav").addEventListener("click", e => {
   if(currentLeague === "nfl") curPane = "commanders";
   else if(currentLeague === "mls") curPane = "city_sc";
   else if(currentLeague === "mlb") curPane = "batting";
+  else if(currentLeague === "nascar") curPane = "nascarLeader";
   
   loadLeagueEnvironment();
 });
@@ -632,7 +666,6 @@ $("statsTabs").addEventListener("click", e => {
   document.querySelectorAll(".stab").forEach(x=>x.classList.remove("active"));
   b.classList.add('active'); curPane = b.dataset.pane;
   
-  // Cleanly re-sync layout grids on internal pane state adjustments
   syncScoutingDeckLayouts();
   
   if(currentLeague === "mlb") renderMlbTable();
