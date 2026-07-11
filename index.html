@@ -139,7 +139,10 @@
       <div class="boxscore-box" id="boxscoreBox"></div>
     </div>
 
-    <a href="#" target="_blank" class="gameday-link-btn" id="gamedayLink"></a>
+    <!-- CACHE BYPASS PATCH NODE: Bypassing JS script strings entirely. Hardcoding live targets natively into HTML markup -->
+    <a href="https://www.nascar.com/results/live/racecenter/" target="_blank" class="gameday-link-btn" id="gamedayLink">
+      🚀 Launch Official NASCAR Live Race Center Real-Time Leaderboard Feed
+    </a>
 
     <section class="panel" id="statsPanel">
       <div class="p-head"><span class="bar"></span><h2 id="dbLabel">Database Engine Outputs</h2><span class="ct" id="coreLabel">Local Data Core Active</span></div>
@@ -150,7 +153,7 @@
   </div>
   
   <footer>
-    <div>Systems Environment: <span class="g">ESPN Scoreboard & Insider Commentary Matrix v8.2</span>.</div>
+    <div>Systems Environment: <span class="g">ESPN Scoreboard & Insider Commentary Matrix v8.3</span>.</div>
     <div>© 2026 Roderick Grimes. All rights reserved.</div>
   </footer>
 </div>
@@ -257,13 +260,8 @@ function updateSuggestedChips() {
   $("aiChips").innerHTML = chips.map(c => `<span class="ai-chip">${c}</span>`).join("");
 }
 
-/* ============================================================
-   QUALITATIVE DYNAMIC SCOUTING DECK ENGINE (v8.2 REPAIRED HOOKS)
-   ============================================================ */
 function syncScoutingDeckLayouts() {
   const linkBtn = $("gamedayLink");
-  
-  // FIX: Force the link and structural rows to remain completely visible across styled contexts
   $("gamedayRow").style.display = "grid";
   linkBtn.style.display = "block";
 
@@ -380,11 +378,11 @@ function syncScoutingDeckLayouts() {
         </tbody>
       </table>`;
 
+    // HARDCODED FALLBACK REINFORCEMENT NODE
     linkBtn.textContent = "🚀 Launch Official NASCAR Live Race Center Real-Time Leaderboard Feed";
     linkBtn.setAttribute("href", "https://www.nascar.com/results/live/racecenter/");
 
   } else {
-    // Hide panels explicitly ONLY when sitting on non-styled text cards (like SpaceX Launchwatch)
     $("gamedayRow").style.display = "none";
     linkBtn.style.display = "none";
   }
@@ -519,7 +517,7 @@ async function buildGranularExpertCard(sportSlug, teamAbbr, expertKey, userQuest
         const hw = parseInt(homeRec.split("-")[0]) || 1, hl = parseInt(homeRec.split("-")[1]) || 1;
         const aw = parseInt(awayRec.split("-")[0]) || 1, al = parseInt(awayRec.split("-")[1]) || 1;
         let homePct = hw / (hw + hl), awayPct = aw / (aw + al);
-        let total = homePct + awayPct;
+        let total = total = homePct + awayPct;
         if (total > 0) {
           homeProb = ((homePct / total) * 100) + 4.5;
           if (homeProb > 95) homeProb = 92; if (homeProb < 5) homeProb = 8;
