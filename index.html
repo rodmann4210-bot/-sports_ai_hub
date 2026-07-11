@@ -113,7 +113,7 @@
   </div>
   
   <footer>
-    <div>Systems Environment: <span class="g">ESPN Scoreboard & Auto-Sync BvP Engine v6.5</span>.</div>
+    <div>Systems Environment: <span class="g">ESPN Scoreboard & Auto-Sync BvP Engine v6.6</span>.</div>
     <div>© 2026 Roderick Grimes. All rights reserved.</div>
   </footer>
 </div>
@@ -171,6 +171,11 @@ const OPPONENT_INTELLIGENCE = {
     lineModel: "Cardinals Moneyline Value: -115 (Avoid steep odds juice over -140 in rivalry models).",
     bvpAdvantage: "<strong>Opponent Blueprint vs Chicago:</strong> Goldschmidt maintains a strong .312 xBA historical advantage vs left-handed slider arrays. Lock down zone edge variations against Happ (.290 BvP).",
     dfsProjections: "Nolan Arenado flags a high power index value against standard division rotation depths."
+  },
+  "braves": {
+    lineModel: "Cardinals Moneyline Value: +105 (Tight underdog margin vs high-power offense models).",
+    bvpAdvantage: "<strong>Opponent Blueprint vs Atlanta:</strong> Attack outer margins to keep power barrels extended. St. Louis bats must prioritize tracking straight changeups out of early setup configurations.",
+    dfsProjections: "Brendan Donovan flags high on-base conversion factors against matching bullpen packages."
   },
   "default": {
     lineModel: "Calculated Value: Market index trends steady. Protect margins inside standard tracking boundaries.",
@@ -294,13 +299,19 @@ function textHasExactWord(sentence, targetWord) {
 }
 
 /* ============================================================
-   UPGRADED AUTO-SYNC MATCHUP ENGINE
+   TARGETED SEARCH INTERCEPT LOOP
+   Bypasses broad string matching by explicitly looking at competitor rosters.
    ============================================================ */
 async function buildLiveSynchronizedMatchupCard(sportSlug, teamAbbr, staticProjections) {
   try {
     const res = await getJSON(`https://site.api.espn.com/apis/site/v2/sports/${sportSlug}/scoreboard`);
+    
+    // TARGETED SCAN: Target only the game where the specific team abbreviation lives in the competitor block
     const match = (res.events || []).find(e => {
-      return JSON.stringify(e).toLowerCase().includes(teamAbbr.toLowerCase());
+      if (!e.competitions?.[0]?.competitors) return false;
+      return e.competitions[0].competitors.some(c => 
+        c.team?.abbreviation?.toLowerCase() === teamAbbr.toLowerCase()
+      );
     });
     
     if (match && match.competitions?.[0]) {
@@ -319,11 +330,13 @@ async function buildLiveSynchronizedMatchupCard(sportSlug, teamAbbr, staticProje
       if (homeProb > 95) homeProb = 92; if (homeProb < 5) homeProb = 8;
       let awayProb = 100 - homeProb;
 
-      // Correctly hand over mapped static projection tables if tracking multi-sport panels
+      // Extract the correct opponent and link their intelligence data card
       let activeIntel = staticProjections;
       if (sportSlug === "baseball/mlb") {
+        const opponentObj = home.team.abbreviation.toLowerCase() === teamAbbr.toLowerCase() ? away : home;
+        const opponentName = opponentObj.team.shortDisplayName.toLowerCase();
+        
         let opponentKey = "default";
-        const opponentName = home.team.abbreviation.toLowerCase() === "stl" ? away.team.shortDisplayName.toLowerCase() : home.team.shortDisplayName.toLowerCase();
         if (OPPONENT_INTELLIGENCE[opponentName]) opponentKey = opponentName;
         activeIntel = OPPONENT_INTELLIGENCE[opponentKey];
       }
@@ -362,8 +375,7 @@ async function handleSearch(query) {
       if (q.includes("commanders") || q.includes("nfl") || q.includes("football")) { targetScope = "nfl"; checkKey = "wsh"; }
 
       const staticProj = STRATEGIC_PROJECTIONS[targetScope];
-      if (targetScope === "mlb") output = await buildLiveSynchronizedMatchupCard("baseball/mlb", checkKey, null);
-      if (targetScope === "nfl") output = await buildLiveSynchronizedMatchupCard("football/nfl", checkKey, staticProj);
+      output = await buildLiveSynchronizedMatchupCard(targetScope === "mlb" ? "baseball/mlb" : "football/nfl", checkKey, staticProj);
       ans.innerHTML = output; return;
     }
 
