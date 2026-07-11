@@ -40,6 +40,7 @@
   .p-head h2{font-family:'Oswald';font-weight:600;letter-spacing:2px;font-size:16px;text-transform:uppercase;flex:1}
   .p-head .ct{font-family:'Oswald';font-weight:600;font-size:13px;color:var(--gold);letter-spacing:1px}
 
+  /* RECONFIGURED STATIC GAMEDAY WIDGET DECKS */
   .gameday-row{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:4px}
   @media(max-width:850px){.gameday-row{grid-template-columns:1fr}}
   .preview-box, .boxscore-box{background:var(--panel);border:1px solid var(--line-soft);border-radius:8px;padding:16px;font-family:'Barlow';font-size:14px}
@@ -129,48 +130,19 @@
       </div>
     </section>
 
-    <!-- STATIC GAMEDAY WIDGET DECKS -->
+    <!-- DYNAMIC GAMEDAY SCOUTING DECKS -->
     <div class="gameday-row" id="gamedayRow">
-      <div class="preview-box">
-        <div class="gd-title"><span>📋 Game Preview Scouting</span> <span id="pvStatus" style="color:var(--muted-2)">MLB Core</span></div>
-        <div class="media-row"><strong>Watch:</strong> <span id="pvWatch">Cardinals.TV Presented by bet365 / BravesVision</span></div>
-        <div class="media-row"><strong>Listen:</strong> <span id="pvListen">KMOX 1120 AM / 104.1 FM / 680 AM The Fan</span></div>
-        <div class="pitcher-split">
-          <div class="pitcher-card">
-            <strong id="pvAwayPitcher">López, R.</strong>
-            <span>RHP • #40</span>
-            <div class="p-stats" id="pvAwayPitcherStats">4-1 | 3.18 ERA | 51 K</div>
-          </div>
-          <div class="vs-badge">VS</div>
-          <div class="pitcher-card">
-            <strong id="pvHomePitcher">Liberatore</strong>
-            <span>LHP • #32</span>
-            <div class="p-stats" id="pvHomePitcherStats">4-6 | 5.34 ERA | 82 K</div>
-          </div>
-        </div>
+      <div class="preview-box" id="previewBox">
+        <!-- Filled dynamically by JavaScript based on league tab context selection -->
       </div>
 
-      <div class="boxscore-box">
-        <div class="gd-title"><span>🏁 Live Box Score Node</span> <span id="bsStatus" style="color:var(--green)">FINAL</span></div>
-        <table class="bs-tbl">
-          <thead>
-            <tr><th>CLUB</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th class="bold-cell">R</th><th>H</th><th>E</th></tr>
-          </thead>
-          <tbody>
-            <tr id="bsAwayRow"><td><strong>ATL</strong></td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="bold-cell">1</td><td>3</td><td>0</td></tr>
-            <tr id="bsHomeRow"><td><strong>STL</strong></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>X</td><td class="bold-cell">2</td><td>5</td><td>0</td></tr>
-          </tbody>
-        </table>
-        <div class="decision-row" id="bsDecisions">
-          <strong>W:</strong> Romero, J. (1-2, 3.43) | <strong>L:</strong> Young, D. (0-1, 2.70) | <strong>S:</strong> O'Brien (23, 3.52)
-        </div>
+      <div class="boxscore-box" id="boxscoreBox">
+        <!-- Filled dynamically by JavaScript based on league tab context selection -->
       </div>
     </div>
 
-    <!-- REPAIRED LIVE ACCELERATOR APP LINK: Fixed to point cleanly to today's active 2026 game node page -->
-    <a href="https://www.mlb.com/gameday/braves-vs-cardinals/2026/07/11/823030/preview" target="_blank" class="gameday-link-btn" id="gamedayLink">
-      🚀 Launch Deep-Dive MLB Live Interactive Gameday App Page
-    </a>
+    <!-- DYNAMIC LIVE ACCELERATOR LINK -->
+    <a href="#" target="_blank" class="gameday-link-btn" id="gamedayLink"></a>
 
     <section class="panel" id="statsPanel">
       <div class="p-head"><span class="bar"></span><h2 id="dbLabel">Database Engine Outputs</h2><span class="ct" id="coreLabel">Local Data Core Active</span></div>
@@ -181,7 +153,7 @@
   </div>
   
   <footer>
-    <div>Systems Environment: <span class="g">ESPN Scoreboard & Insider Commentary Matrix v7.4</span>.</div>
+    <div>Systems Environment: <span class="g">ESPN Scoreboard & Insider Commentary Matrix v7.5</span>.</div>
     <div>© 2026 Roderick Grimes. All rights reserved.</div>
   </footer>
 </div>
@@ -288,37 +260,113 @@ function updateSuggestedChips() {
   $("aiChips").innerHTML = chips.map(c => `<span class="ai-chip">${c}</span>`).join("");
 }
 
+/* ============================================================
+   DYNAMIC SCOUTING DECK ENGINE (v7.5 UPDATE)
+   Swaps board components instantly based on active league grid.
+   ============================================================ */
+function syncScoutingDeckLayouts() {
+  if (currentLeague === "mlb") {
+    $("gamedayRow").style.display = "grid";
+    $("gamedayLink").style.display = "block";
+    
+    // Paste baseball layout structures natively
+    $("previewBox").innerHTML = `
+      <div class="gd-title"><span>📋 Game Preview Scouting</span> <span style="color:var(--muted-2)">MLB Core</span></div>
+      <div class="media-row"><strong>Watch:</strong> <span>Cardinals.TV Presented by bet365 / BravesVision</span></div>
+      <div class="media-row"><strong>Listen:</strong> <span>KMOX 1120 AM / 104.1 FM / 680 AM The Fan</span></div>
+      <div class="pitcher-split">
+        <div class="pitcher-card"><strong>López, R.</strong><span>RHP • #40</span><div class="p-stats">4-1 | 3.18 ERA | 51 K</div></div>
+        <div class="vs-badge">VS</div>
+        <div class="pitcher-card"><strong>Liberatore</strong><span>LHP • #32</span><div class="p-stats">4-6 | 5.34 ERA | 82 K</div></div>
+      </div>`;
+      
+    $("boxscoreBox").innerHTML = `
+      <div class="gd-title"><span>🏁 Live Box Score Node</span> <span style="color:var(--green)">FINAL</span></div>
+      <table class="bs-tbl">
+        <thead><tr><th>CLUB</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th class="bold-cell">R</th><th>H</th><th>E</th></tr></thead>
+        <tbody>
+          <tr><td><strong>ATL</strong></td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="bold-cell">1</td><td>3</td><td>0</td></tr>
+          <tr><td><strong>STL</strong></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>X</td><td class="bold-cell">2</td><td>5</td><td>0</td></tr>
+        </tbody>
+      </table>
+      <div class="decision-row"><strong>W:</strong> Romero, J. (1-2, 3.43) | <strong>L:</strong> Young, D. (0-1, 2.70) | <strong>S:</strong> O'Brien (23, 3.52)</div>`;
+      
+    $("gamedayLink").textContent = "🚀 Launch Deep-Dive MLB Live Interactive Gameday App Page";
+    $("gamedayLink").href = "https://www.mlb.com/gameday/braves-vs-cardinals/2026/07/11/823030/preview";
+
+  } else if (currentLeague === "nfl") {
+    $("gamedayRow").style.display = "grid";
+    $("gamedayLink").style.display = "block";
+    
+    const isChiefs = curPane === "chiefs";
+    const teamTitle = isChiefs ? "KANSAS CITY CHIEFS" : "WASHINGTON COMMANDERS";
+    const radioAffil = isChiefs ? "106.5 The Wolf" : "BIG 100.3 FM Network";
+    const qbAway = isChiefs ? "Jackson, L." : "Prescott, D.";
+    const qbHome = isChiefs ? "Mahomes, P." : "Commanders QB";
+    const awayAbbr = isChiefs ? "BAL" : "DAL";
+    const homeAbbr = isChiefs ? "KC" : "WSH";
+    const spreadVal = isChiefs ? "-3.5 (KC)" : "+3.5 (WSH)";
+    const ouTotal = isChiefs ? "47.5 O/U" : "44.5 O/U";
+
+    // Paste premium football consensus spreadsheet layout structures natively
+    $("previewBox").innerHTML = `
+      <div class="gd-title"><span>🏈 NFL Strategic Match Slip</span> <span style="color:var(--gold-dim)">Consensus Matrix</span></div>
+      <div class="media-row"><strong>Roster Target:</strong> <span>${teamTitle} Projections</span></div>
+      <div class="media-row"><strong>Audio Relay:</strong> <span>${radioAffil} Live Stream</span></div>
+      <div class="pitcher-split">
+        <div class="pitcher-card"><strong>${qbAway}</strong><span>Away QB</span><div class="p-stats">PFF Grade: 88.4</div></div>
+        <div class="vs-badge">DUEL</div>
+        <div class="pitcher-card"><strong>${qbHome}</strong><span>Home QB</span><div class="p-stats">PFF Grade: 91.2</div></div>
+      </div>`;
+      
+    $("boxscoreBox").innerHTML = `
+      <div class="gd-title"><span>📊 Vegas Sportsbook Ledger</span> <span style="color:var(--muted)">PRE-GAME</span></div>
+      <table class="bs-tbl">
+        <thead><tr><th>TEAM</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th class="bold-cell">TOTAL</th><th>SPREAD</th><th>OU</th></tr></thead>
+        <tbody>
+          <tr><td><strong>${awayAbbr}</strong></td><td>—</td><td>—</td><td>—</td><td>—</td><td class="bold-cell">—</td><td>—</td><td>—</td></tr>
+          <tr><td><strong>${homeAbbr}</strong></td><td>—</td><td>—</td><td>—</td><td>—</td><td class="bold-cell">—</td><td><strong>${spreadVal}</strong></td><td><strong>${ouTotal}</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="decision-row"><strong>Market Action Summary:</strong> High betting volume tracked on internal spread consensus blocks.</div>`;
+      
+    $("gamedayLink").textContent = `🚀 Launch Official ESPN Live Football Gamecast Core Dashboard`;
+    $("gamedayLink").href = "https://www.espn.com/nfl/scoreboard";
+
+  } else {
+    // Hide component containers on non-styled tracking boards
+    $("gamedayRow").style.display = "none";
+    $("gamedayLink").style.display = "none";
+  }
+}
+
 async function loadLeagueEnvironment() {
   $("aiAnswer").classList.remove("visible");
   $("aiInput").value = "";
   updateSuggestedChips();
 
   if (currentLeague === "mlb") {
-    $("gamedayRow").style.display = "grid";
-    $("gamedayLink").style.display = "block";
     $("statsTabs").innerHTML = '<button class="stab active" data-pane="batting">Batting</button><button class="stab" data-pane="pitching">Pitching</button><button class="stab" data-pane="fielding">Fielding</button><button class="stab" data-pane="fortyMan">40-Man Roster</button>';
     curPane = "batting"; renderMlbTable();
-  } else {
-    $("gamedayRow").style.display = "none";
-    $("gamedayLink").style.display = "none";
-    
-    if (currentLeague === "nfl") {
-      $("statsTabs").innerHTML = '<button class="stab active" data-pane="commanders">Commanders Standings</button><button class="stab" data-pane="chiefs">Chiefs Standings</button>';
-      curPane = "commanders"; renderNflTable();
-    } 
-    else if (currentLeague === "mls") {
-      $("statsTabs").innerHTML = '<button class="stab active" data-pane="city_sc">St. Louis CITY SC</button><button class="stab" data-pane="mls_all">Full MLS Standings</button>';
-      curPane = "city_sc"; renderMlsTable();
-    } 
-    else if (currentLeague === "nascar") {
-      $("statsTabs").innerHTML = '<button class="stab active" data-pane="nascarLeader">Live Cup Series Standings</button><button class="stab" data-pane="nascarTracks">Core Track Profiles</button>';
-      curPane = "nascarLeader"; renderNascarTable();
-    }
-    else if (currentLeague === "space") {
-      $("statsTabs").innerHTML = '<button class="stab active" data-pane="spaceMissions">Starship & SpaceX Core Testing Log</button>';
-      curPane = "spaceMissions"; renderSpaceTable();
-    }
+  } 
+  else if (currentLeague === "nfl") {
+    $("statsTabs").innerHTML = '<button class="stab active" data-pane="commanders">Commanders Standings</button><button class="stab" data-pane="chiefs">Chiefs Standings</button>';
+    curPane = "commanders"; renderNflTable();
+  } 
+  else if (currentLeague === "mls") {
+    $("statsTabs").innerHTML = '<button class="stab active" data-pane="city_sc">St. Louis CITY SC</button><button class="stab" data-pane="mls_all">Full MLS Standings</button>';
+    curPane = "city_sc"; renderMlsTable();
+  } 
+  else if (currentLeague === "nascar") {
+    $("statsTabs").innerHTML = '<button class="stab active" data-pane="nascarLeader">Live Cup Series Standings</button><button class="stab" data-pane="nascarTracks">Core Track Profiles</button>';
+    curPane = "nascarLeader"; renderNascarTable();
   }
+  else if (currentLeague === "space") {
+    $("statsTabs").innerHTML = '<button class="stab active" data-pane="spaceMissions">Starship & SpaceX Core Testing Log</button>';
+    curPane = "spaceMissions"; renderSpaceTable();
+  }
+  
+  syncScoutingDeckLayouts();
   $("updated").textContent = "Updated " + new Date().toLocaleTimeString();
 }
 
@@ -394,10 +442,6 @@ async function renderNascarTable() {
 
 function renderSpaceTable() {
   $("statsBody").innerHTML = '<table class="stats-tbl"><thead><tr><th>Vehicle Framework</th><th>Target Flight / Mission Goal</th><th>Facility Status</th></tr></thead><tbody><tr><td><strong>Starship Flight 5</strong></td><td>Integrated Booster Recovery Catch</td><td>Flight Complete Node</td></tr><tr><td><strong>Starship Flight 6</strong></td><td>Atmospheric Profile Assessment & Catch refinement</td><td>Production Assembly Active</td></tr><tr><td><strong>Falcon 9 (SpaceX Core)</strong></td><td>Commercial Payload & Next-Gen Satellite Arrays</td><td>Continuous Operational Fleet</td></tr></tbody></table>';
-}
-
-function textHasExactWord(sentence, targetWord) {
-  return (new RegExp('\\b' + targetWord.toLowerCase() + '\\b')).test(sentence.toLowerCase());
 }
 
 async function buildGranularExpertCard(sportSlug, teamAbbr, expertKey, userQuestion) {
@@ -567,6 +611,10 @@ $("statsTabs").addEventListener("click", e => {
   const b = e.target.closest(".stab"); if (!b) return;
   document.querySelectorAll(".stab").forEach(x=>x.classList.remove("active"));
   b.classList.add('active'); curPane = b.dataset.pane;
+  
+  // Cleanly re-sync layout parameters if flipping sub-panes between Commanders and Chiefs
+  if(currentLeague === "nfl") syncScoutingDeckLayouts();
+  
   if(currentLeague === "mlb") renderMlbTable();
   if(currentLeague === "nfl") renderNflTable();
   if(currentLeague === "mls") renderMlsTable();
