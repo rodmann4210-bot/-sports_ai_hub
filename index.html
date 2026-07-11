@@ -1,54 +1,37 @@
-<!-- © 2026 Roderick Grimes. Mobile-Optimized v8.6 -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sports AI Hub</title>
 <style>
-  :root{--burgundy:#b3122e;--gold:#f3c14b;--bg:#0a0f1c;--panel:#141b30;--ink:#f3ece0;}
-  body{background:var(--bg);color:var(--ink);font-family:sans-serif;margin:0;padding:10px;}
-  .hub-nav{display:flex;gap:5px;overflow-x:auto;padding-bottom:10px;}
-  .hub-btn{background:var(--panel);color:var(--ink);padding:10px;border-radius:5px;border:none;white-space:nowrap;}
-  .hub-btn.active{background:var(--burgundy);color:var(--gold);}
-  .gameday-row{display:none;margin-top:15px;background:var(--panel);padding:15px;border-radius:8px;}
-  .gameday-link-btn{display:none;width:100%;text-align:center;background:var(--burgundy);color:var(--gold);padding:15px;margin-top:10px;text-decoration:none;border-radius:5px;font-weight:bold;}
+  body { background: #0a0f1c; color: #f3ece0; font-family: sans-serif; padding: 10px; }
+  .tab-content { display: none; padding-top: 20px; }
+  #mlb:checked ~ #mlb-content, #nfl:checked ~ #nfl-content, #nascar:checked ~ #nascar-content { display: block; }
+  input { display: none; }
+  label { background: #141b30; padding: 10px 20px; border-radius: 5px; cursor: pointer; border: 1px solid #b3122e; }
+  input:checked + label { background: #b3122e; }
+  .btn { display: block; background: #b3122e; color: #f3c14b; text-align: center; padding: 15px; text-decoration: none; border-radius: 5px; margin-top: 20px; font-weight: bold; }
 </style>
 </head>
 <body>
 
-<nav class="hub-nav" id="hubNav">
-  <button class="hub-btn active" data-id="mlb">MLB</button>
-  <button class="hub-btn" data-id="nfl">NFL</button>
-  <button class="hub-btn" data-id="nascar">NASCAR</button>
-</nav>
+<input type="radio" name="tabs" id="mlb" checked> <label for="mlb">MLB</label>
+<input type="radio" name="tabs" id="nfl"> <label for="nfl">NFL</label>
+<input type="radio" name="tabs" id="nascar"> <label for="nascar">NASCAR</label>
 
-<!-- Static Containers -->
-<div id="mlb-box" class="gameday-row">MLB Preview Card</div>
-<a id="mlb-link" href="https://www.mlb.com/gameday/braves-vs-cardinals/2026/07/11/823030/preview" class="gameday-link-btn" style="display:block;">Launch MLB Gameday</a>
+<div id="mlb-content" class="tab-content">
+  <div>MLB Content Here</div>
+  <a href="https://www.mlb.com/gameday/braves-vs-cardinals/2026/07/11/823030/preview" class="btn">Launch MLB Gameday</a>
+</div>
 
-<div id="nfl-box" class="gameday-row">NFL Preview Card</div>
-<a id="nfl-link" href="https://www.espn.com/nfl/scoreboard" class="gameday-link-btn">Launch NFL Scoreboard</a>
+<div id="nfl-content" class="tab-content">
+  <div>NFL Content Here</div>
+  <a href="https://www.espn.com/nfl/scoreboard" class="btn">Launch NFL Scoreboard</a>
+</div>
 
-<div id="nascar-box" class="gameday-row">NASCAR Garage Log</div>
-<a id="nascar-link" href="https://www.nascar.com/results/live/racecenter/" class="gameday-link-btn">Launch NASCAR Race Center</a>
+<div id="nascar-content" class="tab-content">
+  <div>NASCAR Content Here</div>
+  <a href="https://www.nascar.com/results/live/racecenter/" class="btn">Launch NASCAR Race Center</a>
+</div>
 
-<script>
-const btns = document.querySelectorAll('.hub-btn');
-btns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    btns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    
-    // Hide all containers
-    document.querySelectorAll('.gameday-row, .gameday-link-btn').forEach(el => el.style.display = 'none');
-    
-    // Show selected
-    const id = btn.dataset.id;
-    document.getElementById(id + '-box').style.display = 'block';
-    document.getElementById(id + '-link').style.display = 'block';
-  });
-});
-</script>
 </body>
 </html>
