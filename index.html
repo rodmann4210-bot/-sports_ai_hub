@@ -139,6 +139,7 @@
       <div class="boxscore-box" id="boxscoreBox"></div>
     </div>
 
+    <!-- DYNAMIC CORE ROUTED ACCELERATOR LINK CHANNELS -->
     <a href="#" target="_blank" class="gameday-link-btn" id="gamedayLink"></a>
 
     <section class="panel" id="statsPanel">
@@ -150,7 +151,7 @@
   </div>
   
   <footer>
-    <div>Systems Environment: <span class="g">ESPN Scoreboard & Insider Commentary Matrix v7.9</span>.</div>
+    <div>Systems Environment: <span class="g">ESPN Scoreboard & Insider Commentary Matrix v8.0</span>.</div>
     <div>© 2026 Roderick Grimes. All rights reserved.</div>
   </footer>
 </div>
@@ -257,6 +258,9 @@ function updateSuggestedChips() {
   $("aiChips").innerHTML = chips.map(c => `<span class="ai-chip">${c}</span>`).join("");
 }
 
+/* ============================================================
+   QUALITATIVE DYNAMIC SCOUTING DECK ENGINE (v8.0 COMPILATION FIXED)
+   ============================================================ */
 function syncScoutingDeckLayouts() {
   if (currentLeague === "mlb") {
     $("gamedayRow").style.display = "grid";
@@ -383,7 +387,7 @@ function syncScoutingDeckLayouts() {
         </tbody>
       </table>`;
 
-    // FIX ROUTED ESCAPE LINK: Pointing cleanly to the official live Race Center leaderboard dashboard
+    // FIX CORES: Writing target properties directly to global attributes so the navigation deck compiles correctly
     $("gamedayLink").textContent = "🚀 Launch Official NASCAR Live Race Center Real-Time Leaderboard Feed";
     $("gamedayLink").href = "https://www.nascar.com/results/live/racecenter/";
 
@@ -672,13 +676,6 @@ $("statsTabs").addEventListener("click", e => {
   if(currentLeague === "nfl") renderNflTable();
   if(currentLeague === "mls") renderMlsTable();
   if(currentLeague === "nascar") renderNascarTable();
-});
-
-$("aiBtn").addEventListener("click", () => handleSearch($("aiInput").value));
-$("aiInput").addEventListener("keypress", (e) => { if (e.key === "Enter") { e.preventDefault(); handleSearch($("aiInput").value); } });
-$("aiChips").addEventListener("click", (e) => {
-  const chip = e.target.closest(".ai-chip"); if (!chip) return;
-  $("aiInput").value = chip.textContent; handleSearch(chip.textContent);
 });
 
 loadLeagueEnvironment();
