@@ -114,7 +114,7 @@
   </div>
   
   <footer>
-    <div>Systems Environment: <span class="g">ESPN Scoreboard & Insider Commentary Matrix v7.0</span>.</div>
+    <div>Systems Environment: <span class="g">ESPN Scoreboard & Insider Commentary Matrix v7.1</span>.</div>
     <div>© 2026 Roderick Grimes. All rights reserved.</div>
   </footer>
 </div>
@@ -163,34 +163,36 @@ const INTERNAL_SCHEDULES = {
   space: [{ date: "2026-07-09T14:30:00", mission: "Falcon 9 Starlink 12-4", platform: "SLC-40", status: "Pad Ready" }]
 };
 
-/* ============================================================
-   QUALITATIVE ANALYTICAL DATABANK
-   Blends statistical limits with expert insights from top analysts.
-   ============================================================ */
-const QUALITATIVE_EXPERT_CORE = {
-  "commanders": {
-    analyst: "David Harrison / Locked On Commanders Podcast",
-    lineModel: "Commanders Open: +3.5 Spread (-110) | Market Value hook active.",
+const OPPONENT_INTELLIGENCE = {
+  "braves": {
+    lineModel: "Braves Open: -125 | Cardinals Open: +105. Underdog value advantages the dog line profile.",
+    bvpAdvantage: "• <strong>Granular Sabermetric Cheat Sheet:</strong> Goldschmidt ranks in the 88th percentile with a .312 career xBA vs high-velocity breaking sliders. Arenado hard-hit rate registers at .440 vs interior changeup configurations.",
+    pressReport: "• <strong>Derrick Goold Press Box Report:</strong> Clubhouse confirmation states Marmol is running short on high-leverage arms; early pitching switches projected. Hitters must jump straight velocity early before facing complex breaking patterns.",
+    dfsProjections: "• <strong>DFS Indicator Nodes:</strong> Brendan Donovan flags premium conversion points against right-handed bullpen packaging options."
+  },
+  "default": {
+    lineModel: "Cardinals Open: -115. Base market indexes run flat.",
+    bvpAdvantage: "• <strong>Sabermetric Baseline:</strong> Hitter barrel frames are trending steady vs offspeed packages.",
+    pressReport: "• <strong>Press Box Standby:</strong> Standard game plan deployment active. Limit high extensions.",
+    dfsProjections: "• <strong>DFS Nodes:</strong> Middle-order targets display optimal general run index weights."
+  }
+};
+
+const STRATEGIC_PROJECTIONS = {
+  nfl_wsh: {
+    lineModel: "Commanders Open: +3.5 Spread (-110) | Moneyline: +155. Betting hook showing high efficiency values.",
     verdict: "• <strong>Locked On Film Room Verdict:</strong> Secondary structures show maximum coverage conversion metrics when falling back into intermediate press blocks. Offensive line assignments are prioritizing double-team inside splits to protect the edge rusher liability windows.",
     bettingTake: "• <strong>Actionable Strategy:</strong> Grab the +3.5 spread hook early before public volume cuts the line value down."
   },
-  "chiefs": {
-    analyst: "PFF Data Analytics / Arrowhead Core",
-    lineModel: "Chiefs Open: -3.5 Spread (-115). Warning: Juice tracks past optimal -140 risk bounds.",
-    verdict: "• <strong>Roster Scheme Review:</strong> Defensive line usage weights indicate high efficiency matching interior gap runs. Passing design utilizes quick-release seam releases to mitigate exterior blitz vulnerabilities.",
-    bettingTake: "• <strong>Actionable Strategy:</strong> Avoid laying heavy moneyline juice (-180); focus on first-half point spread margins."
+  nfl_kc: {
+    lineModel: "Chiefs Open: -3.5 Spread (-115) | Moneyline: -180. Warning: Juice tracks outside threshold parameters.",
+    verdict: "• <strong>PFF Scheme Evaluation:</strong> Defensive line anchors project strong protection indexing inside vertical gap run concepts. Passing models favor early interior seam routes to counter secondary safety rotations.",
+    bettingTake: "• <strong>Actionable Strategy:</strong> Dodge standard point spreads; target first-half margin betting slots."
   },
-  "cardinals": {
-    analyst: "Derrick Goold / St. Louis Post-Dispatch",
-    lineModel: "Cardinals Open: +105 Underdog Price vs Atlanta Braves baseline rotation.",
-    verdict: "• <strong>Bird Bird Press Box Report:</strong> Clubhouse utilisation confirms Marmol is short on high-leverage relief arms; expectation maps early pitcher changes. Batting vectors must jump straight fastballs before facing deep slider patterns.",
-    bettingTake: "• <strong>Actionable Strategy:</strong> Dog pricing (+105) yields optimal statistical value if tracking early run-line leads."
-  },
-  "city_sc": {
-    analyst: "Tom Timmermann / Post-Dispatch Soccer",
+  mls_stl: {
     lineModel: "CITY SC Open: +110 Moneyline | Draw Price: +240.",
-    verdict: "• <strong>Pitch Configuration Breakdown:</strong> Tactical high counter-press models project an advanced +14% recovery advantage inside the attacking final third against Sporting KC's transitional setup.",
-    bettingTake: "• <strong>Actionable Strategy:</strong> Straight Moneyline at +110 offers high return probability given home-pitch advantage records."
+    verdict: "• <strong>Tom Timmermann Tactical Pitch Report:</strong> High transitional counter-press configurations yield an advanced +14% turnover recovery weight inside the opponent's final third.",
+    bettingTake: "• <strong>Actionable Strategy:</strong> Pure Moneyline position at +110 holds favorable odds return metrics."
   }
 };
 
@@ -331,8 +333,7 @@ function textHasExactWord(sentence, targetWord) {
 }
 
 /* ============================================================
-   QUALITATIVE DYNAMIC MIX ROUTER ENGINE
-   Combines active API scoreboard grids with columnist databanks.
+   QUALITATIVE DYNAMIC MIX ROUTER ENGINE (v7.1 PATCHED)
    ============================================================ */
 async function buildGranularExpertCard(sportSlug, teamAbbr, expertKey, userQuestion) {
   try {
@@ -368,28 +369,47 @@ async function buildGranularExpertCard(sportSlug, teamAbbr, expertKey, userQuest
         }
       }
 
-      // Extract raw key string and call the qualitative columnist profiles
-      const intel = QUALITATIVE_EXPERT_CORE[expertKey];
       const targetTeamName = home.team.abbreviation.toLowerCase() === teamAbbr.toLowerCase() ? home.team.shortDisplayName : away.team.shortDisplayName;
       const calcProb = home.team.abbreviation.toLowerCase() === teamAbbr.toLowerCase() ? homeProb : awayProb;
-
       const isDelayed = match.status?.type?.description === "Delayed" || match.status?.type?.name === "STATUS_DELAYED";
       const delayLabel = isDelayed ? " <span style='color:var(--gold); font-size:12px;'>[WEATHER DELAY ACTIVE]</span>" : "";
 
-      return `<strong>Press Box Command Sheet — ${intel.analyst}</strong>${delayLabel}<br>` +
-             `• <strong>Game Card:</strong> ${away.team.displayName} (${awayRec}) vs ${home.team.displayName} (${homeRec})<br>` +
-             `• <strong>Board Price Line:</strong> ${intel.lineModel}<br>` +
-             `${intel.verdict}<br>` +
-             `${intel.bettingTake}<br>` +
-             `• <strong>Local Algorithmic Predictor Run:</strong> ${targetTeamName} Win Probability calculated at <strong>${calcProb.toFixed(1)}%</strong>.`;
+      // LEVEL 1 SPLIT: BASEBALL QUALITATIVE MATRIX
+      if (sportSlug === "baseball/mlb") {
+        const opponentName = home.team.abbreviation.toLowerCase() === teamAbbr.toLowerCase() ? away.team.shortDisplayName.toLowerCase() : home.team.shortDisplayName.toLowerCase();
+        const intel = OPPONENT_INTELLIGENCE[opponentName] || OPPONENT_INTELLIGENCE["default"];
+        
+        let headerStr = `<strong>Press Box Command Sheet — Derrick Goold / St. Louis Post-Dispatch</strong>${delayLabel}<br>` +
+                        `• <strong>Game Card:</strong> ${away.team.displayName} (${awayRec}) vs ${home.team.displayName} (${homeRec})<br>` +
+                        `• <strong>Board Price Line:</strong> ${intel.lineModel}<br>`;
+
+        // STRICT SEPARATION: Intercept precise button chip text keywords to isolate strings
+        if (userQuestion.includes("bvp") || userQuestion.includes("batter") || userQuestion.includes("pitcher") || userQuestion.includes("advantage")) {
+          return headerStr + `${intel.bvpAdvantage}<br>• <strong>Predictive Edge Index:</strong> Batter launch paths advantage horizontal seam models.`;
+        } else if (userQuestion.includes("report") || userQuestion.includes("goold") || userQuestion.includes("press")) {
+          return headerStr + `${intel.pressReport}<br>${intel.dfsProjections}`;
+        } else {
+          // Standard general projection fallback structure
+          return headerStr + `• <strong>Predictive Edge Index:</strong> ${targetTeamName} Win Probability calculated at <strong>${calcProb.toFixed(1)}%</strong>.<br>${intel.pressReport}`;
+        }
+      }
+
+      // LEVEL 2 SPLIT: NFL QUALITATIVE MATRIX
+      if (sportSlug === "football/nfl") {
+        const intel = STRATEGIC_PROJECTIONS[expertKey];
+        let headerStr = `<strong>Press Box Board Room — NFL Strategic Core</strong><br>` +
+                        `• <strong>Game Card:</strong> ${away.team.displayName} (${awayRec}) vs ${home.team.displayName} (${homeRec})<br>` +
+                        `• <strong>Board Price Line:</strong> ${intel.lineModel}<br>`;
+
+        if (userQuestion.includes("verdict") || userQuestion.includes("locked on")) {
+          return headerStr + `${intel.verdict}`;
+        } else {
+          return headerStr + `${intel.bettingTake}<br>• <strong>Predictive Edge Index:</strong> ${targetTeamName} Win Probability: <strong>${calcProb.toFixed(1)}%</strong>.`;
+        }
+      }
     }
   } catch(e) {}
-  
-  // High-fidelity fallback asset if network endpoint goes dark completely
-  const fallbackIntel = QUALITATIVE_EXPERT_CORE[expertKey];
-  return `<strong>Press Box Insight [Standby Mode] — ${fallbackIntel.analyst}</strong><br>` +
-         `• <strong>Board Price Line:</strong> ${fallbackIntel.lineModel}<br>` +
-         `${fallbackIntel.verdict}`;
+  return `<strong>Press Box Insight Fallback Node Engage.</strong> Link delayed.`;
 }
 
 async function handleSearch(query) {
@@ -400,14 +420,15 @@ async function handleSearch(query) {
   let output = "";
 
   try {
-    const isProjectionQuery = q.includes("matchup") || q.includes("projection") || q.includes("predict") || q.includes("probability") || q.includes("bvp") || q.includes("verdict") || q.includes("locked on") || q.includes("goold");
+    // FIXED CHIP SCANNER: Add "advantage", "batter", "pitcher", and "report" so Level 1 catches your button selections!
+    const isProjectionQuery = q.includes("matchup") || q.includes("projection") || q.includes("predict") || q.includes("probability") || q.includes("bvp") || q.includes("verdict") || q.includes("locked on") || q.includes("goold") || q.includes("advantage") || q.includes("batter") || q.includes("pitcher") || q.includes("report");
+    
     if (isProjectionQuery) {
-      // QUALITATIVE ROUTING INTERCEPT: Locks onto precise columnist keys to kill duplicated replies
       if (q.includes("commanders") || q.includes("locked on") || (currentLeague === "nfl" && curPane === "commanders")) {
         output = await buildGranularExpertCard("football/nfl", "wsh", "commanders", q);
       } else if (q.includes("chiefs") || (currentLeague === "nfl" && curPane === "chiefs")) {
         output = await buildGranularExpertCard("football/nfl", "kc", "chiefs", q);
-      } else if (q.includes("cardinals") || q.includes("goold") || q.includes("baseball") || currentLeague === "mlb") {
+      } else if (q.includes("cardinals") || q.includes("goold") || q.includes("baseball") || q.includes("batter") || q.includes("pitcher") || q.includes("advantage") || q.includes("report") || currentLeague === "mlb") {
         output = await buildGranularExpertCard("baseball/mlb", "stl", "cardinals", q);
       } else if (q.includes("city") || q.includes("mls") || currentLeague === "mls") {
         output = await buildGranularExpertCard("soccer/usa.1", "stl", "city_sc", q);
@@ -415,7 +436,7 @@ async function handleSearch(query) {
       ans.innerHTML = output; return;
     }
 
-    /* CHRONO TIMELINE LOOKUPS */
+    /* TIMELINE LOOKUPS */
     const isTimelineQuery = q.includes("when") || q.includes("schedule") || q.includes("game") || q.includes("play");
     if (isTimelineQuery) {
       let key = "mlb";
@@ -432,7 +453,7 @@ async function handleSearch(query) {
       }
     }
 
-    /* CARDINALS FILE STAT leaders SCANNER */
+    /* LEADERS FILE CORES */
     if (statsData && currentLeague === "mlb") {
       let targetedMetric = null;
       for (const [phrase, columnKey] of Object.entries(ALIASED_METRICS)) {
@@ -451,12 +472,12 @@ async function handleSearch(query) {
       }
     }
 
-    /* GENERAL REGISTRY LOOKUP FALLBACKS */
+    /* FALLBACK REGISTRY REGISTRATION */
     let matchedEntry = UNIVERSAL_REGISTRY.find(entry => entry.keys.some(k => q.includes(k)));
     if (matchedEntry) {
       ans.innerHTML = `<strong>System Matrix Lookup [${matchedEntry.label}]:</strong> ${matchedEntry.property}: <strong>${matchedEntry.value}</strong>.`;
     } else {
-      ans.innerHTML = `<strong>Matrix Indexer [Intent: Unresolved]:</strong> Query parameter unmapped. Try asking for 'Locked On Commanders verdict' or 'Show Derrick Goold press report'!`;
+      ans.innerHTML = `<strong>Matrix Indexer [Intent: Unresolved]:</strong> Query fields unmapped. Try asking for 'Locked On Commanders verdict' or 'Show Derrick Goold press report'!`;
     }
 
   } catch (err) {
