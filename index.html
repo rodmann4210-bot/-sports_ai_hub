@@ -134,13 +134,11 @@
       </div>
     </section>
 
-    <!-- DYNAMIC HUB CONTAINER DECK -->
     <div class="gameday-row" id="gamedayRow">
       <div class="preview-box" id="previewBox"></div>
       <div class="boxscore-box" id="boxscoreBox"></div>
     </div>
 
-    <!-- DYNAMIC HIGH-SPEED ACTION ACCELERATOR LINK CONTAINER -->
     <a href="#" target="_blank" class="gameday-link-btn" id="gamedayLink"></a>
 
     <section class="panel" id="statsPanel">
@@ -152,7 +150,7 @@
   </div>
   
   <footer>
-    <div>Systems Environment: <span class="g">ESPN Scoreboard & Insider Commentary Matrix v8.1</span>.</div>
+    <div>Systems Environment: <span class="g">ESPN Scoreboard & Insider Commentary Matrix v8.2</span>.</div>
     <div>© 2026 Roderick Grimes. All rights reserved.</div>
   </footer>
 </div>
@@ -260,15 +258,16 @@ function updateSuggestedChips() {
 }
 
 /* ============================================================
-   QUALITATIVE DYNAMIC SCOUTING DECK ENGINE (v8.1 DOM INJECTION FIXED)
+   QUALITATIVE DYNAMIC SCOUTING DECK ENGINE (v8.2 REPAIRED HOOKS)
    ============================================================ */
 function syncScoutingDeckLayouts() {
   const linkBtn = $("gamedayLink");
+  
+  // FIX: Force the link and structural rows to remain completely visible across styled contexts
+  $("gamedayRow").style.display = "grid";
+  linkBtn.style.display = "block";
 
   if (currentLeague === "mlb") {
-    $("gamedayRow").style.display = "grid";
-    linkBtn.style.display = "block";
-    
     $("previewBox").innerHTML = `
       <div class="gd-title"><span>📋 Game Preview Scouting</span> <span style="color:var(--muted-2)">MLB Core</span></div>
       <div class="media-row"><strong>Watch:</strong> <span>Cardinals.TV Presented by bet365 / BravesVision</span></div>
@@ -290,14 +289,10 @@ function syncScoutingDeckLayouts() {
       </table>
       <div class="decision-row"><strong>W:</strong> Romero, J. (1-2, 3.43) | <strong>L:</strong> Young, D. (0-1, 2.70) | <strong>S:</strong> O'Brien (23, 3.52)</div>`;
       
-    // FIX CORES: Direct DOM manipulation rewriting the link anchor object properties
     linkBtn.textContent = "🚀 Launch Deep-Dive MLB Live Interactive Gameday App Page";
     linkBtn.setAttribute("href", "https://www.mlb.com/gameday/braves-vs-cardinals/2026/07/11/823030/preview");
 
   } else if (currentLeague === "nfl") {
-    $("gamedayRow").style.display = "grid";
-    linkBtn.style.display = "block";
-    
     const isChiefs = curPane === "chiefs";
     const teamTitle = isChiefs ? "KANSAS CITY CHIEFS" : "WASHINGTON COMMANDERS";
     const radioAffil = isChiefs ? "106.5 The Wolf" : "BIG 100.3 FM Network";
@@ -329,14 +324,10 @@ function syncScoutingDeckLayouts() {
       </table>
       <div class="decision-row"><strong>Market Action Summary:</strong> High betting volume tracked on internal spread consensus blocks.</div>`;
       
-    // FIX CORES: Direct DOM manipulation rewriting the link anchor object properties
     linkBtn.textContent = `🚀 Launch Official ESPN Live Football Gamecast Core Dashboard`;
     linkBtn.setAttribute("href", "https://www.espn.com/nfl/scoreboard");
 
   } else if (currentLeague === "mls") {
-    $("gamedayRow").style.display = "grid";
-    linkBtn.style.display = "block";
-
     $("previewBox").innerHTML = `
       <div class="gd-title"><span>⚽ MLS Matchday Lineup Radar</span> <span style="color:var(--muted-2)">Pitch Matrix</span></div>
       <div class="media-row"><strong>Match Streaming:</strong> <span>Apple TV — MLS Season Pass</span></div>
@@ -358,14 +349,10 @@ function syncScoutingDeckLayouts() {
       </table>
       <div class="decision-row"><strong>Derby Context:</strong> Show-Me State Showdown returns to Energizer Park for Rivalry Night.</div>`;
 
-    // FIX CORES: Direct DOM manipulation rewriting the link anchor object properties
     linkBtn.textContent = `🚀 Launch Official MLS Season Pass Interactive Matchcenter Dashboard`;
     linkBtn.setAttribute("href", "https://www.mlssoccer.com/schedule");
 
   } else if (currentLeague === "nascar") {
-    $("gamedayRow").style.display = "grid";
-    linkBtn.style.display = "block";
-
     const isTracks = curPane === "nascarTracks";
     const trackTitle = isTracks ? "World Wide Technology Raceway" : "Martinsville Speedway";
     const trackLen = isTracks ? "1.250 Miles" : "0.526 Miles";
@@ -393,11 +380,11 @@ function syncScoutingDeckLayouts() {
         </tbody>
       </table>`;
 
-    // CRITICAL FIX DETECTED: Direct attribute rewriting applied to global link elements explicitly handles tab shifts!
     linkBtn.textContent = "🚀 Launch Official NASCAR Live Race Center Real-Time Leaderboard Feed";
     linkBtn.setAttribute("href", "https://www.nascar.com/results/live/racecenter/");
 
   } else {
+    // Hide panels explicitly ONLY when sitting on non-styled text cards (like SpaceX Launchwatch)
     $("gamedayRow").style.display = "none";
     linkBtn.style.display = "none";
   }
