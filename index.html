@@ -113,7 +113,7 @@
   </div>
   
   <footer>
-    <div>Systems Environment: <span class="g">ESPN Scoreboard & Auto-Sync BvP Engine v6.4</span>.</div>
+    <div>Systems Environment: <span class="g">ESPN Scoreboard & Auto-Sync BvP Engine v6.5</span>.</div>
     <div>© 2026 Roderick Grimes. All rights reserved.</div>
   </footer>
 </div>
@@ -159,8 +159,7 @@ const INTERNAL_SCHEDULES = {
 };
 
 /* ============================================================
-   DYNAMIC OPPONENT ADAPTATION DATABASE (ROTWIRE CORE)
-   Holds team-specific tactical projections to break the "same stats" bug.
+   DYNAMIC OPPONENT ADAPTATION DATABASE (ROTWIORE CORE)
    ============================================================ */
 const OPPONENT_INTELLIGENCE = {
   "brewers": {
@@ -296,7 +295,6 @@ function textHasExactWord(sentence, targetWord) {
 
 /* ============================================================
    UPGRADED AUTO-SYNC MATCHUP ENGINE
-   Extracts live opponent identifiers and applies mapped intelligence paragraphs dynamically.
    ============================================================ */
 async function buildLiveSynchronizedMatchupCard(sportSlug, teamAbbr, staticProjections) {
   try {
@@ -321,13 +319,14 @@ async function buildLiveSynchronizedMatchupCard(sportSlug, teamAbbr, staticProje
       if (homeProb > 95) homeProb = 92; if (homeProb < 5) homeProb = 8;
       let awayProb = 100 - homeProb;
 
-      // Identify which team is the opponent to pull unique, data-rich paragraphs
-      let opponentKey = "default";
+      // Correctly hand over mapped static projection tables if tracking multi-sport panels
+      let activeIntel = staticProjections;
       if (sportSlug === "baseball/mlb") {
+        let opponentKey = "default";
         const opponentName = home.team.abbreviation.toLowerCase() === "stl" ? away.team.shortDisplayName.toLowerCase() : home.team.shortDisplayName.toLowerCase();
         if (OPPONENT_INTELLIGENCE[opponentName]) opponentKey = opponentName;
+        activeIntel = OPPONENT_INTELLIGENCE[opponentKey];
       }
-      const activeIntel = sportSlug === "baseball/mlb" ? OPPONENT_INTELLIGENCE[opponentKey] : staticProjections;
 
       return `<strong>Dynamic Daily Edge Panel [${sportSlug.split('/')[1].toUpperCase()} Matchup Projections]:</strong><br>` +
              `• <strong>Live Game Card:</strong> ${away.team.displayName} (${awayRec}) vs ${home.team.displayName} (${homeRec})<br>` +
