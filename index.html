@@ -113,7 +113,7 @@
   </div>
   
   <footer>
-    <div>Systems Environment: <span class="g">ESPN Scoreboard & Auto-Sync BvP Engine v6.6</span>.</div>
+    <div>Systems Environment: <span class="g">ESPN Scoreboard & Auto-Sync BvP Engine v6.7</span>.</div>
     <div>© 2026 Roderick Grimes. All rights reserved.</div>
   </footer>
 </div>
@@ -153,14 +153,11 @@ const UNIVERSAL_REGISTRY = [
 ];
 
 const INTERNAL_SCHEDULES = {
-  mlb: [{ date: "2026-07-07T19:15:00", opponent: "Chicago Cubs", venue: "Busch Stadium", tv: "FS1 / KMOX 1120 AM", teamId: "24" }],
+  mlb: [{ date: "2026-07-10T19:15:00", opponent: "Atlanta Braves", venue: "Busch Stadium", tv: "FS1 / KMOX 1120 AM", teamId: "24" }],
   nfl: [{ date: "2026-09-10T20:20:00", opponent: "Dallas Cowboys", venue: "FedExField", tv: "NBC / BIG 100.3 FM", teamId: "28" }],
   space: [{ date: "2026-07-09T14:30:00", mission: "Falcon 9 Starlink 12-4", platform: "SLC-40", status: "Pad Ready" }]
 };
 
-/* ============================================================
-   DYNAMIC OPPONENT ADAPTATION DATABASE (ROTWIORE CORE)
-   ============================================================ */
 const OPPONENT_INTELLIGENCE = {
   "brewers": {
     lineModel: "Cardinals Moneyline Edge showing high variance vs front-running division velocity profiles.",
@@ -299,14 +296,13 @@ function textHasExactWord(sentence, targetWord) {
 }
 
 /* ============================================================
-   TARGETED SEARCH INTERCEPT LOOP
-   Bypasses broad string matching by explicitly looking at competitor rosters.
+   UPGRADED AUTO-SYNC MATCHUP ENGINE
+   Safely handles delayed and postponed statuses by checking parent team objects.
    ============================================================ */
 async function buildLiveSynchronizedMatchupCard(sportSlug, teamAbbr, staticProjections) {
   try {
     const res = await getJSON(`https://site.api.espn.com/apis/site/v2/sports/${sportSlug}/scoreboard`);
     
-    // TARGETED SCAN: Target only the game where the specific team abbreviation lives in the competitor block
     const match = (res.events || []).find(e => {
       if (!e.competitions?.[0]?.competitors) return false;
       return e.competitions[0].competitors.some(c => 
@@ -319,36 +315,47 @@ async function buildLiveSynchronizedMatchupCard(sportSlug, teamAbbr, staticProje
       const home = comp.competitors.find(c => c.homeAway === "home");
       const away = comp.competitors.find(c => c.homeAway === "away");
       
-      const homeRec = home.record?.[0]?.summary || "50-50";
-      const awayRec = away.record?.[0]?.summary || "50-50";
-      const hw = parseInt(homeRec.split("-")[0]) || 1, hl = parseInt(homeRec.split("-")[1]) || 1;
-      const aw = parseInt(awayRec.split("-")[0]) || 1, al = parseInt(awayRec.split("-")[1]) || 1;
+      const homeRec = home.record?.[0]?.summary || "0-0";
+      const awayRec = away.record?.[0]?.summary || "0-0";
       
-      let homePct = hw / (hw + hl), awayPct = aw / (aw + al);
-      let total = homePct + awayPct;
-      let homeProb = ((homePct / total) * 100) + 4.5;
-      if (homeProb > 95) homeProb = 92; if (homeProb < 5) homeProb = 8;
-      let awayProb = 100 - homeProb;
+      // Delay Guard: Bypasses calculation crashes on unplayed or postponed games
+      let homeProb = 50.0, awayProb = 50.0;
+      if (homeRec !== "0-0" && awayRec !== "0-0") {
+        const hw = parseInt(homeRec.split("-")[0]) || 1, hl = parseInt(homeRec.split("-")[1]) || 1;
+        const aw = parseInt(awayRec.split("-")[0]) || 1, al = parseInt(awayRec.split("-")[1]) || 1;
+        let homePct = hw / (hw + hl), awayPct = aw / (aw + al);
+        let total = homePct + awayPct;
+        if (total > 0) {
+          homeProb = ((homePct / total) * 100) + 4.5;
+          if (homeProb > 95) homeProb = 92; if (homeProb < 5) homeProb = 8;
+          awayProb = 100 - homeProb;
+        }
+      }
 
-      // Extract the correct opponent and link their intelligence data card
+      // Safeguard opponent identity lookups against blank delayed records
       let activeIntel = staticProjections;
-      if (sportSlug === "baseball/mlb") {
+      if (sportSlug === "baseball/mlb" && home.team && away.team) {
         const opponentObj = home.team.abbreviation.toLowerCase() === teamAbbr.toLowerCase() ? away : home;
-        const opponentName = opponentObj.team.shortDisplayName.toLowerCase();
+        const opponentName = (opponentObj.team.shortDisplayName || opponentObj.team.name || "").toLowerCase();
         
         let opponentKey = "default";
         if (OPPONENT_INTELLIGENCE[opponentName]) opponentKey = opponentName;
         activeIntel = OPPONENT_INTELLIGENCE[opponentKey];
       }
 
-      return `<strong>Dynamic Daily Edge Panel [${sportSlug.split('/')[1].toUpperCase()} Matchup Projections]:</strong><br>` +
+      const isDelayed = match.status?.type?.description === "Delayed" || match.status?.type?.name === "STATUS_DELAYED";
+      const delayLabel = isDelayed ? " <span style='color:var(--gold); font-size:12px;'>[WEATHER DELAY]</span>" : "";
+
+      return `<strong>Dynamic Daily Edge Panel [${sportSlug.split('/')[1].toUpperCase()} Matchup Projections]:</strong>${delayLabel}<br>` +
              `• <strong>Live Game Card:</strong> ${away.team.displayName} (${awayRec}) vs ${home.team.displayName} (${homeRec})<br>` +
              `• <strong>Market Evaluation:</strong> ${activeIntel.lineModel}<br>` +
              `• ${activeIntel.bvpAdvantage}<br>` +
              `• ${activeIntel.dfsProjections}<br>` +
              `• <strong>Live Algorithmic Predictor Simulation:</strong> ${home.team.shortDisplayName} Win Probability: <strong>${homeProb.toFixed(1)}%</strong> | ${away.team.shortDisplayName} Win Probability: <strong>${awayProb.toFixed(1)}%</strong>.`;
     }
-  } catch(e) {}
+  } catch(e) {
+    console.error("Scoreboard parsing fault caught:", e);
+  }
   
   const fallbackIntel = sportSlug === "baseball/mlb" ? OPPONENT_INTELLIGENCE["default"] : staticProjections;
   return `<strong>Dynamic Daily Edge Panel [${sportSlug.split('/')[1].toUpperCase()} Projections]:</strong><br>` +
