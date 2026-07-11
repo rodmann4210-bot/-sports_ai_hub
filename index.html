@@ -40,7 +40,6 @@
   .p-head h2{font-family:'Oswald';font-weight:600;letter-spacing:2px;font-size:16px;text-transform:uppercase;flex:1}
   .p-head .ct{font-family:'Oswald';font-weight:600;font-size:13px;color:var(--gold);letter-spacing:1px}
 
-  /* NEW MODULE ROWS: STATIC GAMEDAY COMPONENT DECK */
   .gameday-row{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:4px}
   @media(max-width:850px){.gameday-row{grid-template-columns:1fr}}
   .preview-box, .boxscore-box{background:var(--panel);border:1px solid var(--line-soft);border-radius:8px;padding:16px;font-family:'Barlow';font-size:14px}
@@ -54,7 +53,6 @@
   .media-row{margin-top:6px;line-height:1.6;color:var(--muted);font-size:13px}
   .media-row strong{color:var(--gold-dim);font-family:'Barlow Condensed';font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
   
-  /* BOX SCORE INNINGS TRACKER TABLE */
   .bs-tbl{width:100%;border-collapse:collapse;margin-top:4px;font-family:'Barlow Condensed';font-size:14px}
   .bs-tbl th{font-family:'Oswald';font-size:11px;color:var(--muted-2);padding:6px;text-align:center;border-bottom:1px solid rgba(255,255,255,.05)}
   .bs-tbl th:first-child, .bs-tbl td:first-child{text-align:left;font-weight:700}
@@ -63,7 +61,6 @@
   .decision-row{margin-top:12px;font-family:'Barlow Condensed';font-size:13px;color:var(--muted);border-top:1px solid rgba(255,255,255,.05);padding-top:8px}
   .decision-row strong{color:var(--gold-dim)}
 
-  /* CUSTOM GAMEDAY LINK BUTTON */
   .gameday-link-btn{display:block;width:100%;text-align:center;background:linear-gradient(180deg, var(--panel-2), var(--bg-2));border:1px solid var(--line);border-radius:6px;color:var(--gold);font-family:'Oswald';font-weight:600;font-size:13px;letter-spacing:2px;text-transform:uppercase;padding:10px;margin-top:14px;cursor:pointer;text-decoration:none;transition:all 0.15s;box-shadow:0 4px 15px rgba(0,0,0,0.2)}
   .gameday-link-btn:hover{background:var(--gold);color:var(--burgundy-deep);border-color:var(--gold);box-shadow:0 0 12px rgba(243,193,75,.3)}
   
@@ -132,7 +129,7 @@
       </div>
     </section>
 
-    <!-- NEW ROW MODULE CONTEXT AREA: STATIC PREVIEW & LINESCORE DECK -->
+    <!-- STATIC GAMEDAY WIDGET DECKS -->
     <div class="gameday-row" id="gamedayRow">
       <div class="preview-box">
         <div class="gd-title"><span>📋 Game Preview Scouting</span> <span id="pvStatus" style="color:var(--muted-2)">MLB Core</span></div>
@@ -170,8 +167,8 @@
       </div>
     </div>
 
-    <!-- DIRECT ACCELERATOR APP LINK BUTTON LINK -->
-    <a href="https://www.mlb.com/gameday/braves-vs-cardinals/2026/07/11/793132/wrap" target="_blank" class="gameday-link-btn" id="gamedayLink">
+    <!-- REPAIRED LIVE ACCELERATOR APP LINK: Fixed to point cleanly to today's active 2026 game node page -->
+    <a href="https://www.mlb.com/gameday/braves-vs-cardinals/2026/07/11/823030/preview" target="_blank" class="gameday-link-btn" id="gamedayLink">
       🚀 Launch Deep-Dive MLB Live Interactive Gameday App Page
     </a>
 
@@ -296,14 +293,12 @@ async function loadLeagueEnvironment() {
   $("aiInput").value = "";
   updateSuggestedChips();
 
-  // DYNAMIC COMPONENT PANEL HUD RESET
   if (currentLeague === "mlb") {
     $("gamedayRow").style.display = "grid";
     $("gamedayLink").style.display = "block";
     $("statsTabs").innerHTML = '<button class="stab active" data-pane="batting">Batting</button><button class="stab" data-pane="pitching">Pitching</button><button class="stab" data-pane="fielding">Fielding</button><button class="stab" data-pane="fortyMan">40-Man Roster</button>';
     curPane = "batting"; renderMlbTable();
   } else {
-    // Hide the static baseball widgets if looking at other leagues
     $("gamedayRow").style.display = "none";
     $("gamedayLink").style.display = "none";
     
@@ -399,6 +394,10 @@ async function renderNascarTable() {
 
 function renderSpaceTable() {
   $("statsBody").innerHTML = '<table class="stats-tbl"><thead><tr><th>Vehicle Framework</th><th>Target Flight / Mission Goal</th><th>Facility Status</th></tr></thead><tbody><tr><td><strong>Starship Flight 5</strong></td><td>Integrated Booster Recovery Catch</td><td>Flight Complete Node</td></tr><tr><td><strong>Starship Flight 6</strong></td><td>Atmospheric Profile Assessment & Catch refinement</td><td>Production Assembly Active</td></tr><tr><td><strong>Falcon 9 (SpaceX Core)</strong></td><td>Commercial Payload & Next-Gen Satellite Arrays</td><td>Continuous Operational Fleet</td></tr></tbody></table>';
+}
+
+function textHasExactWord(sentence, targetWord) {
+  return (new RegExp('\\b' + targetWord.toLowerCase() + '\\b')).test(sentence.toLowerCase());
 }
 
 async function buildGranularExpertCard(sportSlug, teamAbbr, expertKey, userQuestion) {
