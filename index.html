@@ -1,81 +1,44 @@
-<!-- © 2026 Roderick Grimes. All rights reserved. -->
+<!-- © 2026 Roderick Grimes. Stability First v8.7 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sports AI Hub — Ask the Stats</title>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<title>Sports AI Hub</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald&family=Barlow&display=swap">
 <style>
-  :root{--burgundy:#b3122e;--burgundy-deep:#7a0c1f;--burgundy-bright:#c41e3a;--gold:#f3c14b;--gold-dim:#c79a3a;--bg:#0a0f1c;--bg-2:#0f1526;--panel:#141b30;--panel-2:#18203a;--ink:#f3ece0;--muted:#a9b4c8;--muted-2:#6f7b93;--red:#ff8275;--green:#5fb47a;--line:rgba(243,193,75,.22);--line-soft:rgba(243,193,75,.10);--glow1:rgba(196,30,58,.42);--glow2:rgba(12,26,48,.6);--stripe:rgba(243,193,75,.022)}
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:radial-gradient(1200px 600px at 80% -10%,var(--glow1),transparent 60%),var(--bg);padding:0 0 48px; color: var(--ink); font-family:'Barlow',sans-serif;}
-  .wrap{max-width:1280px;margin:0 auto;padding:0 20px}
-  .hub-nav{display:flex;gap:8px;margin-top:24px;border-bottom:1px solid var(--line);padding-bottom:12px;overflow-x:auto}
-  .hub-btn{background:var(--panel);border:1px solid var(--line-soft);color:var(--muted);font-family:'Oswald';font-weight:600;padding:12px 24px;border-radius:6px;cursor:pointer;text-transform:uppercase}
-  .hub-btn.active{background:linear-gradient(160deg,var(--burgundy-bright),var(--burgundy-deep));color:var(--gold)}
-  .grid{display:flex;flex-direction:column;gap:22px;margin-top:20px}
-  
-  /* SPACEX SCOPED */
-  .spacex-module { font-family: 'Space Mono', monospace; color: #8aa8c0; }
-  .spacex-module .hero { background:#0d1525; border: 1px solid #162030; padding: 22px; margin-top: 20px; }
-  .spacex-module .card { background: #141b30; border: 1px solid #162030; padding: 13px; display: grid; grid-template-columns: 1fr auto; }
+  :root{--burgundy:#b3122e;--gold:#f3c14b;--bg:#0a0f1c;--panel:#141b30;--ink:#f3ece0;}
+  body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;margin:0;padding:15px;}
+  .hub-nav{display:flex;gap:5px;margin-bottom:20px;overflow-x:auto;}
+  .hub-btn{background:var(--panel);color:var(--ink);padding:12px;border-radius:6px;border:1px solid #222;cursor:pointer;}
+  .hub-btn.active{background:var(--burgundy);color:var(--gold);}
+  .gameday-row{display:none;background:var(--panel);padding:15px;border-radius:8px;}
+  .gameday-row.active{display:block;}
+  .btn{display:block;background:var(--burgundy);color:var(--gold);text-align:center;padding:15px;margin-top:15px;text-decoration:none;border-radius:6px;font-weight:bold;border:none;}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <nav class="hub-nav" id="hubNav">
-    <button class="hub-btn active" data-league="mlb">MLB Grid</button>
-    <button class="hub-btn" data-league="nfl">NFL Grid</button>
-    <button class="hub-btn" data-league="mls">MLS Grid</button>
-    <button class="hub-btn" data-league="nascar">NASCAR Cup Series</button>
-    <button class="hub-btn" data-league="space">SpaceX Launchwatch</button>
-  </nav>
 
-  <div id="mainHubContent" class="grid">
-    <!-- YOUR ORIGINAL CONTENT RE-INSERTED -->
-    <section class="panel">
-        <div class="p-head"><h2>SPORTS AI HUB</h2></div>
-        <p>Your existing stats grid and AI panels are now correctly nested here.</p>
-    </section>
-  </div>
+<nav class="hub-nav" id="hubNav">
+  <button class="hub-btn active" data-target="mlb">MLB</button>
+  <button class="hub-btn" data-target="nfl">NFL</button>
+  <button class="hub-btn" data-target="nascar">NASCAR</button>
+</nav>
 
-  <div id="spacexContent" class="spacex-module" style="display:none;">
-    <div class="hero" id="heroSection">Acquiring signal...</div>
-    <div class="grid" id="launchGrid"></div>
-  </div>
+<div id="mlb" class="gameday-row active">MLB Data Deck</div>
+<div id="nfl" class="gameday-row">NFL Data Deck</div>
+<div id="nascar" class="gameday-row">
+  <div>JGR Garage Log</div>
+  <a href="https://www.nascar.com/results/live/racecenter/" target="_blank" class="btn">Launch NASCAR Race Center</a>
 </div>
 
 <script>
-const $=id=>document.getElementById(id);
-let currentLeague = "mlb";
-
-/* HUB LOGIC */
-function loadLeagueEnvironment() { 
-    console.log("Hub environment active");
-}
-
-/* INTEGRATED SPACEX LOGIC */
-async function initSpaceX() {
-    $("mainHubContent").style.display = "none";
-    $("spacexContent").style.display = "block";
-    $("heroSection").innerHTML = "Searching for launches...";
-}
-
-$("hubNav").addEventListener("click", e => {
-    const b = e.target.closest(".hub-btn"); if(!b) return;
-    document.querySelectorAll(".hub-btn").forEach(x=>x.classList.remove("active"));
-    b.classList.add("active");
-    currentLeague = b.dataset.league;
-    
-    if (currentLeague === "space") {
-        initSpaceX();
-    } else {
-        $("mainHubContent").style.display = "block";
-        $("spacexContent").style.display = "none";
-        loadLeagueEnvironment();
-    }
+document.getElementById('hubNav').addEventListener('click', e => {
+  if(!e.target.classList.contains('hub-btn')) return;
+  document.querySelectorAll('.hub-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.gameday-row').forEach(r => r.classList.remove('active'));
+  e.target.classList.add('active');
+  document.getElementById(e.target.dataset.target).classList.add('active');
 });
 </script>
 </body>
