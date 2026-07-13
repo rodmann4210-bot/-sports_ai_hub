@@ -9,13 +9,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root{--burgundy:#b3122e;--burgundy-deep:#7a0c1f;--burgundy-bright:#c41e3a;--gold:#f3c14b;--gold-dim:#c79a3a;--bg:#0a0f1c;--bg-2:#0f1526;--panel:#141b30;--panel-2:#18203a;--ink:#f3ece0;--muted:#a9b4c8;--muted-2:#6f7b93;--red:#ff8275;--green:#5fb47a;--line:rgba(243,193,75,.22);--line-soft:rgba(243,193,75,.10);--glow1:rgba(196,30,58,.42);--glow2:rgba(12,26,48,.6);--stripe:rgba(243,193,75,.022)}
-  /* ... [Keep existing Hub styles] ... */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif}
+  body{background:radial-gradient(1200px 600px at 80% -10%,var(--glow1),transparent 60%),var(--bg);padding:0 0 48px}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 20px}
+  .hub-nav{display:flex;gap:8px;margin-top:24px;border-bottom:1px solid var(--line);padding-bottom:12px;overflow-x:auto}
+  .hub-btn{background:var(--panel);border:1px solid var(--line-soft);color:var(--muted);font-family:'Oswald';font-weight:600;padding:12px 24px;border-radius:6px;cursor:pointer;text-transform:uppercase}
+  .hub-btn.active{background:linear-gradient(160deg,var(--burgundy-bright),var(--burgundy-deep));color:var(--gold)}
   
-  /* INTEGRATED SPACEX SCOPED STYLES */
+  /* SPACEX SCOPED */
   .spacex-module { font-family: 'Space Mono', monospace; color: #8aa8c0; }
-  .spacex-module .hero { background: linear-gradient(135deg, #0d1525 0%, #0a0f1c 100%); border: 1px solid #162030; border-top: 2px solid #00e5ff; padding: 22px; margin-top: 20px; }
-  .spacex-module .grid { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
-  .spacex-module .card { background: #141b30; border: 1px solid #162030; padding: 13px 16px; display: grid; grid-template-columns: 1fr auto; }
+  .spacex-module .hero { background:#0d1525; border: 1px solid #162030; padding: 22px; margin-top: 20px; }
+  .spacex-module .card { background: #141b30; border: 1px solid #162030; padding: 13px; display: grid; grid-template-columns: 1fr auto; margin-bottom: 8px;}
+  .spacex-module .loading-msg { text-align: center; padding: 48px; color: #6f7b93; }
 </style>
 </head>
 <body>
@@ -29,7 +35,7 @@
   </nav>
 
   <div id="mainHubContent" class="grid">
-    <!-- Insert your original Hub content (AI search, statsPanel, etc) here -->
+     <!-- Your Original Stats Panel and Gameday Rows go here -->
   </div>
 
   <div id="spacexContent" class="spacex-module" style="display:none;">
@@ -39,22 +45,21 @@
 </div>
 
 <script>
-/* --- CORE HUB LOGIC --- */
-function loadLeagueEnvironment() { /* ... Insert your original Hub functions ... */ }
-// ... (Your Hub event listeners and API calls) ...
+const $=id=>document.getElementById(id);
+let currentLeague = "mlb";
 
-/* --- INTEGRATED SPACEX LOGIC --- */
-async function initSpaceXContent() {
+/* 1. ORIGINAL HUB FUNCTIONS */
+function loadLeagueEnvironment() { /* Paste your original loadLeagueEnvironment code here */ }
+
+/* 2. INTEGRATED SPACEX LOGIC */
+async function initSpaceX() {
     $("mainHubContent").style.display = "none";
     $("spacexContent").style.display = "block";
-    
     try {
         const res = await fetch('https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=9&format=json');
         const data = await res.json();
-        // ... (Your existing Launch Watch render logic) ...
-    } catch(e) {
-        $("spacexContent").innerHTML = "<div class='loading-msg'>Signal Error: SpaceX data offline.</div>";
-    }
+        // ... (Paste your SpaceX render logic here)
+    } catch(e) { $("spacexContent").innerHTML = "Error: SpaceX Data Offline."; }
 }
 
 $("hubNav").addEventListener("click", e => {
@@ -64,7 +69,7 @@ $("hubNav").addEventListener("click", e => {
     currentLeague = b.dataset.league;
     
     if (currentLeague === "space") {
-        initSpaceXContent();
+        initSpaceX();
     } else {
         $("mainHubContent").style.display = "block";
         $("spacexContent").style.display = "none";
