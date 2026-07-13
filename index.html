@@ -5,72 +5,66 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sports AI Hub — Ask the Stats</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght=300;400;500;600;700&family=Barlow:wght=400;500;600;700&family=Barlow+Condensed:wght=500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root{--burgundy:#b3122e;--burgundy-deep:#7a0c1f;--burgundy-bright:#c41e3a;--gold:#f3c14b;--gold-dim:#c79a3a;--bg:#0a0f1c;--bg-2:#0f1526;--panel:#141b30;--panel-2:#18203a;--ink:#f3ece0;--muted:#a9b4c8;--muted-2:#6f7b93;--red:#ff8275;--green:#5fb47a;--line:rgba(243,193,75,.22);--line-soft:rgba(243,193,75,.10);--glow1:rgba(196,30,58,.42);--glow2:rgba(12,26,48,.6);--stripe:rgba(243,193,75,.022)}
-  /* ... [KEEP YOUR EXISTING HUB STYLES HERE] ... */
+  /* ... [Keep existing Hub styles] ... */
   
-  /* SpaceX Scoped Styles */
+  /* INTEGRATED SPACEX SCOPED STYLES */
   .spacex-module { font-family: 'Space Mono', monospace; color: #8aa8c0; }
-  .spacex-module .hero { background: linear-gradient(135deg, #0d1525 0%, #0a0f1c 100%); border: 1px solid #162030; border-radius: 2px; padding: 22px 24px; margin-bottom: 16px; }
-  .spacex-module .card { background: #141b30; border: 1px solid #162030; padding: 13px 16px; margin-bottom: 8px; display: grid; grid-template-columns: 1fr auto; }
-  .spacex-module .loading-msg { text-align: center; padding: 48px; color: #6f7b93; }
+  .spacex-module .hero { background: linear-gradient(135deg, #0d1525 0%, #0a0f1c 100%); border: 1px solid #162030; border-top: 2px solid #00e5ff; padding: 22px; margin-top: 20px; }
+  .spacex-module .grid { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
+  .spacex-module .card { background: #141b30; border: 1px solid #162030; padding: 13px 16px; display: grid; grid-template-columns: 1fr auto; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <!-- ... [KEEP YOUR HEADER] ... -->
-    <nav class="hub-nav" id="hubNav">
-      <button class="hub-btn active" data-league="mlb">MLB Grid</button>
-      <button class="hub-btn" data-league="nfl">NFL Grid</button>
-      <button class="hub-btn" data-league="mls">MLS Grid</button>
-      <button class="hub-btn" data-league="nascar">NASCAR Cup Series</button>
-      <button class="hub-btn" data-league="space">SpaceX Launchwatch</button>
-    </nav>
-  </header>
+  <nav class="hub-nav" id="hubNav">
+    <button class="hub-btn active" data-league="mlb">MLB Grid</button>
+    <button class="hub-btn" data-league="nfl">NFL Grid</button>
+    <button class="hub-btn" data-league="mls">MLS Grid</button>
+    <button class="hub-btn" data-league="nascar">NASCAR Cup Series</button>
+    <button class="hub-btn" data-league="space">SpaceX Launchwatch</button>
+  </nav>
 
-  <div class="grid">
-    <!-- Main Hub Panel (Hidden if SpaceX) -->
-    <div id="mainHubContent">
-        <section class="panel" id="aiPanel">
-            <!-- ... [KEEP YOUR AI SEARCH HTML] ... -->
-        </section>
-        <div class="gameday-row" id="gamedayRow"></div>
-        <section class="panel" id="statsPanel">
-            <!-- ... [KEEP YOUR STATS TABLE HTML] ... -->
-        </section>
-    </div>
+  <div id="mainHubContent" class="grid">
+    <!-- Insert your original Hub content (AI search, statsPanel, etc) here -->
+  </div>
 
-    <!-- SpaceX Module (Hidden by default) -->
-    <div id="spacexContent" class="spacex-module" style="display:none;">
-        <div class="hero" id="heroSection">Loading Launchwatch...</div>
-        <div class="grid" id="launchGrid"></div>
-    </div>
+  <div id="spacexContent" class="spacex-module" style="display:none;">
+    <div class="hero" id="heroSection">Acquiring signal...</div>
+    <div class="grid" id="launchGrid"></div>
   </div>
 </div>
 
 <script>
-/* ... [KEEP ALL YOUR HUB JS] ... */
+/* --- CORE HUB LOGIC --- */
+function loadLeagueEnvironment() { /* ... Insert your original Hub functions ... */ }
+// ... (Your Hub event listeners and API calls) ...
 
-/* SpaceX Integration Logic */
-async function initSpaceX() {
+/* --- INTEGRATED SPACEX LOGIC --- */
+async function initSpaceXContent() {
     $("mainHubContent").style.display = "none";
     $("spacexContent").style.display = "block";
-    // Place your Launch Watch Fetch/Render logic here
-    console.log("SpaceX Module Initialized");
+    
+    try {
+        const res = await fetch('https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=9&format=json');
+        const data = await res.json();
+        // ... (Your existing Launch Watch render logic) ...
+    } catch(e) {
+        $("spacexContent").innerHTML = "<div class='loading-msg'>Signal Error: SpaceX data offline.</div>";
+    }
 }
 
 $("hubNav").addEventListener("click", e => {
     const b = e.target.closest(".hub-btn"); if(!b) return;
     document.querySelectorAll(".hub-btn").forEach(x=>x.classList.remove("active"));
-    b.classList.add("active"); currentLeague = b.dataset.league;
+    b.classList.add("active");
+    currentLeague = b.dataset.league;
     
     if (currentLeague === "space") {
-        initSpaceX();
+        initSpaceXContent();
     } else {
         $("mainHubContent").style.display = "block";
         $("spacexContent").style.display = "none";
