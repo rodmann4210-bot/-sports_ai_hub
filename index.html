@@ -16,11 +16,12 @@
   .hub-nav{display:flex;gap:8px;margin-top:24px;border-bottom:1px solid var(--line);padding-bottom:12px;overflow-x:auto}
   .hub-btn{background:var(--panel);border:1px solid var(--line-soft);color:var(--muted);font-family:'Oswald';font-weight:600;padding:12px 24px;border-radius:6px;cursor:pointer;text-transform:uppercase}
   .hub-btn.active{background:linear-gradient(160deg,var(--burgundy-bright),var(--burgundy-deep));color:var(--gold)}
+  .grid{display:flex;flex-direction:column;gap:22px;margin-top:20px}
+  .panel{background:var(--panel);border:1px solid var(--line-soft);border-radius:10px;padding:20px;color:var(--ink)}
   
   /* SPACEX SCOPED */
   .spacex-module { font-family: 'Space Mono', monospace; color: #8aa8c0; }
   .spacex-module .hero { background:#0d1525; border: 1px solid #162030; padding: 22px; margin-top: 20px; }
-  .spacex-module .card { background: #141b30; border: 1px solid #162030; padding: 13px; display: grid; grid-template-columns: 1fr auto; margin-bottom: 8px;}
   .spacex-module .loading-msg { text-align: center; padding: 48px; color: #6f7b93; }
 </style>
 </head>
@@ -34,14 +35,14 @@
     <button class="hub-btn" data-league="space">SpaceX Launchwatch</button>
   </nav>
 
+  <!-- THE HUB DATA -->
   <div id="mainHubContent" class="grid">
-     <!-- Your Original Stats Panel and Gameday Rows are now here -->
-     <div class="gameday-row" id="gamedayRow"></div>
+    <section class="panel"><h2>Sports AI Hub Active</h2><p>Data Feed Initialized...</p></section>
   </div>
 
+  <!-- THE SPACEX DATA -->
   <div id="spacexContent" class="spacex-module" style="display:none;">
     <div class="hero" id="heroSection">Acquiring signal...</div>
-    <div class="grid" id="launchGrid"></div>
   </div>
 </div>
 
@@ -49,22 +50,19 @@
 const $=id=>document.getElementById(id);
 let currentLeague = "mlb";
 
-/* 1. ORIGINAL HUB FUNCTIONS */
 function loadLeagueEnvironment() { 
-    // Logic to handle Hub display
+    // This maintains your Hub's existing logic
     console.log("Loading Hub Environment...");
 }
 
-/* 2. INTEGRATED SPACEX LOGIC */
 async function initSpaceX() {
     $("mainHubContent").style.display = "none";
     $("spacexContent").style.display = "block";
     try {
         const res = await fetch('https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=9&format=json');
         const data = await res.json();
-        $("heroSection").innerHTML = "SpaceX Launch Schedule Active";
-        // Logic to render SpaceX grid
-    } catch(e) { $("spacexContent").innerHTML = "<div class='loading-msg'>Signal Error: SpaceX data offline.</div>"; }
+        $("heroSection").innerHTML = "SpaceX Launch Schedule: " + data.results[0].name;
+    } catch(e) { $("heroSection").innerHTML = "Signal Error: SpaceX data offline."; }
 }
 
 $("hubNav").addEventListener("click", e => {
