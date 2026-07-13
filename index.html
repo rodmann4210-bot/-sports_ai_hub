@@ -5,95 +5,37 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sports AI Hub — Ask the Stats</title>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Barlow:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Barlow:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root{--burgundy:#b3122e;--burgundy-deep:#7a0c1f;--gold:#f3c14b;--bg:#0a0f1c;--panel:#141b30;--ink:#f3ece0;--muted:#a9b4c8;--line:rgba(243,193,75,.22);--accent:#00e5ff}
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;padding:0 20px 48px}
-  .wrap{max-width:1280px;margin:0 auto}
-  
-  /* AI Header (Pinned) */
-  .ai-header{position:sticky;top:0;background:var(--bg);padding:20px 0;border-bottom:1px solid var(--line);z-index:100}
-  .ai-input-row{display:flex;gap:10px}
-  input{flex-grow:1;padding:12px;background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:6px}
-  
-  /* Navigation */
-  .hub-nav{display:flex;gap:8px;margin-top:20px;border-bottom:1px solid var(--line);padding-bottom:12px}
-  .hub-btn{background:var(--panel);color:var(--muted);padding:10px 20px;border-radius:6px;cursor:pointer;border:1px solid var(--line);text-transform:uppercase;font-family:'Oswald'}
-  .hub-btn.active{background:linear-gradient(160deg,var(--burgundy),var(--burgundy-deep));color:var(--gold)}
-  
-  /* Views */
-  #mainHubContent{display:block}
-  #spacexContent{display:none;font-family:'Space Mono',monospace}
-  
-  /* SpaceX Specifics */
-  .hero{background:#0d1525;border-top:2px solid var(--accent);padding:20px;margin-top:20px}
-  .launch-card{background:var(--panel);border:1px solid #162030;padding:15px;margin-top:10px;display:grid;grid-template-columns:1fr auto}
-  .weather-alert{color:#ff8275;font-weight:700;text-transform:uppercase}
+  body { background: #0a0f1c; color: #f3ece0; font-family: 'Barlow', sans-serif; margin: 0; padding: 20px; }
+  .ai-header { position: sticky; top: 0; background: #0a0f1c; padding: 10px 0; border-bottom: 1px solid #c79a3a; z-index: 1000; }
+  .nav-bar { display: flex; gap: 10px; margin-top: 15px; }
+  .tab-btn { background: #141b30; color: #a9b4c8; padding: 10px 20px; border: none; cursor: pointer; text-transform: uppercase; font-family: 'Oswald'; }
+  .tab-btn.active { background: #b3122e; color: #f3c14b; }
+  .content-area { margin-top: 20px; }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <!-- Permanent AI Header -->
-  <header class="ai-header">
-    <div class="ai-input-row">
-      <input type="text" id="aiInput" placeholder="Ask the Stats...">
-      <button class="hub-btn">Execute</button>
-    </div>
-    <nav class="hub-nav" id="hubNav">
-      <button class="hub-btn active" data-league="mlb">MLB Grid</button>
-      <button class="hub-btn" data-league="nfl">NFL Grid</button>
-      <button class="hub-btn" data-league="space">SpaceX Launchwatch</button>
-    </nav>
-  </header>
-
-  <!-- Sports Content -->
-  <div id="mainHubContent">
-    <section style="margin-top:20px;"><h2>Sports Dashboard Active</h2></section>
-  </div>
-
-  <!-- SpaceX Content -->
-  <div id="spacexContent">
-    <div id="priorLaunches"><h3>Prior Mission History</h3></div>
-    <div class="hero" id="heroSection">Acquiring upcoming launch signal...</div>
-    <div id="launchGrid"></div>
+<div class="ai-header">
+  <input type="text" placeholder="Ask the Stats..." style="width: 100%; padding: 12px; background: #141b30; border: 1px solid #c79a3a; color: white;">
+  <div class="nav-bar" id="hubNav">
+    <button class="tab-btn active" data-id="mainHubContent">MLB Grid</button>
+    <button class="tab-btn" data-id="mainHubContent">NFL Grid</button>
+    <button class="tab-btn" data-id="mainHubContent">MLS Grid</button>
+    <button class="tab-btn" data-id="mainHubContent">NASCAR Cup Series</button>
+    <button class="tab-btn" data-id="spacexContent">SpaceX Launchwatch</button>
   </div>
 </div>
-
+<div id="mainHubContent" class="content-area"><h2>Sports Dashboard Initialized</h2><p>Data Feed Active: Ready for input.</p></div>
+<div id="spacexContent" class="content-area" style="display:none;"><h2>SpaceX Launchwatch Active</h2><div id="launchGrid">Loading telemetry...</div></div>
 <script>
-const $=id=>document.getElementById(id);
-$("hubNav").addEventListener("click", e => {
-    const b = e.target.closest(".hub-btn"); if(!b) return;
-    document.querySelectorAll(".hub-btn").forEach(x=>x.classList.remove("active"));
-    b.classList.add("active");
-    
-    if (b.dataset.league === "space") {
-        $("mainHubContent").style.display = "none";
-        $("spacexContent").style.display = "block";
-        initSpaceX();
-    } else {
-        $("mainHubContent").style.display = "block";
-        $("spacexContent").style.display = "none";
-    }
+document.getElementById('hubNav').addEventListener('click', e => {
+    if(!e.target.classList.contains('tab-btn')) return;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById('mainHubContent').style.display = e.target.dataset.id === 'spacexContent' ? 'none' : 'block';
+    document.getElementById('spacexContent').style.display = e.target.dataset.id === 'spacexContent' ? 'block' : 'none';
 });
-
-async function initSpaceX() {
-    try {
-        const res = await fetch('https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=5&format=json');
-        const data = await res.json();
-        const next = data.results[0];
-        $("heroSection").innerHTML = `<strong>NEXT LAUNCH:</strong> ${next.name} <br> Time: ${next.net}`;
-        
-        let gridHtml = "<h3>Upcoming Launches</h3>";
-        data.results.forEach(l => {
-            gridHtml += `<div class="launch-card">
-                <div>${l.name}<br><span class="weather-alert">T-0 Forecast: Nominal</span></div>
-                <a href="${l.vidURLs[0]?.url || '#'}" target="_blank">Watch on YouTube</a>
-            </div>`;
-        });
-        $("launchGrid").innerHTML = gridHtml;
-    } catch(e) { $("heroSection").innerHTML = "Data offline."; }
-}
 </script>
 </body>
 </html>
