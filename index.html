@@ -3,58 +3,48 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sports AI Hub — Ask the Stats</title>
+<title>Sports AI Hub — Master Build</title>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Barlow:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root{--burgundy:#b3122e;--gold:#f3c14b;--bg:#0a0f1c;--panel:#141b30;--ink:#f3ece0;--line:rgba(243,193,75,.22);--shadow:0 8px 16px rgba(0,0,0,0.5);}
-  body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;margin:0;padding:0}
-  .ai-header{position:sticky;top:0;background:var(--bg);padding:20px;border-bottom:1px solid var(--line);z-index:1000}
-  .nav-bar{display:flex;gap:10px;margin-top:15px}
-  .tab-btn{background:var(--panel);color:#a9b4c8;padding:10px 20px;border:1px solid var(--line);cursor:pointer;text-transform:uppercase;font-family:'Oswald'}
-  .tab-btn.active{background:var(--burgundy);color:var(--gold)}
-  .content{padding:20px}
-  .card{background:var(--panel);padding:20px;margin-bottom:15px;border:1px solid var(--line)}
-  /* Floating Tray Style */
-  .floating-tray{background:var(--panel);padding:20px;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:8px;position:relative;z-index:10;}
-  .tray-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0;}
+  :root{--bg:#0a0f1c;--panel:#141b30;--gold:#f3c14b;--burgundy:#b3122e;--ink:#f3ece0;}
+  body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;margin:0;padding:20px}
+  /* Floating Card Style */
+  .floating-card {
+    background: var(--panel);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.3);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  /* Elevated Button Style */
+  .elevated-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-top: 10px;
+    background: var(--gold);
+    color: var(--bg);
+    font-weight: 700;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
-<div class="ai-header">
-  <input type="text" placeholder="Ask the Stats..." style="width:100%;padding:12px;background:var(--panel);color:white;border:1px solid var(--gold)">
-  <div class="nav-bar" id="hubNav">
-    <button class="tab-btn active" data-id="mlb">MLB Grid</button>
-    <button class="tab-btn" data-id="nfl">NFL Grid</button>
-    <button class="tab-btn" data-id="space">SpaceX Launchwatch</button>
+  <!-- Floating Content Area -->
+  <div class="floating-card">
+    <h2>Cardinals Command Center</h2>
+    <div style="display:grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+      <div>Roster Data Placeholder</div>
+      <div>
+        <button class="elevated-btn">Betting</button>
+        <button class="elevated-btn">Film Room</button>
+      </div>
+    </div>
   </div>
-</div>
-
-<div id="mlb" class="content">
-  <div class="card"><h2>Cardinals Command Center</h2><p id="cardinalsStatus">Fetching Cardinals data...</p></div>
-  <div class="tray-grid">
-    <div class="floating-tray" id="statsTray">Stats Panel: Loading...</div>
-    <div class="floating-tray" id="betTray">Betting/Gameday: Loading...</div>
-  </div>
-  <div class="card"><h3>League Daily Scoreboard</h3><div id="leagueScores">Fetching live MLB scores...</div></div>
-</div>
-
-<script>
-document.getElementById('hubNav').addEventListener('click', e => {
-    if(!e.target.classList.contains('tab-btn')) return;
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    e.target.classList.add('active');
-    document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
-    document.getElementById(e.target.dataset.id).style.display = 'block';
-});
-// Data Hook
-async function loadMLB() {
-    document.getElementById('cardinalsStatus').innerHTML = "Cardinals: Playing vs CHC | Pitchers: Mikolas vs Steele";
-    document.getElementById('statsTray').innerHTML = "<strong>Stats Panel</strong><br>ERA: 3.85 | OPS: .742";
-    document.getElementById('betTray').innerHTML = "<strong>Gameday Tray</strong><br>Spread: STL -1.5 | O/U: 8.5";
-    document.getElementById('leagueScores').innerHTML = "CHC 2 - 1 STL (Inning 4) | NYY 5 - 3 BOS (Final)";
-}
-loadMLB();
-</script>
 </body>
 </html>
