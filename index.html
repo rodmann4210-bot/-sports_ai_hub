@@ -1,29 +1,45 @@
-<style>
-  .cardinals-cmd-center {
-    background: linear-gradient(145deg, #1a2238, #141b30);
-    border: 1px solid rgba(243, 193, 75, 0.15);
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.05);
-    padding: 24px;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 30px;
-    margin-bottom: 24px;
-  }
-  .action-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .elevated-btn {
-    background: #f3c14b;
-    color: #0a0f1c;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 700;
-    text-transform: uppercase;
-    box-shadow: 0 4px 0 #b3923a;
-    cursor: pointer;
-  }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sports AI Hub</title>
+    <style>
+        body { background: #0a0f1c; color: #f3ece0; font-family: sans-serif; margin: 0; padding: 20px; }
+        .cardinals-cmd-center {
+            background: linear-gradient(145deg, #1a2238, #141b30);
+            border: 1px solid rgba(243, 193, 75, 0.15);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            padding: 24px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 30px;
+            margin-bottom: 24px;
+        }
+        .action-buttons { display: flex; flex-direction: column; gap: 12px; }
+        .elevated-btn {
+            background: #f3c14b;
+            color: #0a0f1c;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            box-shadow: 0 4px 0 #b3923a;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="cardinals-cmd-center">
+        <div>
+            <h2>Cardinals Command Center</h2>
+            <p>Roster Data: Active Feed</p>
+        </div>
+        <div class="action-buttons">
+            <button class="elevated-btn">Betting</button>
+            <button class="elevated-btn">Film Room</button>
+        </div>
+    </div>
+</body>
+</html>
