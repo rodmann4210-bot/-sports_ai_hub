@@ -1,27 +1,81 @@
-<!-- Add this button to your .nav-bar in index.html -->
-<button class="tab-btn" onclick="switchTab(event, 'mls')">MLS Grid</button>
+<!-- © 2026 Roderick Grimes. All rights reserved. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sports AI Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Barlow:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0f1c;--panel:#141b30;--gold:#f3c14b;--burgundy:#b3122e;--ink:#f3ece0;--line:rgba(243,193,75,.22);--shadow:0 8px 16px rgba(0,0,0,0.5)}
+body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;margin:0;padding:0}
+.ai-header{position:sticky;top:0;background:var(--bg);padding:20px;border-bottom:1px solid var(--line);z-index:1000}
+.nav-bar{display:flex;gap:10px;margin-top:15px}
+.tab-btn{background:var(--panel);color:#a9b4c8;padding:10px 20px;border:1px solid var(--line);cursor:pointer;text-transform:uppercase;font-family:'Oswald'}
+.tab-btn.active{background:var(--burgundy);color:var(--gold)}
+.content{padding:20px;display:none}
+.content.active{display:block}
+.card{background:var(--panel);padding:20px;margin-bottom:15px;border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow)}
+.grid-layout{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:15px}
+.elevated-btn{display:block;width:100%;background:var(--gold);color:var(--bg);border:none;padding:15px;margin-bottom:10px;border-radius:8px;font-weight:700;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 0 #b3923a}
+</style>
+</head>
+<body>
 
-<!-- Add this content block into your body alongside the other tabs -->
-<div id="mls" class="content">
+<div class="ai-header">
+  <input type="text" placeholder="Ask the Stats..." style="width:100%;padding:12px;background:var(--panel);color:white;border:1px solid var(--gold);border-radius:4px;">
+  <div class="nav-bar" id="hubNav">
+    <button class="tab-btn active" onclick="switchTab(event, 'mlb')">MLB Grid</button>
+    <button class="tab-btn" onclick="switchTab(event, 'nfl')">NFL Grid</button>
+    <button class="tab-btn" onclick="switchTab(event, 'nascar')">NASCAR Cup Series</button>
+  </div>
+</div>
+
+<div id="mlb" class="content active">
   <div class="card">
-    <h2>St. Louis CITY SC Command Center</h2>
-    <p>2026 Season | Western Conference Standing: 10th (19 Pts, 5W-6L-4T)</p>
+    <h2>Cardinals Command Center</h2>
+    <p id="cardinalsStatus">Pitcher vs. Team Stats: Active | View Full Stats</p>
   </div>
   
   <div class="grid-layout">
     <div class="card">
-      <h3>Upcoming Matches</h3>
-      <p><strong>vs. LA Galaxy:</strong> July 22, 2026 — 9:30 PM CDT</p>
-      <p><strong>vs. Colorado Rapids:</strong> July 25, 2026 — 7:30 PM CDT</p>
+      <h3>Stats Panel</h3>
+      <p>Active roster metrics and tracking data loaded.</p>
     </div>
     <div>
-      <button class="elevated-btn">Match Betting</button>
+      <button class="elevated-btn">Betting</button>
       <button class="elevated-btn">Film Room</button>
     </div>
   </div>
 
   <div class="card">
-    <h3>Western Conference Snapshot</h3>
-    <p>Top Contenders: Vancouver Whitecaps (32 Pts) &amp; San Jose Earthquakes (32 Pts)</p>
+    <h3>League Daily Scoreboard</h3>
+    <div id="leagueScores">All Games: Loading data...</div>
   </div>
 </div>
+
+<div id="nfl" class="content">
+  <div class="card">
+    <h2>NFL Command Center</h2>
+    <p>Gridiron feeds loading...</p>
+  </div>
+</div>
+
+<div id="nascar" class="content">
+  <div class="card">
+    <h2>NASCAR Cup Series Hub</h2>
+    <p>Track stats and telemetry loading...</p>
+  </div>
+</div>
+
+<script>
+function switchTab(evt, tabId) {
+    document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    evt.currentTarget.classList.add('active');
+}
+</script>
+
+</body>
+</html>
