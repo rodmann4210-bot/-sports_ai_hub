@@ -1,49 +1,109 @@
+<!-- © 2026 Roderick Grimes. All rights reserved. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sports AI Hub</title>
 <style>
-:root{--bg:#0a0f1c;--panel:#141b30;--gold:#f3c14b;--burgundy:#b3122e;--ink:#f3ece0}
+:root{--bg:#0a0f1c;--panel:#141b30;--gold:#f3c14b;--burgundy:#b3122e;--ink:#f3ece0;--line:rgba(243,193,75,.22)}
 body{background:var(--bg);color:var(--ink);font-family:sans-serif;margin:0;padding:20px}
-
-/* Navigation & Header */
-.ai-header{margin-bottom:20px}
-.nav-bar{display:flex;gap:10px;margin-bottom:20px}
-.tab-btn{background:var(--panel);color:#a9b4c8;padding:10px 20px;border:1px solid rgba(243,193,75,.22);cursor:pointer;text-transform:uppercase}
+.ai-header{margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:15px}
+.nav-bar{display:flex;gap:10px}
+.tab-btn{background:var(--panel);color:#a9b4c8;padding:10px 20px;border:1px solid var(--line);cursor:pointer;text-transform:uppercase;font-weight:700}
 .tab-btn.active{background:var(--burgundy);color:var(--gold)}
+.content{display:none}
+.content.active{display:block}
 
-/* Correct Floating Tray Style */
+/* Main Command Center Layout Grid */
+.command-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+/* TRUE FLOATING TRAYS (Individual elevated panels) */
 .floating-tray {
     background: var(--panel);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3), 0 10px 20px rgba(0,0,0,0.5);
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 4px 6px rgba(0,0,0,0.4);
 }
-.tray-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.elevated-btn{display:block;width:100%;background:var(--gold);color:var(--bg);border:none;padding:15px;margin-bottom:10px;border-radius:8px;font-weight:700;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 0 #b3923a}
+
+.tray-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--ink);
+    letter-spacing: 0.5px;
+}
+
+.sidebar-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.elevated-btn {
+    background: var(--gold);
+    color: var(--bg);
+    border: none;
+    padding: 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #b3923a, 0 6px 12px rgba(0,0,0,0.3);
+    transition: transform 0.1s ease;
+}
+.elevated-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #b3923a, 0 3px 6px rgba(0,0,0,0.3);
+}
 </style>
 </head>
 <body>
+
 <div class="ai-header">
     <div class="nav-bar">
-        <button class="tab-btn active">MLB Grid</button>
-        <button class="tab-btn">NFL Grid</button>
+        <button class="tab-btn active" onclick="showTab(event, 'mlb')">MLB Grid</button>
+        <button class="tab-btn" onclick="showTab(event, 'nfl')">NFL Grid</button>
     </div>
 </div>
 
-<!-- Integrated Floating Trays -->
-<div class="floating-tray">
-    <h2>Cardinals Command Center</h2>
-    <div class="tray-grid">
-        <div>Roster Data Area</div>
-        <div class="sidebar">
+<div id="mlb" class="content active">
+    <div class="command-grid">
+        <!-- Tray 1: Data / Roster Area -->
+        <div class="floating-tray">
+            <div class="tray-title">Cardinals Command Center</div>
+            <p>Roster Data Area / Active Feed</p>
+        </div>
+
+        <!-- Tray 2: Interactive Controls / Actions -->
+        <div class="sidebar-buttons">
             <button class="elevated-btn">Betting</button>
             <button class="elevated-btn">Film Room</button>
         </div>
     </div>
 </div>
+
+<div id="nfl" class="content">
+    <div class="floating-tray">
+        <div class="tray-title">NFL Command Center</div>
+        <p>Loading NFL data feeds...</p>
+    </div>
+</div>
+
+<script>
+function showTab(evt, id) {
+    document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    evt.currentTarget.classList.add('active');
+}
+</script>
+
 </body>
 </html>
