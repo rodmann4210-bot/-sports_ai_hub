@@ -23,16 +23,30 @@
             padding: 16px;
         }
 
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
         .search-bar {
-            width: 100%;
+            flex: 1;
             padding: 12px 16px;
             background-color: var(--card-bg);
             border: 1px solid #1e293b;
             border-radius: 8px;
             color: var(--text-color);
             font-size: 16px;
-            margin-bottom: 16px;
             box-sizing: border-box;
+            margin-right: 10px;
+        }
+
+        .version-tag {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
         }
 
         .nav-tabs {
@@ -109,7 +123,10 @@
 </head>
 <body>
 
-    <input type="text" class="search-bar" placeholder="Ask the Stats...">
+    <div class="header-row">
+        <input type="text" class="search-bar" placeholder="Ask the Stats...">
+        <span class="version-tag">v2.5-CARDS</span>
+    </div>
 
     <!-- Navigation Tabs on Top -->
     <div class="nav-tabs">
