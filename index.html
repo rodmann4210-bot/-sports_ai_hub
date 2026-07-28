@@ -145,13 +145,33 @@
             font-size: 15px;
             font-weight: bold;
         }
+
+        .stat-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .stat-table th, .stat-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .stat-table th {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
 
     <div class="header-row">
         <input type="text" class="search-bar" placeholder="Ask the Stats...">
-        <span class="version-tag">v2.6-STATS</span>
+        <span class="version-tag">v2.7-GAMEDAY</span>
     </div>
 
     <!-- Navigation Tabs on Top -->
@@ -175,38 +195,51 @@
             
             <div class="metrics-grid">
                 <div class="metric-box">
-                    <div class="metric-label">Current Streak</div>
-                    <div class="metric-value" style="color: #4ade80;">W2 (Active)</div>
+                    <div class="metric-label">Record & Streak</div>
+                    <div class="metric-value" style="color: #4ade80;">52-48 | W2</div>
                 </div>
                 <div class="metric-box">
-                    <div class="metric-label">Betting Synopsis</div>
+                    <div class="metric-label">Live Odds & O/U</div>
                     <div class="metric-value">STL -135 | O/U 8.5</div>
                 </div>
             </div>
         </div>
 
         <div class="card">
-            <h2>Pitcher vs. Batter Matchup Metrics</h2>
-            <p style="color: var(--text-muted);">Key Lineup Splits & Advanced Tracking Feed Synchronized</p>
-            <div class="metrics-grid">
-                <div class="metric-box">
-                    <div class="metric-label">Starter vs LHB/RHB</div>
-                    <div class="metric-value">.210 AVG / .615 OPS</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-label">Bullpen Usage Trend</div>
-                    <div class="metric-value">High Leverage Ready</div>
-                </div>
-            </div>
+            <h2>Gameday Probable Pitchers & Lineup Splits</h2>
+            <p style="color: var(--text-muted);">Matchup Analysis & Advanced Stat Splits</p>
+            
+            <table class="stat-table">
+                <tr>
+                    <th>Matchup Metric</th>
+                    <th>STL Cardinals</th>
+                    <th>CHC Cubs</th>
+                </tr>
+                <tr>
+                    <td>Starter ERA (L10)</td>
+                    <td>3.42</td>
+                    <td>4.15</td>
+                </tr>
+                <tr>
+                    <td>Bullpen WHIP</td>
+                    <td>1.22</td>
+                    <td>1.31</td>
+                </tr>
+                <tr>
+                    <td>Team OPS vs RHP</td>
+                    <td>.745</td>
+                    <td>.712</td>
+                </tr>
+            </table>
         </div>
 
         <div class="card">
-            <h2>Current Cubs Series Schedule</h2>
+            <h2>Series Schedule & Broadcast Feed</h2>
             <p style="color: var(--text-muted);">
-                Tue, Jul 28 (6:45 PM): vs. Chicago Cubs<br>
-                Wed, Jul 29 (6:45 PM): vs. Chicago Cubs<br>
-                Thu, Jul 30 (1:15 PM): vs. Chicago Cubs<br>
-                Upcoming: Fri, Jul 31 at Toronto Blue Jays
+                Tue, Jul 28 (6:45 PM): vs. Chicago Cubs (Bally Sports / MLB.tv)<br>
+                Wed, Jul 29 (6:45 PM): vs. Chicago Cubs (Bally Sports / MLB.tv)<br>
+                Thu, Jul 30 (1:15 PM): vs. Chicago Cubs (Bally Sports / MLB.tv)<br>
+                Upcoming: Fri, Jul 31 at Toronto Blue Jays (7:07 PM)
             </p>
         </div>
     </div>
