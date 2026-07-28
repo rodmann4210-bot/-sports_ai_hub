@@ -1,39 +1,209 @@
-<!-- © 2026 Roderick Grimes. All rights reserved. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sports AI Hub</title>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Barlow:wght@400;700&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#0a0f1c;--panel:#141b30;--gold:#f3c14b;--burgundy:#b3122e;--ink:#f3ece0;--line:rgba(243,193,75,.22);--shadow:0 8px 16px rgba(0,0,0,0.5)}
-body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;margin:0;padding:0}
-.ai-header{position:sticky;top:0;background:var(--bg);padding:20px;border-bottom:1px solid var(--line);z-index:1000}
-.nav-bar{display:flex;gap:10px;margin-top:15px;overflow-x:auto}
-.tab-btn{background:var(--panel);color:#a9b4c8;padding:10px 20px;border:1px solid var(--line);cursor:pointer;text-transform:uppercase;font-family:'Oswald';white-space:nowrap}
-.tab-btn.active{background:var(--burgundy);color:var(--gold)}
-.content{padding:20px;display:none}
-.content.active{display:block}
-.card{background:var(--panel);padding:20px;margin-bottom:15px;border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow)}
-.grid-layout{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:15px}
-.elevated-btn{display:block;width:100%;background:var(--gold);color:var(--bg);border:none;padding:15px;margin-bottom:10px;border-radius:8px;font-weight:700;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 0 #b3923a}
-@media(max-width:768px){.grid-layout{grid-template-columns:1fr}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports AI Hub — Ask the Stats</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #131b2e;
+            --accent-red: #d32f2f;
+            --btn-yellow: #ffca28;
+            --btn-yellow-hover: #ffb300;
+            --text-color: #ffffff;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 16px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: var(--card-bg);
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 16px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .nav-tab {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid #1e293b;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            white-space: nowrap;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .nav-tab.active {
+            background-color: var(--accent-red);
+            border-color: var(--accent-red);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid #1e293b;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .action-btn {
+            background-color: var(--btn-yellow);
+            color: #000000;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: var(--btn-yellow-hover);
+        }
+    </style>
 </head>
 <body>
 
-<div class="ai-header">
-  <input type="text" placeholder="Ask the Stats..." style="width:100%;padding:12px;background:var(--panel);color:white;border:1px solid var(--gold);border-radius:4px;box-sizing:border-box;">
-  <div class="nav-bar" id="hubNav">
-    <button class="tab-btn active" onclick="switchTab(event, 'mlb')">MLB Grid</button>
-    <button class="tab-btn" onclick="switchTab(event, 'nfl')">NFL Grid</button>
-    <button class="tab-btn" onclick="switchTab(event, 'nascar')">NASCAR</button>
-    <button class="tab-btn" onclick="switchTab(event, 'mls')">MLS Grid</button>
-  </div>
-</div>
+    <input type="text" class="search-bar" placeholder="Ask the Stats...">
 
-<!-- MLB / Cardinals Tab -->
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="switchTab('mlb')">MLB GRID</button>
+        <button class="nav-tab" onclick="switchTab('nfl')">NFL GRID</button>
+        <button class="nav-tab" onclick="switchTab('nascar')">NASCAR</button>
+        <button class="nav-tab" onclick="switchTab('mls')">MLS GRID</button>
+    </div>
+
+    <!-- MLB TAB -->
+    <div id="mlb" class="tab-content active">
+        <div class="action-buttons">
+            <button class="action-btn">BETTING</button>
+            <button class="action-btn">FILM ROOM</button>
+        </div>
+        <div class="card">
+            <h2>Roster & Matchup Metrics</h2>
+            <p style="color: var(--text-muted);">Pitcher vs. Team Stats: Live Data Feed Synchronized for Busch Stadium Series</p>
+        </div>
+    </div>
+
+    <!-- NFL TAB -->
+    <div id="nfl" class="tab-content">
+        <div class="action-buttons">
+            <button class="action-btn">BETTING</button>
+            <button class="action-btn">FILM ROOM</button>
+        </div>
+        <div class="card">
+            <h2>NFL Command Center</h2>
+            <p style="color: var(--text-muted);">Gridiron feeds loading...</p>
+        </div>
+    </div>
+
+    <!-- NASCAR TAB -->
+    <div id="nascar" class="tab-content">
+        <div class="action-buttons">
+            <button class="action-btn">BETTING</button>
+            <button class="action-btn">FILM ROOM</button>
+        </div>
+        <div class="card">
+            <h2>NASCAR Cup Series Hub</h2>
+            <p style="color: var(--text-muted);">Track stats and telemetry loading...</p>
+        </div>
+    </div>
+
+    <!-- MLS TAB -->
+    <div id="mls" class="tab-content">
+        <div class="card">
+            <h2>St. Louis CITY SC Command Center</h2>
+            <p style="color: var(--text-muted);">2026 Season | Western Conference Standing: 10th (19 Pts)</p>
+        </div>
+        <div class="card">
+            <h2>Upcoming Matches</h2>
+            <p style="color: var(--text-muted);">Match schedule feeds loading...</p>
+        </div>
+        <div class="action-buttons">
+            <button class="action-btn">MATCH BETTING</button>
+            <button class="action-btn">FILM ROOM</button>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Remove active class from all buttons
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show target tab content and activate button
+            document.getElementById(tabId).classList.add('active');
+            
+            // Find and activate the correct button
+            tabs.forEach(tab => {
+                if (tab.getAttribute('onclick').includes(tabId)) {
+                    tab.classList.add('active');
+                }
+            });
+
+            // Save state to localStorage
+            localStorage.setItem('activeSportsTab', tabId);
+        }
+
+        // Check for saved tab on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTab = localStorage.getItem('activeSportsTab');
+            if (savedTab) {
+                switchTab(savedTab);
+            }
+        });
+    </script>
+</body>
+</html>
 <div id="mlb" class="content active">
   <div class="card">
     <h2>Cardinals Command Center</h2>
