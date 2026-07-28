@@ -111,6 +111,202 @@
 
     <input type="text" class="search-bar" placeholder="Ask the Stats...">
 
+    <!-- Navigation Tabs on Top -->
+    <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="mlb">MLB GRID</button>
+        <button class="nav-tab" data-tab="nfl">NFL GRID</button>
+        <button class="nav-tab" data-tab="nascar">NASCAR</button>
+        <button class="nav-tab" data-tab="mls">MLS GRID</button>
+    </div>
+
+    <!-- MLB TAB -->
+    <div id="mlb" class="tab-content active">
+        <div class="action-buttons">
+            <button class="action-btn">BETTING</button>
+            <button class="action-btn">FILM ROOM</button>
+        </div>
+        <div class="card">
+            <h2>Roster & Matchup Metrics</h2>
+            <p style="color: var(--text-muted);">Pitcher vs. Team Stats: Live Data Feed Synchronized for Busch Stadium Series</p>
+        </div>
+        <div class="card">
+            <h2>Cardinals Command Center</h2>
+            <p style="color: var(--text-muted);">Busch Stadium Homestand | Active Series: vs. Chicago Cubs</p>
+        </div>
+        <div class="card">
+            <h2>Current Cubs Series Schedule</h2>
+            <p style="color: var(--text-muted);">
+                Tue, Jul 28 (6:45 PM): vs. Chicago Cubs<br>
+                Wed, Jul 29 (6:45 PM): vs. Chicago Cubs<br>
+                Thu, Jul 30 (1:15 PM): vs. Chicago Cubs<br>
+                Upcoming: Fri, Jul 31 at Toronto Blue Jays
+            </p>
+        </div>
+    </div>
+
+    <!-- NFL TAB -->
+    <div id="nfl" class="tab-content">
+        <div class="action-buttons">
+            <button class="action-btn">BETTING</button>
+            <button class="action-btn">FILM ROOM</button>
+        </div>
+        <div class="card">
+            <h2>NFL Command Center</h2>
+            <p style="color: var(--text-muted);">Gridiron feeds loading...</p>
+        </div>
+    </div>
+
+    <!-- NASCAR TAB -->
+    <div id="nascar" class="tab-content">
+        <div class="action-buttons">
+            <button class="action-btn">BETTING</button>
+            <button class="action-btn">FILM ROOM</button>
+        </div>
+        <div class="card">
+            <h2>NASCAR Cup Series Hub</h2>
+            <p style="color: var(--text-muted);">Track stats and telemetry loading...</p>
+        </div>
+    </div>
+
+    <!-- MLS TAB -->
+    <div id="mls" class="tab-content">
+        <div class="card">
+            <h2>St. Louis CITY SC Command Center</h2>
+            <p style="color: var(--text-muted);">2026 Season | Western Conference Standing: 10th (19 Pts)</p>
+        </div>
+        <div class="card">
+            <h2>Upcoming Matches</h2>
+            <p style="color: var(--text-muted);">Match schedule feeds loading...</p>
+        </div>
+        <div class="action-buttons">
+            <button class="action-btn">MATCH BETTING</button>
+            <button class="action-btn">FILM ROOM</button>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Activate target content
+            const targetContent = document.getElementById(tabId);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+
+            // Activate target button using data-tab attribute
+            const targetButton = document.querySelector(`.nav-tab[data-tab="${tabId}"]`);
+            if (targetButton) {
+                targetButton.classList.add('active');
+            }
+
+            // Save state to localStorage
+            localStorage.setItem('activeSportsTab', tabId);
+        }
+
+        // Attach event listeners to top tabs
+        document.querySelectorAll('.nav-tab').forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                switchTab(tabId);
+            });
+        });
+
+        // Check for saved tab on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTab = localStorage.getItem('activeSportsTab');
+            if (savedTab && document.getElementById(savedTab)) {
+                switchTab(savedTab);
+            }
+        });
+    </script>
+</body>
+</html>
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .nav-tab {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid #1e293b;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            white-space: nowrap;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .nav-tab.active {
+            background-color: var(--accent-red);
+            border-color: var(--accent-red);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid #1e293b;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .action-btn {
+            background-color: var(--btn-yellow);
+            color: #000000;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: var(--btn-yellow-hover);
+        }
+    </style>
+</head>
+<body>
+
+    <input type="text" class="search-bar" placeholder="Ask the Stats...">
+
     <div class="nav-tabs">
         <button class="nav-tab active" data-tab="mlb">MLB GRID</button>
         <button class="nav-tab" data-tab="nfl">NFL GRID</button>
