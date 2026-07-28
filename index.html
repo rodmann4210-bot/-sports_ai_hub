@@ -119,13 +119,39 @@
         .action-btn:hover {
             background-color: var(--btn-yellow-hover);
         }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .metric-box {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid #1e293b;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            font-size: 15px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
     <div class="header-row">
         <input type="text" class="search-bar" placeholder="Ask the Stats...">
-        <span class="version-tag">v2.5-CARDS</span>
+        <span class="version-tag">v2.6-STATS</span>
     </div>
 
     <!-- Navigation Tabs on Top -->
@@ -142,14 +168,38 @@
             <button class="action-btn">BETTING</button>
             <button class="action-btn">FILM ROOM</button>
         </div>
-        <div class="card">
-            <h2>Roster & Matchup Metrics</h2>
-            <p style="color: var(--text-muted);">Pitcher vs. Team Stats: Live Data Feed Synchronized for Busch Stadium Series</p>
-        </div>
+        
         <div class="card">
             <h2>St. Louis Cardinals Command Center</h2>
             <p style="color: var(--text-muted);">Busch Stadium Homestand | Active Series: vs. Chicago Cubs</p>
+            
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-label">Current Streak</div>
+                    <div class="metric-value" style="color: #4ade80;">W2 (Active)</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">Betting Synopsis</div>
+                    <div class="metric-value">STL -135 | O/U 8.5</div>
+                </div>
+            </div>
         </div>
+
+        <div class="card">
+            <h2>Pitcher vs. Batter Matchup Metrics</h2>
+            <p style="color: var(--text-muted);">Key Lineup Splits & Advanced Tracking Feed Synchronized</p>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-label">Starter vs LHB/RHB</div>
+                    <div class="metric-value">.210 AVG / .615 OPS</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">Bullpen Usage Trend</div>
+                    <div class="metric-value">High Leverage Ready</div>
+                </div>
+            </div>
+        </div>
+
         <div class="card">
             <h2>Current Cubs Series Schedule</h2>
             <p style="color: var(--text-muted);">
