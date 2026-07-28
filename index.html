@@ -61,7 +61,6 @@
             border-color: var(--accent-red);
         }
 
-        /* Crucial: Ensure hidden tabs don't render their contents */
         .tab-content {
             display: none !important;
         }
@@ -131,7 +130,7 @@
             <p style="color: var(--text-muted);">Pitcher vs. Team Stats: Live Data Feed Synchronized for Busch Stadium Series</p>
         </div>
         <div class="card">
-            <h2>Cardinals Command Center</h2>
+            <h2>St. Louis Cardinals Command Center</h2>
             <p style="color: var(--text-muted);">Busch Stadium Homestand | Active Series: vs. Chicago Cubs</p>
         </div>
         <div class="card">
@@ -187,33 +186,27 @@
 
     <script>
         function switchTab(tabId) {
-            // Hide all tab contents completely using !important rule override
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
 
-            // Remove active class from all tab buttons
             document.querySelectorAll('.nav-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
 
-            // Activate target content
             const targetContent = document.getElementById(tabId);
             if (targetContent) {
                 targetContent.classList.add('active');
             }
 
-            // Activate target button using data-tab attribute
             const targetButton = document.querySelector(`.nav-tab[data-tab="${tabId}"]`);
             if (targetButton) {
                 targetButton.classList.add('active');
             }
 
-            // Save state to localStorage
             localStorage.setItem('activeSportsTab', tabId);
         }
 
-        // Attach event listeners to top tabs
         document.querySelectorAll('.nav-tab').forEach(button => {
             button.addEventListener('click', () => {
                 const tabId = button.getAttribute('data-tab');
@@ -221,7 +214,6 @@
             });
         });
 
-        // Check for saved tab on page load
         window.addEventListener('DOMContentLoaded', () => {
             const savedTab = localStorage.getItem('activeSportsTab');
             if (savedTab && document.getElementById(savedTab)) {
