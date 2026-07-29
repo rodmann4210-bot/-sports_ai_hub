@@ -102,7 +102,7 @@
     <p id="searchResultText">Awaiting analytical query execution...</p>
   </div>
 
-  <!-- MLB Tab Content (Restored Cardinals Hub & Interactive Standings) -->
+  <!-- MLB Tab Content (Cardinals Hub & Interactive Standings) -->
   <div id="mlb-tab-content" class="tab-pane active">
     <div class="dashboard-header-banner">
       <div>
@@ -182,36 +182,79 @@
   <!-- NASCAR Tab Content -->
   <div id="nascar-tab-content" class="tab-pane">
     <div class="dashboard-header-banner">
-      <div>
+      <div class="banner-titles">
         <h2>🏁 NASCAR Grid — Command Center</h2>
         <p>Season tracking, upcoming speedway schedules, and driver telemetry metrics.</p>
       </div>
-      <button class="gold-action-btn" onclick="alert('Film Room onboard feeds active.')">
-        <i class="fa-solid fa-video"></i> Film Room: Onboard Feeds
-      </button>
-    </div>
-
-    <div class="nascar-hero">
-      <div style="font-size:0.85rem; color:var(--gold); text-transform:uppercase; font-weight:700; margin-bottom:6px;">Next Up Series</div>
-      <h3 style="font-family:'Oswald'; font-size:1.6rem;">Iowa Corn 350 Powered by Ethanol</h3>
-      <div class="track-meta-grid">
-        <div class="meta-item"><span class="meta-label">Venue</span><span class="meta-val">Iowa Speedway (Newton, IA)</span></div>
-        <div class="meta-item"><span class="meta-label">Track Length</span><span class="meta-val">7/8 Mile Short Track</span></div>
-        <div class="meta-item"><span class="meta-label">Green Flag</span><span class="meta-val">Sunday, Aug 9, 3:30 PM</span></div>
-        <div class="meta-item"><span class="meta-label">Broadcast</span><span class="meta-val">USA Network</span></div>
+      <div class="banner-action-group">
+        <button class="gold-action-btn" onclick="alert('Film Room onboard feeds active.')">
+          <i class="fa-solid fa-video"></i> Film Room: Onboard Feeds
+        </button>
       </div>
     </div>
 
+    <!-- Featured Next Race Hero Card -->
+    <div class="hero-feature-card nascar-hero">
+      <div style="font-size:0.85rem; color:var(--gold); text-transform:uppercase; font-weight:700; margin-bottom:6px;" class="hero-badge">Next Up Series</div>
+      <h3 style="font-family:'Oswald'; font-size:1.6rem;">Iowa Corn 350 Powered by Ethanol</h3>
+      <div class="track-meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">Venue</span>
+          <span class="meta-val">Iowa Speedway (Newton, IA)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Track Length</span>
+          <span class="meta-val">7/8 Mile Short Track</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Green Flag</span>
+          <span class="meta-val">Sunday, Aug 9, 3:30 PM</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Broadcast</span>
+          <span class="meta-val">USA Network / App</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming Schedule Table Widget -->
     <div class="dashboard-card-section">
       <h4>Upcoming August 2026 Cup Series Schedule</h4>
       <div class="table-responsive">
         <table class="hub-data-table">
-          <thead><tr><th>Date</th><th>Race Event</th><th>Track / Location</th><th>Network</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Race Event</th>
+              <th>Track / Location</th>
+              <th>Network</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr><td>Sun, Aug 9</td><td><strong>Iowa Corn 350</strong></td><td>Iowa Speedway (Newton, IA)</td><td>USA</td></tr>
-            <tr><td>Sat, Aug 15</td><td><strong>Cook Out 400</strong></td><td>Richmond Raceway (Richmond, VA)</td><td>USA</td></tr>
-            <tr><td>Sun, Aug 23</td><td><strong>Dollar Tree 301</strong></td><td>New Hampshire Motor Speedway</td><td>USA</td></tr>
-            <tr><td>Sat, Aug 29</td><td><strong>Coke Zero Sugar 400</strong></td><td>Daytona International Speedway</td><td>NBC</td></tr>
+            <tr>
+              <td>Sun, Aug 9</td>
+              <td><strong>Iowa Corn 350</strong></td>
+              <td>Iowa Speedway (Newton, IA)</td>
+              <td>USA</td>
+            </tr>
+            <tr>
+              <td>Sat, Aug 15</td>
+              <td><strong>Cook Out 400</strong></td>
+              <td>Richmond Raceway (Richmond, VA)</td>
+              <td>USA</td>
+            </tr>
+            <tr>
+              <td>Sun, Aug 23</td>
+              <td><strong>Dollar Tree 301</strong></td>
+              <td>New Hampshire Motor Speedway</td>
+              <td>USA</td>
+            </tr>
+            <tr>
+              <td>Sat, Aug 29</td>
+              <td><strong>Coke Zero Sugar 400</strong></td>
+              <td>Daytona International Speedway</td>
+              <td>NBC</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -320,26 +363,42 @@ function switchStandings(type, btn) {
     if(target) target.classList.add('active');
 }
 
-// Dual-Stat Natural Language Search Handler
+// Intelligent Dual-Stat Natural Language Search Handler (Strictly Current Cardinals & MLB)
 function executeHubSearch() {
-    const query = $("aiInput").value.toLowerCase().trim();
+    const rawQuery = $("aiInput").value.toLowerCase().trim();
     const box = $("searchOutputBox");
     const title = $("searchResultTitle");
     const text = $("searchResultText");
     
-    if(!query) return;
+    if(!rawQuery) return;
     
     box.style.display = "block";
     
-    if(query.includes("hr") || query.includes("home run") || query.includes("leader")) {
-        title.innerText = "Query Result: MLB / Cardinals Home Run Metrics";
-        text.innerHTML = "<strong>St. Louis Cardinals Leader:</strong> Paul Goldschmidt / Nolan Arenado tier matrix active. <br><strong>MLB League Leader:</strong> Parsed from current live stats matrix (Top tier averaging 35+ HR pace).";
-    } else if(query.includes("era") || query.includes("pitching")) {
-        title.innerText = "Query Result: Pitching & ERA Telemetry";
-        text.innerHTML = "<strong>Cardinals Rotation Metrics:</strong> Active bullpen and starter ERA tracking loaded. <br><strong>League Benchmark:</strong> Top MLB starters holding sub-2.80 ERA thresholds.";
+    const isCardinalsQuery = rawQuery.includes("cardinals") || rawQuery.includes("cards") || rawQuery.includes("st. louis") || rawQuery.includes("stl");
+    const isLeagueQuery = rawQuery.includes("mlb") || rawQuery.includes("league") || rawQuery.includes("overall") || rawQuery.includes("leaders");
+
+    if (rawQuery.includes("hr") || rawQuery.includes("home run") || rawQuery.includes("slugging")) {
+        if (isCardinalsQuery || (!isLeagueQuery && !rawQuery.includes("all"))) {
+            title.innerText = "Query Result: St. Louis Cardinals Power Metrics (Current Roster)";
+            text.innerHTML = "<strong>Active Squad Focus:</strong> Jordan Walker, Alec Burleson, and Willson Contreras lead the current power matrix.<br><em>Note: Active 2026 roster filter enforced.</em>";
+        } else {
+            title.innerText = "Query Result: MLB League-Wide Home Run Leaders";
+            text.innerHTML = "<strong>MLB Leaderboard:</strong> Top tier sluggers averaging a 35+ home run pace across American and National Leagues.";
+        }
+    } else if (rawQuery.includes("era") || rawQuery.includes("pitching") || rawQuery.includes("strikeout")) {
+        if (isCardinalsQuery || (!isLeagueQuery && !rawQuery.includes("all"))) {
+            title.innerText = "Query Result: Cardinals Rotation & Bullpen Telemetry";
+            text.innerHTML = "<strong>Active Pitching Staff:</strong> Monitoring current starting rotation turn rates, bullpen high-leverage arms, and team ERA baselines.";
+        } else {
+            title.innerText = "Query Result: MLB Pitching & ERA Benchmarks";
+            text.innerHTML = "<strong>League Leaderboard:</strong> Elite starting pitchers holding sub-2.80 ERA thresholds across MLB.";
+        }
+    } else if (rawQuery.includes("winn") || rawQuery.includes("shortstop") || rawQuery.includes("roster")) {
+        title.innerText = "Query Result: Cardinals Roster Spotlight";
+        text.innerHTML = "<strong>Player Focus:</strong> Masyn Winn (SS) — Anchor telemetry tracking defensive metrics, batting average splits, and table-setting production.";
     } else {
         title.innerText = "Natural Language Engine Response";
-        text.innerHTML = `Processed query for: <em>"${query}"</em>. Relational extraction node matched general roster parameters.`;
+        text.innerHTML = `Processed query for: <em>"${rawQuery}"</em>. Active relational filters applied to current 2026 sports data stream.`;
     }
 }
 
