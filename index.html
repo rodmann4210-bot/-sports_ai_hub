@@ -1,557 +1,99 @@
+<!-- © 2026 Roderick Grimes. All rights reserved. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sports AI Hub — Ask the Stats</title>
-    <style>
-        :root {
-            --bg-color: #0b0f19;
-            --card-bg: #131b2e;
-            --accent-red: #d32f2f;
-            --btn-yellow: #ffca28;
-            --btn-yellow-hover: #ffb300;
-            --text-color: #ffffff;
-            --text-muted: #94a3b8;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            margin: 0;
-            padding: 16px;
-            padding-bottom: 90px;
-        }
-
-        .header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .search-bar {
-            flex: 1;
-            padding: 12px 16px;
-            background-color: var(--card-bg);
-            border: 1px solid #1e293b;
-            border-radius: 8px;
-            color: var(--text-color);
-            font-size: 16px;
-            box-sizing: border-box;
-            margin-right: 10px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .search-bar:focus {
-            border-color: var(--btn-yellow);
-        }
-
-        .version-tag {
-            color: var(--text-muted);
-            font-size: 12px;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
-        .nav-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-        }
-
-        .nav-tab {
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            border: 1px solid #1e293b;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            white-space: nowrap;
-            transition: background-color 0.2s, border-color 0.2s;
-        }
-
-        .nav-tab.active {
-            background-color: var(--accent-red);
-            border-color: var(--accent-red);
-        }
-
-        .tab-content {
-            display: none !important;
-        }
-
-        .tab-content.active {
-            display: block !important;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
-            border: 1px solid #1e293b;
-        }
-
-        .card h2 {
-            margin-top: 0;
-            font-size: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 10px;
-        }
-
-        .metric-box {
-            background-color: rgba(255, 255, 255, 0.03);
-            border: 1px solid #1e293b;
-            padding: 12px;
-            border-radius: 8px;
-        }
-
-        .metric-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .metric-value {
-            font-size: 15px;
-            font-weight: bold;
-        }
-
-        .stat-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-
-        .stat-table th, .stat-table td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #1e293b;
-        }
-
-        .stat-table th {
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-        
-        .badge {
-            background-color: rgba(211, 47, 47, 0.2);
-            color: #ef4444;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-        }
-
-        .standings-toggle {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 12px;
-        }
-
-        .stand-btn {
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid #1e293b;
-            color: var(--text-muted);
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .stand-btn.active {
-            background-color: var(--accent-red);
-            border-color: var(--accent-red);
-            color: var(--text-color);
-        }
-
-        .standings-view {
-            display: none;
-        }
-
-        .standings-view.active {
-            display: block;
-        }
-
-        /* AI Search Box & Output Panel */
-        .ai-output-box {
-            margin-top: 12px;
-            padding: 14px;
-            background-color: rgba(255, 255, 255, 0.02);
-            border: 1px solid #1e293b;
-            border-radius: 8px;
-            font-size: 14.5px;
-            line-height: 1.5;
-            display: none;
-        }
-
-        .ai-output-box.visible {
-            display: block;
-        }
-
-        .ai-output-box strong {
-            color: var(--btn-yellow);
-        }
-
-        .chip-container {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
-
-        .chip {
-            background-color: rgba(255, 255, 255, 0.04);
-            border: 1px solid #1e293b;
-            color: var(--text-muted);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11.5px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .chip:hover {
-            border-color: var(--btn-yellow);
-            color: var(--btn-yellow);
-        }
-
-        /* Unified Gold Floating Trays */
-        .film-launch {
-            position: fixed;
-            right: 22px;
-            bottom: 22px;
-            z-index: 40;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(160deg, var(--btn-yellow), #c79a3a);
-            color: #000;
-            font-weight: 700;
-            letter-spacing: 1px;
-            font-size: 14px;
-            text-transform: uppercase;
-            border: none;
-            border-radius: 50px;
-            padding: 14px 22px;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.2);
-            transition: transform .15s;
-        }
-        .film-launch:hover { transform: translateY(-2px); }
-        
-        .bet-launch {
-            position: fixed;
-            right: 22px;
-            bottom: 84px;
-            z-index: 40;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(160deg, var(--btn-yellow), #c79a3a);
-            color: #000;
-            font-weight: 700;
-            letter-spacing: 1px;
-            font-size: 14px;
-            text-transform: uppercase;
-            border: none;
-            border-radius: 50px;
-            padding: 14px 22px;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.2);
-            transition: transform .15s;
-        }
-        .bet-launch:hover { transform: translateY(-2px); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sports AI Hub — Ask the Stats</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Barlow:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{--burgundy:#b3122e;--burgundy-deep:#7a0c1f;--gold:#f3c14b;--bg:#0a0f1c;--panel:#141b30;--ink:#f3ece0;--muted:#a9b4c8;--line:rgba(243,193,75,.22);--accent:#00e5ff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:'Barlow',sans-serif;padding:0 20px 48px}
+  .wrap{max-width:1280px;margin:0 auto}
+  
+  /* AI Header (Pinned) */
+  .ai-header{position:sticky;top:0;background:var(--bg);padding:20px 0;border-bottom:1px solid var(--line);z-index:100}
+  .ai-input-row{display:flex;gap:10px}
+  input{flex-grow:1;padding:12px;background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:6px}
+  
+  /* Navigation */
+  .hub-nav{display:flex;gap:8px;margin-top:20px;border-bottom:1px solid var(--line);padding-bottom:12px}
+  .hub-btn{background:var(--panel);color:var(--muted);padding:10px 20px;border-radius:6px;cursor:pointer;border:1px solid var(--line);text-transform:uppercase;font-family:'Oswald'}
+  .hub-btn.active{background:linear-gradient(160deg,var(--burgundy),var(--burgundy-deep));color:var(--gold)}
+  
+  /* Views */
+  #mainHubContent{display:block}
+  #spacexContent{display:none;font-family:'Space Mono',monospace}
+  
+  /* SpaceX Specifics */
+  .hero{background:#0d1525;border-top:2px solid var(--accent);padding:20px;margin-top:20px}
+  .launch-card{background:var(--panel);border:1px solid #162030;padding:15px;margin-top:10px;display:grid;grid-template-columns:1fr auto}
+  .weather-alert{color:#ff8275;font-weight:700;text-transform:uppercase}
+</style>
 </head>
 <body>
-
-    <div class="header-row">
-        <input type="text" id="globalSearchInput" class="search-bar" placeholder="Ask anything (e.g., 'Who leads MLB in HR?' or 'Walker stats')...">
-        <span class="version-tag">v5.1-SMART-SEARCH</span>
+<div class="wrap">
+  <!-- Permanent AI Header -->
+  <header class="ai-header">
+    <div class="ai-input-row">
+      <input type="text" id="aiInput" placeholder="Ask the Stats...">
+      <button class="hub-btn">Execute</button>
     </div>
+    <nav class="hub-nav" id="hubNav">
+      <button class="hub-btn active" data-league="mlb">MLB Grid</button>
+      <button class="hub-btn" data-league="nfl">NFL Grid</button>
+      <button class="hub-btn" data-league="space">SpaceX Launchwatch</button>
+    </nav>
+  </header>
 
-    <!-- AI Search Answer Dropdown -->
-    <div class="card" id="aiResultCard" style="display: none; background-color: #1a233a; border-color: var(--btn-yellow);">
-        <h2>Ask the Stats Engine <span class="badge" style="background: rgba(255,202,40,0.2); color: var(--btn-yellow);">Smart Intent Match</span></h2>
-        <div id="aiAnswerContent" class="ai-output-box visible" style="border: none; background: transparent; margin-top: 0; padding: 0;"></div>
-    </div>
+  <!-- Sports Content -->
+  <div id="mainHubContent">
+    <section style="margin-top:20px;"><h2>Sports Dashboard Active</h2></section>
+  </div>
 
-    <!-- Navigation Tabs on Top -->
-    <div class="nav-tabs">
-        <button class="nav-tab active" data-tab="mlb">MLB GRID</button>
-        <button class="nav-tab" data-tab="nfl">NFL GRID</button>
-        <button class="nav-tab" data-tab="nascar">NASCAR</button>
-        <button class="nav-tab" data-tab="mls">MLS GRID</button>
-    </div>
+  <!-- SpaceX Content -->
+  <div id="spacexContent">
+    <div id="priorLaunches"><h3>Prior Mission History</h3></div>
+    <div class="hero" id="heroSection">Acquiring upcoming launch signal...</div>
+    <div id="launchGrid"></div>
+  </div>
+</div>
 
-    <!-- MLB TAB -->
-    <div id="mlb" class="tab-content active">
-        <div class="card">
-            <h2>
-                St. Louis Cardinals Command Center 
-                <span class="badge">Live Gameday</span>
-            </h2>
-            <p style="color: var(--text-muted);">Busch Stadium Homestand | Game vs. Chicago Cubs</p>
-            
-            <div class="metrics-grid">
-                <div class="metric-box">
-                    <div class="metric-label">Today's Probable Starter</div>
-                    <div class="metric-value">Andre Pallante (RHP)</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-label">Live Gameday Feed</div>
-                    <div class="metric-value">
-                        <a href="https://www.mlb.com/cardinals" target="_blank" style="color: var(--btn-yellow); text-decoration: underline;">Open Cardinals MLB Page ↗</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="chip-container">
-                <span class="chip" onclick="runPresetQuery('Who is leading the team in homers?')">Cardinals HR Leader</span>
-                <span class="chip" onclick="runPresetQuery('How is Jordan Walker doing?')">Jordan Walker Splits</span>
-                <span class="chip" onclick="runPresetQuery('Show me league home run leaders')">MLB HR Leaders</span>
-                <span class="chip" onclick="runPresetQuery('Who has the best ERA in baseball?')">MLB ERA Leaders</span>
-            </div>
-        </div>
+<script>
+const $=id=>document.getElementById(id);
+$("hubNav").addEventListener("click", e => {
+    const b = e.target.closest(".hub-btn"); if(!b) return;
+    document.querySelectorAll(".hub-btn").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    
+    if (b.dataset.league === "space") {
+        $("mainHubContent").style.display = "none";
+        $("spacexContent").style.display = "block";
+        initSpaceX();
+    } else {
+        $("mainHubContent").style.display = "block";
+        $("spacexContent").style.display = "none";
+    }
+});
 
-        <!-- Standings Toggle Component -->
-        <div class="card">
-            <h2>Standings Hub</h2>
-            <div class="standings-toggle">
-                <button class="stand-btn active" onclick="switchStandings('central', event)">NL Central</button>
-                <button class="stand-btn" onclick="switchStandings('playoffs', event)">NL Wild Card</button>
-                <button class="stand-btn" onclick="switchStandings('mlb', event)">MLB Overall</button>
-            </div>
-
-            <div id="standings-central" class="standings-view active">
-                <table class="stat-table">
-                    <tr><th>Team</th><th>W-L</th><th>GB</th></tr>
-                    <tr><td>Milwaukee Brewers</td><td>67-40</td><td>—</td></tr>
-                    <tr><td>Chicago Cubs</td><td>61-46</td><td>6.0</td></tr>
-                    <tr><td>Pittsburgh Pirates</td><td>55-53</td><td>12.5</td></tr>
-                    <tr style="color: var(--btn-yellow);"><td><strong>St. Louis Cardinals</strong></td><td><strong>53-54</strong></td><td><strong>14.0</strong></td></tr>
-                    <tr><td>Cincinnati Reds</td><td>50-56</td><td>16.5</td></tr>
-                </table>
-            </div>
-
-            <div id="standings-playoffs" class="standings-view">
-                <table class="stat-table">
-                    <tr><th>Wild Card Race</th><th>W-L</th><th>GB</th></tr>
-                    <tr><td>Atlanta Braves (WC1)</td><td>62-44</td><td>+2.5</td></tr>
-                    <tr><td>New York Mets (WC2)</td><td>54-54</td><td>—</td></tr>
-                    <tr style="color: var(--btn-yellow);"><td><strong>St. Louis Cardinals (Hunt)</strong></td><td><strong>53-54</strong></td><td><strong>0.5</strong></td></tr>
-                    <tr><td>San Francisco Giants</td><td>45-62</td><td>8.5</td></tr>
-                </table>
-            </div>
-
-            <div id="standings-mlb" class="standings-view">
-                <table class="stat-table">
-                    <tr><th>Top MLB Clubs</th><th>W-L</th><th>PCT</th></tr>
-                    <tr><td>Los Angeles Dodgers</td><td>67-40</td><td>.626</td></tr>
-                    <tr><td>Milwaukee Brewers</td><td>67-40</td><td>.626</td></tr>
-                    <tr><td>New York Yankees</td><td>60-40</td><td>.600</td></tr>
-                </table>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>Key Roster Matchups & Lineup Tracking</h2>
-            <table class="stat-table">
-                <tr>
-                    <th>Player</th>
-                    <th>Position</th>
-                    <th>Recent Trend / Split</th>
-                </tr>
-                <tr>
-                    <td><strong>Masyn Winn</strong></td>
-                    <td>Shortstop</td>
-                    <td>Multi-hit threat, active table-setter</td>
-                </tr>
-                <tr>
-                    <td><strong>Jordan Walker</strong></td>
-                    <td>Right Fielder</td>
-                    <td>Team leader with 22 HR / 77 RBI</td>
-                </tr>
-                <tr>
-                    <td><strong>Alec Burleson</strong></td>
-                    <td>First Baseman</td>
-                    <td>Team batting average leader (.285 BA)</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-    <!-- NFL TAB -->
-    <div id="nfl" class="tab-content">
-        <div class="card">
-            <h2>NFL Command Center</h2>
-            <p style="color: var(--text-muted);">Gridiron feeds loading...</p>
-        </div>
-    </div>
-
-    <!-- NASCAR TAB -->
-    <div id="nascar" class="tab-content">
-        <div class="card">
-            <h2>NASCAR Cup Series Hub</h2>
-            <p style="color: var(--text-muted);">Track stats and telemetry loading...</p>
-        </div>
-    </div>
-
-    <!-- MLS TAB -->
-    <div id="mls" class="tab-content">
-        <div class="card">
-            <h2>St. Louis CITY SC Command Center</h2>
-            <p style="color: var(--text-muted);">2026 Season | Western Conference Standing: 10th (19 Pts)</p>
-        </div>
-    </div>
-
-    <!-- Unified Gold Floating Trays -->
-    <button class="bet-launch" onclick="alert('Betting Panel Triggered')">📊 Match Betting</button>
-    <button class="film-launch" onclick="window.open('https://www.mlb.com/video/search?q=TeamId+%3D+%5B138%5D', '_blank')">🎞 Film Room</button>
-
-    <script>
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-
-            const targetContent = document.getElementById(tabId);
-            if (targetContent) {
-                targetContent.classList.add('active');
-            }
-
-            const targetButton = document.querySelector(`.nav-tab[data-tab="${tabId}"]`);
-            if (targetButton) {
-                targetButton.classList.add('active');
-            }
-
-            localStorage.setItem('activeSportsTab', tabId);
-        }
-
-        function switchStandings(viewId, event) {
-            document.querySelectorAll('.standings-view').forEach(view => {
-                view.classList.remove('active');
-            });
-            document.querySelectorAll('.stand-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            document.getElementById('standings-' + viewId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-
-        // Flexible Conversational Intent Matching Engine
-        function handleGlobalSearch(query) {
-            const q = query.toLowerCase().trim();
-            const resCard = document.getElementById('aiResultCard');
-            const ansContent = document.getElementById('aiAnswerContent');
-
-            if (!q) {
-                resCard.style.display = 'none';
-                return;
-            }
-
-            resCard.style.display = 'block';
-            ansContent.innerHTML = `<span style="color: var(--text-muted);">Scanning databases for "${query}"...</span>`;
-
-            setTimeout(() => {
-                let html = "";
-
-                // Check for league-wide / MLB intent
-                const isLeagueWide = q.includes("mlb") || q.includes("league") || q.includes("in baseball") || q.includes("overall");
-                const isHomeRunQuery = q.includes("hr") || q.includes("home run") || q.includes("homers") || q.includes("longball");
-                const isEraQuery = q.includes("era") || q.includes("pitcher") || q.includes("pitching") || q.includes("strikeouts");
-                const isPlayerQuery = q.includes("walker") || q.includes("winn") || q.includes("burleson") || q.includes("pallante");
-
-                if (isLeagueWide && isHomeRunQuery) {
-                    html = `<strong>MLB Home Run Leaders (League-Wide):</strong><br>` +
-                           `1. Kyle Schwarber (PHI) — <strong>33 HR</strong><br>` +
-                           `2. Hunter Goodman (COL) — <strong>31 HR</strong><br>` +
-                           `3. Ben Rice (NYY) — <strong>31 HR</strong>`;
-                } 
-                else if (isLeagueWide && isEraQuery) {
-                    html = `<strong>MLB ERA Leaders (League-Wide Starters):</strong><br>` +
-                           `1. Jacob Misiorowski (MIL) — <strong>1.62 ERA</strong><br>` +
-                           `2. Cole Schlittler (NYY) — <strong>2.07 ERA</strong><br>` +
-                           `3. Chris Sale (ATL) — <strong>2.19 ERA</strong>`;
-                }
-                else if (isLeagueWide) {
-                    html = `<strong>MLB General Overview:</strong><br>` +
-                           `Top clubs currently battling for the 2026 pennant race include the Dodgers, Brewers, and Phillies. Try asking specifically about <em>'league home run leaders'</em> or <em>'ERA leaders'</em>.`;
-                }
-                // Check for specific Cardinals or player intent
-                else if (isHomeRunQuery || q.includes("team in hr") || q.includes("leader")) {
-                    html = `<strong>St. Louis Cardinals Home Run & Power Leader:</strong><br>` +
-                           `<strong>Jordan Walker</strong> leads the Redbirds with <strong>22 Home Runs</strong> and <strong>77 RBIs</strong> on the season.`;
-                } 
-                else if (q.includes("walker") || q.includes("jordan")) {
-                    html = `<strong>Jordan Walker Player Profile:</strong><br>` +
-                           `Right Fielder | Bashing .285 with <strong>22 HR</strong> and <strong>77 RBI</strong>. Currently anchoring the middle of the Cardinals' lineup.`;
-                } 
-                else if (q.includes("winn") || q.includes("masyn")) {
-                    html = `<strong>Masyn Winn Player Profile:</strong><br>` +
-                           `Shortstop | Batting .288 with elite defensive range and speed, setting the table at the top of the order.`;
-                }
-                else if (q.includes("burleson") || q.includes("alec")) {
-                    html = `<strong>Alec Burleson Player Profile:</strong><br>` +
-                           `First Baseman | Leads the club with a <strong>.285 Batting Average</strong> alongside 15 HR and 71 RBIs.`;
-                }
-                else {
-                    html = `I searched for "<strong>${query}</strong>". You can ask things like <em>'Who leads MLB in home runs?'</em>, <em>'Jordan Walker stats'</em>, or <em>'Cardinals HR leader'</em>.`;
-                }
-
-                ansContent.innerHTML = html;
-            }, 250);
-        }
-
-        function runPresetQuery(queryString) {
-            document.getElementById('globalSearchInput').value = queryString;
-            handleGlobalSearch(queryString);
-        }
-
-        document.getElementById('globalSearchInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                handleGlobalSearch(e.target.value);
-            }
+async function initSpaceX() {
+    try {
+        const res = await fetch('https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=5&format=json');
+        const data = await res.json();
+        const next = data.results[0];
+        $("heroSection").innerHTML = `<strong>NEXT LAUNCH:</strong> ${next.name} <br> Time: ${next.net}`;
+        
+        let gridHtml = "<h3>Upcoming Launches</h3>";
+        data.results.forEach(l => {
+            gridHtml += `<div class="launch-card">
+                <div>${l.name}<br><span class="weather-alert">T-0 Forecast: Nominal</span></div>
+                <a href="${l.vidURLs[0]?.url || '#'}" target="_blank">Watch on YouTube</a>
+            </div>`;
         });
-
-        document.querySelectorAll('.nav-tab').forEach(button => {
-            button.addEventListener('click', () => {
-                const tabId = button.getAttribute('data-tab');
-                switchTab(tabId);
-            });
-        });
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedTab = localStorage.getItem('activeSportsTab');
-            if (savedTab && document.getElementById(savedTab)) {
-                switchTab(savedTab);
-            }
-        });
-    </script>
+        $("launchGrid").innerHTML = gridHtml;
+    } catch(e) { $("heroSection").innerHTML = "Data offline."; }
+}
+</script>
 </body>
 </html>
