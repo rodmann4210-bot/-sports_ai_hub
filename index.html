@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sports AI Hub — Ask the Stats</title>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Barlow:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
   :root{--burgundy:#b3122e;--burgundy-deep:#7a0c1f;--gold:#f3c14b;--bg:#0a0f1c;--panel:#141b30;--ink:#f3ece0;--muted:#a9b4c8;--line:rgba(243,193,75,.22);--accent:#00e5ff}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -18,17 +19,54 @@
   input{flex-grow:1;padding:12px;background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:6px}
   
   /* Navigation */
-  .hub-nav{display:flex;gap:8px;margin-top:20px;border-bottom:1px solid var(--line);padding-bottom:12px}
+  .hub-nav{display:flex;gap:8px;margin-top:20px;border-bottom:1px solid var(--line);padding-bottom:12px;flex-wrap:wrap;}
   .hub-btn{background:var(--panel);color:var(--muted);padding:10px 20px;border-radius:6px;cursor:pointer;border:1px solid var(--line);text-transform:uppercase;font-family:'Oswald'}
   .hub-btn.active{background:linear-gradient(160deg,var(--burgundy),var(--burgundy-deep));color:var(--gold)}
   
-  /* Views */
-  #mainHubContent{display:block}
-  #spacexContent{display:none;font-family:'Space Mono',monospace}
-  
+  /* Views & Content Panes */
+  .tab-pane { display: none; margin-top: 20px; }
+  .tab-pane.active { display: block; }
+  #spacexContent{font-family:'Space Mono',monospace}
+
+  /* Shared Dashboard Components */
+  .dashboard-header-banner { background: var(--panel); border: 1px solid var(--line); padding: 20px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+  .dashboard-card-section { background: var(--panel); border: 1px solid var(--line); padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+  .dashboard-card-section h4 { font-family: 'Oswald'; color: var(--gold); margin-bottom: 12px; font-size: 1.2rem; }
+  .gold-action-btn { background: var(--gold); color: var(--bg); font-weight: 700; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-family: 'Oswald'; text-transform: uppercase; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+  .gold-action-btn:hover { background: #d4af37; }
+
+  /* Tables & Lists */
+  .table-responsive { width: 100%; overflow-x: auto; }
+  .hub-data-table { width: 100%; border-collapse: collapse; text-align: left; }
+  .hub-data-table th, .hub-data-table td { padding: 12px; border-bottom: 1px solid var(--line); font-size: 0.95rem; }
+  .hub-data-table th { color: var(--gold); font-family: 'Oswald'; text-transform: uppercase; }
+
+  /* NASCAR Specifics */
+  .nascar-hero { background: linear-gradient(135deg, #111a2e 0%, #1a2744 100%); border-left: 5px solid var(--gold); padding: 24px; border-radius: 8px; color: #fff; margin-bottom: 20px; }
+  .track-meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px; }
+  .meta-item { display: flex; flex-direction: column; }
+  .meta-label { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; }
+  .meta-val { font-size: 1.05rem; font-weight: 600; color: #f7fafc; }
+
+  /* MLS Specifics */
+  .mls-summary-grid { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+  .half-card { flex: 1; min-width: 280px; }
+  .standings-mini-badge { display: flex; align-items: center; gap: 12px; background: rgba(243, 193, 75, 0.1); padding: 12px 16px; border-radius: 6px; border: 1px solid var(--line); margin: 12px 0; }
+  .position-num { font-size: 1.5rem; font-weight: 800; color: var(--gold); }
+  .next-match-banner { display: flex; align-items: center; justify-content: space-around; background: #111a2e; padding: 20px; border-radius: 8px; text-align: center; flex-wrap: wrap; gap: 16px; }
+  .team-block { display: flex; flex-direction: column; align-items: center; font-weight: 600; color: #fff; flex: 1; }
+  .club-logo { width: 48px; height: 48px; object-fit: contain; margin-bottom: 8px; }
+  .vs-block { display: flex; flex-direction: column; align-items: center; flex: 1; }
+  .vs-tag { font-weight: 900; color: var(--gold); font-size: 1.2rem; }
+  .match-time { font-size: 0.9rem; color: var(--ink); margin-top: 4px; }
+  .match-venue { font-size: 0.8rem; color: var(--muted); }
+  .stat-leader-list { list-style: none; }
+  .stat-leader-list li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line); }
+
   /* SpaceX Specifics */
-  .hero{background:#0d1525;border-top:2px solid var(--accent);padding:20px;margin-top:20px}
-  .launch-card{background:var(--panel);border:1px solid #162030;padding:15px;margin-top:10px;display:grid;grid-template-columns:1fr auto}
+  .hero{background:#0d1525;border-top:2px solid var(--accent);padding:20px;margin-top:20px; border-radius:8px;}
+  .launch-card{background:var(--panel);border:1px solid var(--line);padding:15px;margin-top:10px;display:grid;grid-template-columns:1fr auto; border-radius:6px; align-items:center;}
+  .launch-card a { color: var(--accent); text-decoration: none; }
   .weather-alert{color:#ff8275;font-weight:700;text-transform:uppercase}
 </style>
 </head>
@@ -38,22 +76,186 @@
   <header class="ai-header">
     <div class="ai-input-row">
       <input type="text" id="aiInput" placeholder="Ask the Stats...">
-      <button class="hub-btn">Execute</button>
+      <button class="gold-action-btn">Execute</button>
     </div>
     <nav class="hub-nav" id="hubNav">
       <button class="hub-btn active" data-league="mlb">MLB Grid</button>
       <button class="hub-btn" data-league="nfl">NFL Grid</button>
+      <button class="hub-btn" data-league="nascar">NASCAR</button>
+      <button class="hub-btn" data-league="mls">MLS Grid</button>
       <button class="hub-btn" data-league="space">SpaceX Launchwatch</button>
     </nav>
   </header>
 
-  <!-- Sports Content -->
-  <div id="mainHubContent">
-    <section style="margin-top:20px;"><h2>Sports Dashboard Active</h2></section>
+  <!-- MLB Tab Content -->
+  <div id="mlb-tab-content" class="tab-pane active">
+    <div class="dashboard-header-banner">
+      <div>
+        <h2>⚾ MLB Grid — St. Louis Cardinals Command Center</h2>
+        <p>Live standings, schedule hubs, and dual-stat conversational querying.</p>
+      </div>
+      <a href="https://www.mlb.com/cardinals" target="_blank" class="gold-action-btn">
+        <i class="fa-solid fa-baseball"></i> Cardinals MLB.com Hub
+      </a>
+    </div>
+    <div class="dashboard-card-section">
+      <h4>Active Dashboard Framework</h4>
+      <p>MLB statistics matrices, standings toggles, and natural language engine loaded.</p>
+    </div>
+  </div>
+
+  <!-- NFL Tab Content -->
+  <div id="nfl-tab-content" class="tab-pane">
+    <div class="dashboard-header-banner">
+      <div>
+        <h2>🏈 NFL Grid — Command Center</h2>
+        <p>Pre-season telemetry, rosters, and schedule trackers.</p>
+      </div>
+    </div>
+    <div class="dashboard-card-section">
+      <h4>2026 Schedule & Matchup Preview</h4>
+      <p>Gridiron telemetry modules initializing for the upcoming campaign.</p>
+    </div>
+  </div>
+
+  <!-- NASCAR Tab Content -->
+  <div id="nascar-tab-content" class="tab-pane">
+    <div class="dashboard-header-banner">
+      <div>
+        <h2>🏁 NASCAR Grid — Command Center</h2>
+        <p>Season tracking, upcoming speedway schedules, and driver telemetry metrics.</p>
+      </div>
+      <button class="gold-action-btn" onclick="alert('Film Room onboard feeds active.')">
+        <i class="fa-solid fa-video"></i> Film Room: Onboard Feeds
+      </button>
+    </div>
+
+    <div class="nascar-hero">
+      <div style="font-size:0.85rem; color:var(--gold); text-transform:uppercase; font-weight:700; margin-bottom:6px;">Next Up Series</div>
+      <h3 style="font-family:'Oswald'; font-size:1.6rem;">Iowa Corn 350 Powered by Ethanol</h3>
+      <div class="track-meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">Venue</span>
+          <span class="meta-val">Iowa Speedway (Newton, IA)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Track Length</span>
+          <span class="meta-val">7/8 Mile Short Track</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Green Flag</span>
+          <span class="meta-val">Sunday, Aug 9, 3:30 PM</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Broadcast</span>
+          <span class="meta-val">USA Network</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-card-section">
+      <h4>Upcoming August 2026 Cup Series Schedule</h4>
+      <div class="table-responsive">
+        <table class="hub-data-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Race Event</th>
+              <th>Track / Location</th>
+              <th>Network</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Sun, Aug 9</td>
+              <td><strong>Iowa Corn 350</strong></td>
+              <td>Iowa Speedway (Newton, IA)</td>
+              <td>USA</td>
+            </tr>
+            <tr>
+              <td>Sat, Aug 15</td>
+              <td><strong>Cook Out 400</strong></td>
+              <td>Richmond Raceway (Richmond, VA)</td>
+              <td>USA</td>
+            </tr>
+            <tr>
+              <td>Sun, Aug 23</td>
+              <td><strong>Dollar Tree 301</strong></td>
+              <td>New Hampshire Motor Speedway</td>
+              <td>USA</td>
+            </tr>
+            <tr>
+              <td>Sat, Aug 29</td>
+              <td><strong>Coke Zero Sugar 400</strong></td>
+              <td>Daytona International Speedway</td>
+              <td>NBC</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- MLS Tab Content -->
+  <div id="mls-tab-content" class="tab-pane">
+    <div class="dashboard-header-banner">
+      <div>
+        <h2>⚽ MLS Grid — St. Louis CITY SC Hub</h2>
+        <p>Match performance, Western Conference tracking, and squad metrics.</p>
+      </div>
+      <a href="https://www.stlcitysc.com" target="_blank" class="gold-action-btn">
+        <i class="fa-solid fa-globe"></i> Official CITY SC Hub
+      </a>
+    </div>
+
+    <div class="mls-summary-grid">
+      <div class="dashboard-card-section half-card" style="margin-bottom:0;">
+        <h4>Current 2026 Standing</h4>
+        <div class="standings-mini-badge">
+          <span class="position-num">7th</span>
+          <span class="conference-text">Western Conference (25 PTS | 7W-4D-6L)</span>
+        </div>
+        <p style="font-size:0.9rem; color:var(--muted);">In contention for playoff qualification approaching the late-summer stretch.</p>
+      </div>
+
+      <div class="dashboard-card-section half-card" style="margin-bottom:0;">
+        <h4>Squad Goal Leaders</h4>
+        <ul class="stat-leader-list">
+          <li><span>Marcel Hartel (MF/FW)</span> <strong>5G / 3A</strong></li>
+          <li><span>Simon Becher (FW)</span> <strong>2G / 4A</strong></li>
+          <li><span>Eduard Löwen (MF)</span> <strong>2G / 1A</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="dashboard-card-section" style="margin-top:20px;">
+      <h4>Next Match Preview</h4>
+      <div class="next-match-banner">
+        <div class="team-block">
+          <img src="https://ssl.gstatic.com/onebox/media/sports/logos/optimized/43siA1JCgiPGGt5aFyZ8uw_500x500.png" alt="St. Louis City SC" class="club-logo">
+          <span>St. Louis CITY SC</span>
+        </div>
+        <div class="vs-block">
+          <span class="vs-tag">VS</span>
+          <span class="match-time">Saturday, Aug 1 — 7:30 PM CST</span>
+          <span class="match-venue">Energizer Park (St. Louis, MO)</span>
+        </div>
+        <div class="team-block">
+          <img src="https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Vkw9peVBvSjpAwm34IEPow_500x500.png" alt="Real Salt Lake" class="club-logo">
+          <span>Real Salt Lake</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- SpaceX Content -->
-  <div id="spacexContent">
+  <div id="spacexContent" class="tab-pane">
+    <div class="dashboard-header-banner">
+      <div>
+        <h2>🚀 SpaceX Launchwatch</h2>
+        <p>Orbital telemetry and mission status tracking.</p>
+      </div>
+    </div>
     <div id="priorLaunches"><h3>Prior Mission History</h3></div>
     <div class="hero" id="heroSection">Acquiring upcoming launch signal...</div>
     <div id="launchGrid"></div>
@@ -62,18 +264,31 @@
 
 <script>
 const $=id=>document.getElementById(id);
+
+// Unified Tab Switching Controller
 $("hubNav").addEventListener("click", e => {
-    const b = e.target.closest(".hub-btn"); if(!b) return;
+    const b = e.target.closest(".hub-btn"); 
+    if(!b) return;
+    
     document.querySelectorAll(".hub-btn").forEach(x=>x.classList.remove("active"));
     b.classList.add("active");
     
-    if (b.dataset.league === "space") {
-        $("mainHubContent").style.display = "none";
-        $("spacexContent").style.display = "block";
+    const league = b.dataset.league;
+    
+    // Hide all tab panes
+    document.querySelectorAll(".tab-pane").forEach(pane => {
+        pane.classList.remove("active");
+    });
+    
+    // Display target pane
+    if (league === "space") {
+        $("spacexContent").classList.add("active");
         initSpaceX();
     } else {
-        $("mainHubContent").style.display = "block";
-        $("spacexContent").style.display = "none";
+        const targetPane = $(league + "-tab-content");
+        if (targetPane) {
+            targetPane.classList.add("active");
+        }
     }
 });
 
@@ -84,11 +299,11 @@ async function initSpaceX() {
         const next = data.results[0];
         $("heroSection").innerHTML = `<strong>NEXT LAUNCH:</strong> ${next.name} <br> Time: ${next.net}`;
         
-        let gridHtml = "<h3>Upcoming Launches</h3>";
+        let gridHtml = "<h3 style='margin:20px 0 10px; font-family:Oswald; color:var(--gold);'>Upcoming Launches</h3>";
         data.results.forEach(l => {
             gridHtml += `<div class="launch-card">
-                <div>${l.name}<br><span class="weather-alert">T-0 Forecast: Nominal</span></div>
-                <a href="${l.vidURLs[0]?.url || '#'}" target="_blank">Watch on YouTube</a>
+                <div><strong>${l.name}</strong><br><span class="weather-alert">T-0 Forecast: Nominal</span></div>
+                <a href="${l.vidURLs[0]?.url || '#'}" target="_blank"><i class="fa-brands fa-youtube"></i> Watch</a>
             </div>`;
         });
         $("launchGrid").innerHTML = gridHtml;
