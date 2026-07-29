@@ -84,7 +84,7 @@
   <!-- Permanent AI Header & Dual-Stat Engine Input -->
   <header class="ai-header">
     <div class="ai-input-row">
-      <input type="text" id="aiInput" placeholder="Ask the Stats (e.g., Cardinals HR leaders, MLB ERA)...">
+      <input type="text" id="aiInput" placeholder="Ask the Stats (e.g., Cardinals HR leaders, MLB saves)...">
       <button class="gold-action-btn" onclick="executeHubSearch()">Execute</button>
     </div>
     <nav class="hub-nav" id="hubNav">
@@ -383,8 +383,11 @@ function executeHubSearch() {
             text.innerHTML = "<strong>Cardinals HR Leaders:</strong><br>1. <strong>Jordan Walker (RF)</strong> — 22 HR<br>2. <strong>Alec Burleson (1B)</strong> — 15 HR<br>3. <strong>JJ Wetherholt (2B)</strong> — 15 HR";
         } else {
             title.innerText = "Query Result: MLB League-Wide Home Run Leaders (2026)";
-            text.innerHTML = "<strong>MLB HR Leaders:</strong><br>1. <strong>Yordan Alvarez (HOU)</strong> — 34 HR<br>2. <strong>Kyle Schwarber (PHI)</strong> — 33 HR<br>3. <strong>Hunter Goodman (COL)</strong> / <strong>Ben Rice (NYY)</strong> — 31 HR";
+            text.innerHTML = "<strong>MLB HR Leaders:</strong><br>1. <strong>Yordan Alvarez (HOU)</strong> — 34 HR<br>2. <strong>Kyle Schwarber (PHI)</strong> — 33 HR<br>3. <strong>Hunter Goodman (COL)</strong> — 31 HR";
         }
+    } else if (rawQuery.includes("save") || rawQuery.includes("closer")) {
+        title.innerText = "Query Result: MLB Saves Leaders (2026)";
+        text.innerHTML = "<strong>MLB Saves Leaders:</strong><br>1. <strong>Cade Smith (CLE)</strong> — 30 SV<br>2. <strong>Bryan Baker (TBR)</strong> — 28 SV<br>3. <strong>Mason Miller (SDP)</strong> — 27 SV<br>4. <strong>Riley O'Brien (STL)</strong> — 26 SV";
     } else if (rawQuery.includes("era") || rawQuery.includes("pitching") || rawQuery.includes("strikeout")) {
         if (isCardinalsQuery || (!isLeagueQuery && !rawQuery.includes("all"))) {
             title.innerText = "Query Result: Cardinals Rotation & Bullpen Status";
