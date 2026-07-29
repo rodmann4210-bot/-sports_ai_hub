@@ -41,6 +41,12 @@
             font-size: 16px;
             box-sizing: border-box;
             margin-right: 10px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-bar:focus {
+            border-color: var(--btn-yellow);
         }
 
         .version-tag {
@@ -186,6 +192,49 @@
             display: block;
         }
 
+        /* AI Search Box & Output Panel */
+        .ai-output-box {
+            margin-top: 12px;
+            padding: 14px;
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            font-size: 14.5px;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .ai-output-box.visible {
+            display: block;
+        }
+
+        .ai-output-box strong {
+            color: var(--btn-yellow);
+        }
+
+        .chip-container {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .chip {
+            background-color: rgba(255, 255, 255, 0.04);
+            border: 1px solid #1e293b;
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chip:hover {
+            border-color: var(--btn-yellow);
+            color: var(--btn-yellow);
+        }
+
         /* Unified Gold Floating Trays */
         .film-launch {
             position: fixed;
@@ -237,8 +286,14 @@
 <body>
 
     <div class="header-row">
-        <input type="text" class="search-bar" placeholder="Ask the Stats...">
-        <span class="version-tag">v4.1-CARDINALS-GAMEDAY</span>
+        <input type="text" id="globalSearchInput" class="search-bar" placeholder="Ask anything (e.g., 'Who leads MLB in HR?' or 'Walker stats')...">
+        <span class="version-tag">v5.1-SMART-SEARCH</span>
+    </div>
+
+    <!-- AI Search Answer Dropdown -->
+    <div class="card" id="aiResultCard" style="display: none; background-color: #1a233a; border-color: var(--btn-yellow);">
+        <h2>Ask the Stats Engine <span class="badge" style="background: rgba(255,202,40,0.2); color: var(--btn-yellow);">Smart Intent Match</span></h2>
+        <div id="aiAnswerContent" class="ai-output-box visible" style="border: none; background: transparent; margin-top: 0; padding: 0;"></div>
     </div>
 
     <!-- Navigation Tabs on Top -->
@@ -270,6 +325,13 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="chip-container">
+                <span class="chip" onclick="runPresetQuery('Who is leading the team in homers?')">Cardinals HR Leader</span>
+                <span class="chip" onclick="runPresetQuery('How is Jordan Walker doing?')">Jordan Walker Splits</span>
+                <span class="chip" onclick="runPresetQuery('Show me league home run leaders')">MLB HR Leaders</span>
+                <span class="chip" onclick="runPresetQuery('Who has the best ERA in baseball?')">MLB ERA Leaders</span>
+            </div>
         </div>
 
         <!-- Standings Toggle Component -->
@@ -284,29 +346,29 @@
             <div id="standings-central" class="standings-view active">
                 <table class="stat-table">
                     <tr><th>Team</th><th>W-L</th><th>GB</th></tr>
-                    <tr><td>Milwaukee Brewers</td><td>58-42</td><td>—</td></tr>
-                    <tr style="color: var(--btn-yellow);"><td><strong>St. Louis Cardinals</strong></td><td><strong>52-48</strong></td><td><strong>6.0</strong></td></tr>
-                    <tr><td>Chicago Cubs</td><td>49-51</td><td>9.0</td></tr>
-                    <tr><td>Cincinnati Reds</td><td>45-55</td><td>13.0</td></tr>
-                    <tr><td>Pittsburgh Pirates</td><td>42-58</td><td>16.0</td></tr>
+                    <tr><td>Milwaukee Brewers</td><td>67-40</td><td>—</td></tr>
+                    <tr><td>Chicago Cubs</td><td>61-46</td><td>6.0</td></tr>
+                    <tr><td>Pittsburgh Pirates</td><td>55-53</td><td>12.5</td></tr>
+                    <tr style="color: var(--btn-yellow);"><td><strong>St. Louis Cardinals</strong></td><td><strong>53-54</strong></td><td><strong>14.0</strong></td></tr>
+                    <tr><td>Cincinnati Reds</td><td>50-56</td><td>16.5</td></tr>
                 </table>
             </div>
 
             <div id="standings-playoffs" class="standings-view">
                 <table class="stat-table">
                     <tr><th>Wild Card Race</th><th>W-L</th><th>GB</th></tr>
-                    <tr><td>Atlanta Braves (WC1)</td><td>55-45</td><td>+2.5</td></tr>
-                    <tr><td>New York Mets (WC2)</td><td>53-47</td><td>+0.5</td></tr>
-                    <tr style="color: var(--btn-yellow);"><td><strong>St. Louis Cardinals (Hunt)</strong></td><td><strong>52-48</strong></td><td><strong>—</strong></td></tr>
-                    <tr><td>San Francisco Giants</td><td>51-49</td><td>1.0</td></tr>
+                    <tr><td>Atlanta Braves (WC1)</td><td>62-44</td><td>+2.5</td></tr>
+                    <tr><td>New York Mets (WC2)</td><td>54-54</td><td>—</td></tr>
+                    <tr style="color: var(--btn-yellow);"><td><strong>St. Louis Cardinals (Hunt)</strong></td><td><strong>53-54</strong></td><td><strong>0.5</strong></td></tr>
+                    <tr><td>San Francisco Giants</td><td>45-62</td><td>8.5</td></tr>
                 </table>
             </div>
 
             <div id="standings-mlb" class="standings-view">
                 <table class="stat-table">
                     <tr><th>Top MLB Clubs</th><th>W-L</th><th>PCT</th></tr>
-                    <tr><td>Los Angeles Dodgers</td><td>64-36</td><td>.640</td></tr>
-                    <tr><td>Philadelphia Phillies</td><td>62-38</td><td>.620</td></tr>
+                    <tr><td>Los Angeles Dodgers</td><td>67-40</td><td>.626</td></tr>
+                    <tr><td>Milwaukee Brewers</td><td>67-40</td><td>.626</td></tr>
                     <tr><td>New York Yankees</td><td>60-40</td><td>.600</td></tr>
                 </table>
             </div>
@@ -328,12 +390,12 @@
                 <tr>
                     <td><strong>Jordan Walker</strong></td>
                     <td>Right Fielder</td>
-                    <td>Strong metrics vs LHP power layout</td>
+                    <td>Team leader with 22 HR / 77 RBI</td>
                 </tr>
                 <tr>
                     <td><strong>Alec Burleson</strong></td>
                     <td>First Baseman</td>
-                    <td>Consistent contact / Clutch RBI profile</td>
+                    <td>Team batting average leader (.285 BA)</td>
                 </tr>
             </table>
         </div>
@@ -401,6 +463,81 @@
             document.getElementById('standings-' + viewId).classList.add('active');
             event.currentTarget.classList.add('active');
         }
+
+        // Flexible Conversational Intent Matching Engine
+        function handleGlobalSearch(query) {
+            const q = query.toLowerCase().trim();
+            const resCard = document.getElementById('aiResultCard');
+            const ansContent = document.getElementById('aiAnswerContent');
+
+            if (!q) {
+                resCard.style.display = 'none';
+                return;
+            }
+
+            resCard.style.display = 'block';
+            ansContent.innerHTML = `<span style="color: var(--text-muted);">Scanning databases for "${query}"...</span>`;
+
+            setTimeout(() => {
+                let html = "";
+
+                // Check for league-wide / MLB intent
+                const isLeagueWide = q.includes("mlb") || q.includes("league") || q.includes("in baseball") || q.includes("overall");
+                const isHomeRunQuery = q.includes("hr") || q.includes("home run") || q.includes("homers") || q.includes("longball");
+                const isEraQuery = q.includes("era") || q.includes("pitcher") || q.includes("pitching") || q.includes("strikeouts");
+                const isPlayerQuery = q.includes("walker") || q.includes("winn") || q.includes("burleson") || q.includes("pallante");
+
+                if (isLeagueWide && isHomeRunQuery) {
+                    html = `<strong>MLB Home Run Leaders (League-Wide):</strong><br>` +
+                           `1. Kyle Schwarber (PHI) — <strong>33 HR</strong><br>` +
+                           `2. Hunter Goodman (COL) — <strong>31 HR</strong><br>` +
+                           `3. Ben Rice (NYY) — <strong>31 HR</strong>`;
+                } 
+                else if (isLeagueWide && isEraQuery) {
+                    html = `<strong>MLB ERA Leaders (League-Wide Starters):</strong><br>` +
+                           `1. Jacob Misiorowski (MIL) — <strong>1.62 ERA</strong><br>` +
+                           `2. Cole Schlittler (NYY) — <strong>2.07 ERA</strong><br>` +
+                           `3. Chris Sale (ATL) — <strong>2.19 ERA</strong>`;
+                }
+                else if (isLeagueWide) {
+                    html = `<strong>MLB General Overview:</strong><br>` +
+                           `Top clubs currently battling for the 2026 pennant race include the Dodgers, Brewers, and Phillies. Try asking specifically about <em>'league home run leaders'</em> or <em>'ERA leaders'</em>.`;
+                }
+                // Check for specific Cardinals or player intent
+                else if (isHomeRunQuery || q.includes("team in hr") || q.includes("leader")) {
+                    html = `<strong>St. Louis Cardinals Home Run & Power Leader:</strong><br>` +
+                           `<strong>Jordan Walker</strong> leads the Redbirds with <strong>22 Home Runs</strong> and <strong>77 RBIs</strong> on the season.`;
+                } 
+                else if (q.includes("walker") || q.includes("jordan")) {
+                    html = `<strong>Jordan Walker Player Profile:</strong><br>` +
+                           `Right Fielder | Bashing .285 with <strong>22 HR</strong> and <strong>77 RBI</strong>. Currently anchoring the middle of the Cardinals' lineup.`;
+                } 
+                else if (q.includes("winn") || q.includes("masyn")) {
+                    html = `<strong>Masyn Winn Player Profile:</strong><br>` +
+                           `Shortstop | Batting .288 with elite defensive range and speed, setting the table at the top of the order.`;
+                }
+                else if (q.includes("burleson") || q.includes("alec")) {
+                    html = `<strong>Alec Burleson Player Profile:</strong><br>` +
+                           `First Baseman | Leads the club with a <strong>.285 Batting Average</strong> alongside 15 HR and 71 RBIs.`;
+                }
+                else {
+                    html = `I searched for "<strong>${query}</strong>". You can ask things like <em>'Who leads MLB in home runs?'</em>, <em>'Jordan Walker stats'</em>, or <em>'Cardinals HR leader'</em>.`;
+                }
+
+                ansContent.innerHTML = html;
+            }, 250);
+        }
+
+        function runPresetQuery(queryString) {
+            document.getElementById('globalSearchInput').value = queryString;
+            handleGlobalSearch(queryString);
+        }
+
+        document.getElementById('globalSearchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleGlobalSearch(e.target.value);
+            }
+        });
 
         document.querySelectorAll('.nav-tab').forEach(button => {
             button.addEventListener('click', () => {
