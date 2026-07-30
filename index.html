@@ -52,9 +52,14 @@
   .hub-data-table th, .hub-data-table td { padding: 12px; border-bottom: 1px solid var(--line); font-size: 0.95rem; }
   .hub-data-table th { color: var(--gold); font-family: 'Oswald'; text-transform: uppercase; }
 
-  /* NASCAR Specifics */
-  .nascar-hero { background: linear-gradient(135deg, #111a2e 0%, #1a2744 100%); border-left: 5px solid var(--gold); padding: 24px; border-radius: 8px; color: #fff; margin-bottom: 20px; }
-  .track-meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px; }
+  /* NASCAR Specifics & Track Outline Graphic */
+  .nascar-hero { background: linear-gradient(135deg, #111a2e 0%, #1a2744 100%); border-left: 5px solid var(--gold); padding: 24px; border-radius: 8px; color: #fff; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+  .nascar-hero-content { flex: 1; min-width: 280px; }
+  .track-outline-container { width: 160px; height: 90px; background: rgba(0,0,0,0.3); border: 1px solid var(--line); border-radius: 6px; display: flex; align-items: center; justify-content: center; position: relative; }
+  .track-oval { width: 120px; height: 55px; border: 3px dashed var(--gold); border-radius: 30px; position: relative; display: flex; align-items: center; justify-content: center; }
+  .track-label { font-size: 0.65rem; font-family: 'Space Mono', monospace; color: var(--muted); text-transform: uppercase; position: absolute; bottom: 4px; }
+  
+  .track-meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 16px; }
   .meta-item { display: flex; flex-direction: column; }
   .meta-label { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; }
   .meta-val { font-size: 1.05rem; font-weight: 600; color: #f7fafc; }
@@ -105,7 +110,7 @@
     <p id="searchResultText">Awaiting analytical query execution...</p>
   </div>
 
-  <!-- MLB Tab Content (Cardinals Hub & Full Interactive Standings) -->
+  <!-- MLB Tab Content (Cardinals Hub, Interactive Standings & Full Overall Schedule) -->
   <div id="mlb-tab-content" class="tab-pane active">
     <div class="dashboard-header-banner">
       <div>
@@ -117,13 +122,13 @@
       </a>
     </div>
 
-    <!-- Interactive Full Standings Matrix -->
+    <!-- Interactive Standings Toggle Component -->
     <div class="dashboard-card-section">
       <h4>Interactive Standings Matrix</h4>
       <div class="standings-toggle-bar">
         <button class="standings-toggle-btn active" onclick="switchStandings('central', this)">NL Central</button>
         <button class="standings-toggle-btn" onclick="switchStandings('wildcard', this)">NL Wild Card</button>
-        <button class="standings-toggle-btn" onclick="switchStandings('overall', this)">MLB Overall</button>
+        <button class="standings-toggle-btn" onclick="switchStandings('overall', this)">Overall Schedule</button>
       </div>
 
       <!-- NL Central Pane (Full 5 Teams) -->
@@ -159,16 +164,22 @@
         </div>
       </div>
 
-      <!-- MLB Overall Pane -->
+      <!-- Overall Schedule Pane (Full Upcoming Cardinals Schedule) -->
       <div id="standings-overall" class="standings-pane">
         <div class="table-responsive">
           <table class="hub-data-table">
-            <thead><tr><th>League Leader / Contender</th><th>Record</th><th>Status</th></tr></thead>
+            <thead><tr><th>Date</th><th>Opponent</th><th>Venue / Location</th><th>Time (CT)</th></tr></thead>
             <tbody>
-              <tr><td>Los Angeles Dodgers</td><td>67-41</td><td>NL West Leader</td></tr>
-              <tr><td>Milwaukee Brewers</td><td>66-39</td><td>NL Central Leader</td></tr>
-              <tr><td>Tampa Bay Rays</td><td>63-44</td><td>AL East Leader</td></tr>
-              <tr style="background: rgba(179, 18, 46, 0.15);"><td><strong>St. Louis Cardinals</strong></td><td>53-52</td><td>Wild Card Contender</td></tr>
+              <tr><td>Thu, Jul 30</td><td>vs Chicago Cubs</td><td>Busch Stadium (St. Louis, MO)</td><td>1:15 PM</td></tr>
+              <tr><td>Fri, Jul 31</td><td>at Toronto Blue Jays</td><td>Rogers Centre (Toronto, Canada)</td><td>6:07 PM</td></tr>
+              <tr><td>Sat, Aug 1</td><td>at Toronto Blue Jays</td><td>Rogers Centre (Toronto, Canada)</td><td>2:07 PM</td></tr>
+              <tr><td>Sun, Aug 2</td><td>at Toronto Blue Jays</td><td>Rogers Centre (Toronto, Canada)</td><td>12:37 PM</td></tr>
+              <tr><td>Mon, Aug 3</td><td>at New York Yankees</td><td>Yankee Stadium (Bronx, NY)</td><td>6:05 PM</td></tr>
+              <tr><td>Tue, Aug 4</td><td>at New York Yankees</td><td>Yankee Stadium (Bronx, NY)</td><td>6:05 PM</td></tr>
+              <tr><td>Wed, Aug 5</td><td>at New York Yankees</td><td>Yankee Stadium (Bronx, NY)</td><td>6:05 PM</td></tr>
+              <tr><td>Fri, Aug 7</td><td>vs Colorado Rockies</td><td>Busch Stadium (St. Louis, MO)</td><td>7:15 PM</td></tr>
+              <tr><td>Sat, Aug 8</td><td>vs Colorado Rockies</td><td>Busch Stadium (St. Louis, MO)</td><td>6:15 PM</td></tr>
+              <tr><td>Sun, Aug 9</td><td>vs Colorado Rockies</td><td>Busch Stadium (St. Louis, MO)</td><td>1:15 PM</td></tr>
             </tbody>
           </table>
         </div>
@@ -190,7 +201,7 @@
     </div>
   </div>
 
-  <!-- NASCAR Tab Content (Joe Gibbs Racing & Series Standings Hub + Connected Links) -->
+  <!-- NASCAR Tab Content (Joe Gibbs Racing & Track Outline Graphic) -->
   <div id="nascar-tab-content" class="tab-pane">
     <div class="dashboard-header-banner">
       <div class="banner-titles">
@@ -204,27 +215,35 @@
       </div>
     </div>
 
-    <!-- Featured Next Race Hero Card -->
+    <!-- Featured Next Race Hero Card with Track Outline -->
     <div class="nascar-hero">
-      <div style="font-size:0.85rem; color:var(--gold); text-transform:uppercase; font-weight:700; margin-bottom:6px;">Next Up Series</div>
-      <h3 style="font-family:'Oswald'; font-size:1.6rem;">Iowa Corn 350 Powered by Ethanol</h3>
-      <div class="track-meta-grid">
-        <div class="meta-item">
-          <span class="meta-label">Venue</span>
-          <span class="meta-val">Iowa Speedway (Newton, IA)</span>
+      <div class="nascar-hero-content">
+        <div style="font-size:0.85rem; color:var(--gold); text-transform:uppercase; font-weight:700; margin-bottom:6px;">Next Up Series</div>
+        <h3 style="font-family:'Oswald'; font-size:1.6rem;">Iowa Corn 350 Powered by Ethanol</h3>
+        <div class="track-meta-grid">
+          <div class="meta-item">
+            <span class="meta-label">Venue</span>
+            <span class="meta-val">Iowa Speedway (Newton, IA)</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Track Length</span>
+            <span class="meta-val">7/8 Mile Short Track</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Green Flag</span>
+            <span class="meta-val">Sunday, Aug 9, 3:30 PM ET</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Broadcast</span>
+            <span class="meta-val">USA Network / App</span>
+          </div>
         </div>
-        <div class="meta-item">
-          <span class="meta-label">Track Length</span>
-          <span class="meta-val">7/8 Mile Short Track</span>
+      </div>
+      <div class="track-outline-container" title="Iowa Speedway Track Schematic">
+        <div class="track-oval">
+          <i class="fa-solid fa-flag-checkered" style="color:var(--gold); font-size:1.1rem;"></i>
         </div>
-        <div class="meta-item">
-          <span class="meta-label">Green Flag</span>
-          <span class="meta-val">Sunday, Aug 9, 3:30 PM ET</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">Broadcast</span>
-          <span class="meta-val">USA Network / App</span>
-        </div>
+        <span class="track-label">Iowa Speedway</span>
       </div>
     </div>
 
@@ -379,10 +398,10 @@
   </div>
 </div>
 
-<!-- Unified Gold Floating Action Trays -->
+<!-- Linked Unified Gold Floating Action Trays -->
 <div class="floating-trays-container">
-  <button class="gold-action-btn" onclick="alert('Betting Hub Tray Active')"><i class="fa-solid fa-ticket"></i> Betting</button>
-  <button class="gold-action-btn" onclick="alert('Film Room Tray Active')"><i class="fa-solid fa-video"></i> Film Room</button>
+  <a href="https://www.actionnetwork.com" target="_blank" class="gold-action-btn"><i class="fa-solid fa-ticket"></i> Betting</a>
+  <a href="https://www.youtube.com" target="_blank" class="gold-action-btn"><i class="fa-solid fa-video"></i> Film Room</a>
 </div>
 
 <script>
