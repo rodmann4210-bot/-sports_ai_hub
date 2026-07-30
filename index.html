@@ -34,6 +34,9 @@
   .gold-action-btn { background: var(--gold); color: var(--bg); font-weight: 700; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-family: 'Oswald'; text-transform: uppercase; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
   .gold-action-btn:hover { background: #d4af37; }
 
+  /* Floating Action Trays Wrapper */
+  .floating-trays-container { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; z-index: 999; }
+
   /* Standings Toggle & Search Results */
   .standings-toggle-bar { display: flex; gap: 10px; margin-bottom: 15px; }
   .standings-toggle-btn { background: var(--bg); color: var(--muted); border: 1px solid var(--line); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-family: 'Oswald'; font-size: 0.9rem; }
@@ -84,7 +87,7 @@
   <!-- Permanent AI Header & Dual-Stat Engine Input -->
   <header class="ai-header">
     <div class="ai-input-row">
-      <input type="text" id="aiInput" placeholder="Ask the Stats (e.g., Cardinals HR leaders, JGR drivers)...">
+      <input type="text" id="aiInput" placeholder="Ask the Stats (e.g., Cardinals HR, NASCAR points leaders, JGR drivers)...">
       <button class="gold-action-btn" onclick="executeHubSearch()">Execute</button>
     </div>
     <nav class="hub-nav" id="hubNav">
@@ -179,16 +182,16 @@
     </div>
   </div>
 
-  <!-- NASCAR Tab Content (Joe Gibbs Racing Command Center) -->
+  <!-- NASCAR Tab Content (Joe Gibbs Racing & Series Standings Hub) -->
   <div id="nascar-tab-content" class="tab-pane">
     <div class="dashboard-header-banner">
       <div class="banner-titles">
-        <h2>🏁 NASCAR Grid — Joe Gibbs Racing Command Center</h2>
-        <p>JGR driver rosters, crew chief pairings, and upcoming August speedway slate.</p>
+        <h2>🏁 NASCAR Grid — Command Center</h2>
+        <p>Joe Gibbs Racing stability, Cup Series points standings, and August schedule.</p>
       </div>
       <div class="banner-action-group">
-        <button class="gold-action-btn" onclick="alert('Film Room: JGR Onboard telemetry feeds active.')">
-          <i class="fa-solid fa-video"></i> Film Room: JGR Onboard Feeds
+        <button class="gold-action-btn" onclick="alert('Film Room: Onboard telemetry camera feeds active.')">
+          <i class="fa-solid fa-video"></i> Film Room: Onboard Feeds
         </button>
       </div>
     </div>
@@ -368,6 +371,12 @@
   </div>
 </div>
 
+<!-- Unified Gold Floating Action Trays -->
+<div class="floating-trays-container">
+  <button class="gold-action-btn" onclick="alert('Betting Hub Tray Active')"><i class="fa-solid fa-ticket"></i> Betting</button>
+  <button class="gold-action-btn" onclick="alert('Film Room Tray Active')"><i class="fa-solid fa-video"></i> Film Room</button>
+</div>
+
 <script>
 const $=id=>document.getElementById(id);
 
@@ -406,7 +415,7 @@ function switchStandings(type, btn) {
     if(target) target.classList.add('active');
 }
 
-// Fully Populated Dual-Stat Search Engine with Named Players, JGR Support & Active Metrics
+// Fully Populated Dual-Stat Search Engine (Cardinals, MLB League-Wide, & NASCAR/JGR Support)
 function executeHubSearch() {
     const rawQuery = $("aiInput").value.toLowerCase().trim();
     const box = $("searchOutputBox");
@@ -419,11 +428,15 @@ function executeHubSearch() {
     
     const isCardinalsQuery = rawQuery.includes("cardinals") || rawQuery.includes("cards") || rawQuery.includes("st. louis") || rawQuery.includes("stl");
     const isLeagueQuery = rawQuery.includes("mlb") || rawQuery.includes("league") || rawQuery.includes("overall") || rawQuery.includes("leaders");
-    const isNascarQuery = rawQuery.includes("nascar") || rawQuery.includes("jgr") || rawQuery.includes("gibbs") || rawQuery.includes("hamlin") || rawQuery.includes("bell") || rawQuery.includes("briscoe");
+    const isNascarQuery = rawQuery.includes("nascar") || rawQuery.includes("cup") || rawQuery.includes("points") || rawQuery.includes("standings");
+    const isJgrQuery = rawQuery.includes("jgr") || rawQuery.includes("gibbs") || rawQuery.includes("hamlin") || rawQuery.includes("bell") || rawQuery.includes("briscoe") || rawQuery.includes("ty gibbs");
 
-    if (isNascarQuery || rawQuery.includes("driver") || rawQuery.includes("cup")) {
-        title.innerText = "Query Result: Joe Gibbs Racing (JGR) Focus";
-        text.innerHTML = "<strong>JGR Roster Overview:</strong><br>• <strong>Denny Hamlin (#11)</strong><br>• <strong>Chase Briscoe (#19)</strong><br>• <strong>Christopher Bell (#20)</strong><br>• <strong>Ty Gibbs (#54)</strong>";
+    if (isJgrQuery) {
+        title.innerText = "Query Result: Joe Gibbs Racing (JGR) Stable Spotlight";
+        text.innerHTML = "<strong>JGR Roster & Crew Chiefs (2026):</strong><br>• <strong>Denny Hamlin (#11)</strong> / Crew Chief: Chris Gayle<br>• <strong>Chase Briscoe (#19)</strong> / Crew Chief: James Small<br>• <strong>Christopher Bell (#20)</strong> / Crew Chief: Adam Stevens<br>• <strong>Ty Gibbs (#54)</strong> / Crew Chief: Tyler Allen";
+    } else if (isNascarQuery) {
+        title.innerText = "Query Result: NASCAR Cup Series Standings & Leaders (2026)";
+        text.innerHTML = "<strong>Cup Series Points Leaders:</strong><br>1. <strong>Denny Hamlin (JGR)</strong> — 886 PTS (4 Wins)<br>2. <strong>Tyler Reddick (23XI)</strong> — 802 PTS (5 Wins)<br>3. <strong>Ryan Blaney (Penske)</strong> — 766 PTS (2 Wins)<br>4. <strong>Ty Gibbs (JGR)</strong> — 751 PTS (1 Win)";
     } else if (rawQuery.includes("hr") || rawQuery.includes("home run") || rawQuery.includes("slugging")) {
         if (isCardinalsQuery || (!isLeagueQuery && !rawQuery.includes("all"))) {
             title.innerText = "Query Result: St. Louis Cardinals Power Leaders (2026)";
