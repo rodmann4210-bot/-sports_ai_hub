@@ -64,7 +64,7 @@
   .half-card { flex: 1; min-width: 280px; }
   .standings-mini-badge { display: flex; align-items: center; gap: 12px; background: rgba(243, 193, 75, 0.1); padding: 12px 16px; border-radius: 6px; border: 1px solid var(--line); margin: 12px 0; }
   .position-num { font-size: 1.5rem; font-weight: 800; color: var(--gold); }
-  .next-match-banner { display: flex; align-items: center; justify-content: space-around; background: #111a2e; padding: 20px; border-radius: 8px; text-align: center; flex-wrap: wrap; gap: 16px; }
+  .next-match-banner { display: flex; align-items: center; justify-content: space-around; background: #1a202c; padding: 20px; border-radius: 8px; text-align: center; flex-wrap: wrap; gap: 16px; }
   .team-block { display: flex; flex-direction: column; align-items: center; font-weight: 600; color: #fff; flex: 1; }
   .club-logo { width: 48px; height: 48px; object-fit: contain; margin-bottom: 8px; }
   .vs-block { display: flex; flex-direction: column; align-items: center; flex: 1; }
@@ -105,7 +105,7 @@
     <p id="searchResultText">Awaiting analytical query execution...</p>
   </div>
 
-  <!-- MLB Tab Content (Cardinals Hub & Interactive Standings) -->
+  <!-- MLB Tab Content (Cardinals Hub & Full Interactive Standings) -->
   <div id="mlb-tab-content" class="tab-pane active">
     <div class="dashboard-header-banner">
       <div>
@@ -117,7 +117,7 @@
       </a>
     </div>
 
-    <!-- Interactive Standings Toggle Component -->
+    <!-- Interactive Full Standings Matrix -->
     <div class="dashboard-card-section">
       <h4>Interactive Standings Matrix</h4>
       <div class="standings-toggle-bar">
@@ -126,28 +126,34 @@
         <button class="standings-toggle-btn" onclick="switchStandings('overall', this)">MLB Overall</button>
       </div>
 
-      <!-- NL Central Pane -->
+      <!-- NL Central Pane (Full 5 Teams) -->
       <div id="standings-central" class="standings-pane active">
         <div class="table-responsive">
           <table class="hub-data-table">
             <thead><tr><th>Team</th><th>W</th><th>L</th><th>PCT</th><th>GB</th></tr></thead>
             <tbody>
-              <tr><td>Milwaukee Brewers</td><td>60</td><td>42</td><td>.588</td><td>—</td></tr>
-              <tr style="background: rgba(179, 18, 46, 0.15);"><td><strong>St. Louis Cardinals</strong></td><td>54</td><td>48</td><td>.529</td><td>6.0</td></tr>
-              <tr><td>Chicago Cubs</td><td>50</td><td>52</td><td>.490</td><td>10.0</td></tr>
+              <tr><td>Milwaukee Brewers</td><td>66</td><td>39</td><td>.629</td><td>—</td></tr>
+              <tr><td>Chicago Cubs</td><td>59</td><td>46</td><td>.562</td><td>7</td></tr>
+              <tr><td>Pittsburgh Pirates</td><td>54</td><td>52</td><td>.509</td><td>12½</td></tr>
+              <tr style="background: rgba(179, 18, 46, 0.15);"><td><strong>St. Louis Cardinals</strong></td><td>53</td><td>52</td><td>.505</td><td>13</td></tr>
+              <tr><td>Cincinnati Reds</td><td>49</td><td>55</td><td>.471</td><td>16½</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- NL Wild Card Pane -->
+      <!-- NL Wild Card Pane (Full Contender Field) -->
       <div id="standings-wildcard" class="standings-pane">
         <div class="table-responsive">
           <table class="hub-data-table">
-            <thead><tr><th>Rank / Team</th><th>W</th><th>L</th><th>GB</th></tr></thead>
+            <thead><tr><th>Rank / Team</th><th>W</th><th>L</th><th>PCT</th><th>GB</th></tr></thead>
             <tbody>
-              <tr><td>1. Wild Card Contender A</td><td>56</td><td>46</td><td>+2.0</td></tr>
-              <tr style="background: rgba(179, 18, 46, 0.15);"><td><strong>2. St. Louis Cardinals</strong></td><td>54</td><td>48</td><td>—</td></tr>
+              <tr><td>1. Chicago Cubs</td><td>61</td><td>46</td><td>.570</td><td>+5</td></tr>
+              <tr><td>2. Arizona Diamondbacks</td><td>57</td><td>52</td><td>.523</td><td>—</td></tr>
+              <tr><td>3. Philadelphia Phillies</td><td>57</td><td>52</td><td>.523</td><td>—</td></tr>
+              <tr><td>4. Washington Nationals</td><td>55</td><td>54</td><td>.505</td><td>2</td></tr>
+              <tr><td>5. Pittsburgh Pirates</td><td>55</td><td>54</td><td>.505</td><td>2</td></tr>
+              <tr style="background: rgba(179, 18, 46, 0.15);"><td><strong>6. St. Louis Cardinals</strong></td><td>53</td><td>54</td><td>.495</td><td>3</td></tr>
             </tbody>
           </table>
         </div>
@@ -157,10 +163,12 @@
       <div id="standings-overall" class="standings-pane">
         <div class="table-responsive">
           <table class="hub-data-table">
-            <thead><tr><th>League Leader</th><th>Record</th><th>Status</th></tr></thead>
+            <thead><tr><th>League Leader / Contender</th><th>Record</th><th>Status</th></tr></thead>
             <tbody>
-              <tr><td>Top Club (AL/NL)</td><td>65-37</td><td>Division Leader</td></tr>
-              <tr style="background: rgba(179, 18, 46, 0.15);"><td><strong>St. Louis Cardinals</strong></td><td>54-48</td><td>In Hunt</td></tr>
+              <tr><td>Los Angeles Dodgers</td><td>67-41</td><td>NL West Leader</td></tr>
+              <tr><td>Milwaukee Brewers</td><td>66-39</td><td>NL Central Leader</td></tr>
+              <tr><td>Tampa Bay Rays</td><td>63-44</td><td>AL East Leader</td></tr>
+              <tr style="background: rgba(179, 18, 46, 0.15);"><td><strong>St. Louis Cardinals</strong></td><td>53-52</td><td>Wild Card Contender</td></tr>
             </tbody>
           </table>
         </div>
@@ -182,7 +190,7 @@
     </div>
   </div>
 
-  <!-- NASCAR Tab Content (Joe Gibbs Racing & Series Standings Hub) -->
+  <!-- NASCAR Tab Content (Joe Gibbs Racing & Series Standings Hub + Connected Links) -->
   <div id="nascar-tab-content" class="tab-pane">
     <div class="dashboard-header-banner">
       <div class="banner-titles">
@@ -190,9 +198,9 @@
         <p>Joe Gibbs Racing stability, Cup Series points standings, and August schedule.</p>
       </div>
       <div class="banner-action-group">
-        <button class="gold-action-btn" onclick="alert('Film Room: Onboard telemetry camera feeds active.')">
-          <i class="fa-solid fa-video"></i> Film Room: Onboard Feeds
-        </button>
+        <a href="https://www.nascar.com/schedule" target="_blank" class="gold-action-btn">
+          <i class="fa-solid fa-globe"></i> Official NASCAR Schedule Hub
+        </a>
       </div>
     </div>
 
@@ -428,7 +436,7 @@ function executeHubSearch() {
     
     const isCardinalsQuery = rawQuery.includes("cardinals") || rawQuery.includes("cards") || rawQuery.includes("st. louis") || rawQuery.includes("stl");
     const isLeagueQuery = rawQuery.includes("mlb") || rawQuery.includes("league") || rawQuery.includes("overall") || rawQuery.includes("leaders");
-    const isNascarQuery = rawQuery.includes("nascar") || rawQuery.includes("cup") || rawQuery.includes("points") || rawQuery.includes("standings");
+    const isNascarQuery = rawQuery.includes("nascar") || rawQuery.includes("cup") || rawQuery.includes("points") || rawQuery.includes("standings") || rawQuery.includes("race");
     const isJgrQuery = rawQuery.includes("jgr") || rawQuery.includes("gibbs") || rawQuery.includes("hamlin") || rawQuery.includes("bell") || rawQuery.includes("briscoe") || rawQuery.includes("ty gibbs");
 
     if (isJgrQuery) {
