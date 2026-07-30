@@ -84,7 +84,7 @@
   <!-- Permanent AI Header & Dual-Stat Engine Input -->
   <header class="ai-header">
     <div class="ai-input-row">
-      <input type="text" id="aiInput" placeholder="Ask the Stats (e.g., Cardinals HR leaders, MLB saves)...">
+      <input type="text" id="aiInput" placeholder="Ask the Stats (e.g., Cardinals HR leaders, JGR drivers)...">
       <button class="gold-action-btn" onclick="executeHubSearch()">Execute</button>
     </div>
     <nav class="hub-nav" id="hubNav">
@@ -179,23 +179,23 @@
     </div>
   </div>
 
-  <!-- NASCAR Tab Content -->
+  <!-- NASCAR Tab Content (Joe Gibbs Racing Command Center) -->
   <div id="nascar-tab-content" class="tab-pane">
     <div class="dashboard-header-banner">
       <div class="banner-titles">
-        <h2>🏁 NASCAR Grid — Command Center</h2>
-        <p>Season tracking, upcoming speedway schedules, and driver telemetry metrics.</p>
+        <h2>🏁 NASCAR Grid — Joe Gibbs Racing Command Center</h2>
+        <p>JGR driver rosters, crew chief pairings, and upcoming August speedway slate.</p>
       </div>
       <div class="banner-action-group">
-        <button class="gold-action-btn" onclick="alert('Film Room onboard feeds active.')">
-          <i class="fa-solid fa-video"></i> Film Room: Onboard Feeds
+        <button class="gold-action-btn" onclick="alert('Film Room: JGR Onboard telemetry feeds active.')">
+          <i class="fa-solid fa-video"></i> Film Room: JGR Onboard Feeds
         </button>
       </div>
     </div>
 
     <!-- Featured Next Race Hero Card -->
-    <div class="hero-feature-card nascar-hero">
-      <div style="font-size:0.85rem; color:var(--gold); text-transform:uppercase; font-weight:700; margin-bottom:6px;" class="hero-badge">Next Up Series</div>
+    <div class="nascar-hero">
+      <div style="font-size:0.85rem; color:var(--gold); text-transform:uppercase; font-weight:700; margin-bottom:6px;">Next Up Series</div>
       <h3 style="font-family:'Oswald'; font-size:1.6rem;">Iowa Corn 350 Powered by Ethanol</h3>
       <div class="track-meta-grid">
         <div class="meta-item">
@@ -208,12 +208,55 @@
         </div>
         <div class="meta-item">
           <span class="meta-label">Green Flag</span>
-          <span class="meta-val">Sunday, Aug 9, 3:30 PM</span>
+          <span class="meta-val">Sunday, Aug 9, 3:30 PM ET</span>
         </div>
         <div class="meta-item">
           <span class="meta-label">Broadcast</span>
           <span class="meta-val">USA Network / App</span>
         </div>
+      </div>
+    </div>
+
+    <!-- JGR Driver & Crew Chief Lineup Widget -->
+    <div class="dashboard-card-section">
+      <h4>Joe Gibbs Racing — 2026 Cup Series Lineup</h4>
+      <div class="table-responsive">
+        <table class="hub-data-table">
+          <thead>
+            <tr>
+              <th>Car #</th>
+              <th>Driver</th>
+              <th>Crew Chief</th>
+              <th>Manufacturer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>No. 11</strong></td>
+              <td>Denny Hamlin</td>
+              <td>Chris Gayle</td>
+              <td>Toyota Racing Development</td>
+            </tr>
+            <tr>
+              <td><strong>No. 19</strong></td>
+              <td>Chase Briscoe</td>
+              <td>James Small</td>
+              <td>Toyota Racing Development</td>
+            </tr>
+            <tr>
+              <td><strong>No. 20</strong></td>
+              <td>Christopher Bell</td>
+              <td>Adam Stevens</td>
+              <td>Toyota Racing Development</td>
+            </tr>
+            <tr>
+              <td><strong>No. 54</strong></td>
+              <td>Ty Gibbs</td>
+              <td>Tyler Allen</td>
+              <td>Toyota Racing Development</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -363,7 +406,7 @@ function switchStandings(type, btn) {
     if(target) target.classList.add('active');
 }
 
-// Fully Populated Dual-Stat Search Engine with Named Players & Active Metrics
+// Fully Populated Dual-Stat Search Engine with Named Players, JGR Support & Active Metrics
 function executeHubSearch() {
     const rawQuery = $("aiInput").value.toLowerCase().trim();
     const box = $("searchOutputBox");
@@ -376,8 +419,12 @@ function executeHubSearch() {
     
     const isCardinalsQuery = rawQuery.includes("cardinals") || rawQuery.includes("cards") || rawQuery.includes("st. louis") || rawQuery.includes("stl");
     const isLeagueQuery = rawQuery.includes("mlb") || rawQuery.includes("league") || rawQuery.includes("overall") || rawQuery.includes("leaders");
+    const isNascarQuery = rawQuery.includes("nascar") || rawQuery.includes("jgr") || rawQuery.includes("gibbs") || rawQuery.includes("hamlin") || rawQuery.includes("bell") || rawQuery.includes("briscoe");
 
-    if (rawQuery.includes("hr") || rawQuery.includes("home run") || rawQuery.includes("slugging")) {
+    if (isNascarQuery || rawQuery.includes("driver") || rawQuery.includes("cup")) {
+        title.innerText = "Query Result: Joe Gibbs Racing (JGR) Focus";
+        text.innerHTML = "<strong>JGR Roster Overview:</strong><br>• <strong>Denny Hamlin (#11)</strong><br>• <strong>Chase Briscoe (#19)</strong><br>• <strong>Christopher Bell (#20)</strong><br>• <strong>Ty Gibbs (#54)</strong>";
+    } else if (rawQuery.includes("hr") || rawQuery.includes("home run") || rawQuery.includes("slugging")) {
         if (isCardinalsQuery || (!isLeagueQuery && !rawQuery.includes("all"))) {
             title.innerText = "Query Result: St. Louis Cardinals Power Leaders (2026)";
             text.innerHTML = "<strong>Cardinals HR Leaders:</strong><br>1. <strong>Jordan Walker (RF)</strong> — 22 HR<br>2. <strong>Alec Burleson (1B)</strong> — 15 HR<br>3. <strong>JJ Wetherholt (2B)</strong> — 15 HR";
