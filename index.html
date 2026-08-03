@@ -77,6 +77,26 @@
   .match-venue{font-size:0.8rem;color:var(--muted)}
   .stat-leader-list{list-style:none}
   .stat-leader-list li{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)}
+
+  /* At a Glance Card */
+  .glance-card{background:linear-gradient(135deg,#1a0a14 0%,var(--panel) 100%);border:1px solid var(--burgundy);border-left:4px solid var(--gold);border-radius:8px;padding:18px 20px;margin-bottom:20px}
+  .glance-loading{color:var(--muted);font-size:0.9rem;font-style:italic}
+  .glance-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .glance-matchup{font-family:'Oswald';font-size:1.3rem;font-weight:700;color:var(--gold)}
+  .glance-meta{font-size:0.85rem;color:var(--muted)}
+  .glance-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin-bottom:14px}
+  .glance-team{display:flex;flex-direction:column;gap:4px}
+  .glance-team.away{text-align:left}
+  .glance-team.home{text-align:right}
+  .glance-team-name{font-family:'Oswald';font-size:1rem;font-weight:600;color:var(--ink)}
+  .glance-team-record{font-size:0.8rem;color:var(--muted)}
+  .glance-pitcher{font-size:0.85rem;color:var(--ink)}
+  .glance-pitcher span{color:var(--gold);font-weight:600}
+  .glance-vs{font-family:'Oswald';font-size:1.4rem;font-weight:900;color:var(--burgundy);text-align:center}
+  .glance-odds{display:flex;gap:16px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:12px}
+  .glance-odd{display:flex;flex-direction:column;align-items:center;background:rgba(255,255,255,0.04);border:1px solid var(--line);border-radius:6px;padding:8px 16px;flex:1;min-width:80px}
+  .glance-odd-label{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-family:'Oswald'}
+  .glance-odd-val{font-family:'Oswald';font-size:1.1rem;font-weight:700;color:var(--gold)}
 </style>
 </head>
 <body>
@@ -111,6 +131,11 @@
       <a href="https://www.mlb.com/cardinals" target="_blank" class="gold-action-btn">
         <i class="fa-solid fa-baseball"></i> Cardinals MLB.com Hub
       </a>
+    </div>
+
+    <!-- At a Glance Card -->
+    <div class="glance-card" id="glanceCard">
+      <div class="glance-loading">⚾ Loading next Cardinals game data...</div>
     </div>
 
     <div class="dashboard-card-section">
@@ -391,6 +416,90 @@ function executeHubSearch(){
 document.getElementById("aiInput").addEventListener("keydown",e=>{
   if(e.key==="Enter")executeHubSearch();
 });
+
+// ── AT A GLANCE CARD ──
+async function loadGlanceCard(){
+  const card=document.getElementById('glanceCard');
+  try{
+    // Get Cardinals schedule to find next game
+    const schedData=await fetch('https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/stl/schedule',{cache:'no-store'}).then(r=>r.json());
+    const events=(schedData.events||[]).sort((a,b)=>new Date(a.date)-new Date(b.date));
+    const now=Date.now();
+    const next=events.find(e=>new Date(e.date).getTime()>now-3*3600*1000);
+    if(!next){card.innerHTML='<div class="glance-loading">No upcoming game found.</div>';return;}
+
+    const comp=(next.competitions&&next.competitions[0])||{};
+    const cs=comp.competitors||[];
+    const us=cs.find(c=>(c.team&&c.team.abbreviation||'').toLowerCase()==='stl')||{};
+    const them=cs.find(c=>(c.team&&c.team.abbreviation||'').toLowerCase()!=='stl')||{};
+    const home=us.homeAway==='home';
+    const oppName=(them.team&&(them.team.displayName||them.team.shortDisplayName))||'Opponent';
+    const oppAbbr=(them.team&&them.team.abbreviation)||'OPP';
+    const usRecord=us.records&&us.records[0]?us.records[0].summary:'—';
+    const themRecord=them.records&&them.records[0]?them.records[0].summary:'—';
+
+    const gameDate=new Date(next.date);
+    const dateStr=gameDate.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+    const timeStr=gameDate.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+    const venue=comp.venue&&comp.venue.fullName?comp.venue.fullName:'';
+    const broadcast=(comp.broadcasts&&comp.broadcasts[0]&&comp.broadcasts[0].names&&comp.broadcasts[0].names[0])||'';
+
+    // Probable pitchers
+    const getPitcher=(team)=>{
+      const prob=team.probables&&team.probables[0];
+      if(!prob)return{name:'TBD',era:'—',record:'—'};
+      const ath=prob.athlete||{};
+      const stats=prob.statistics||[];
+      const era=(stats.find(s=>s.name==='ERA')||{}).displayValue||'—';
+      const w=(stats.find(s=>s.name==='wins')||{}).displayValue||'—';
+      const l=(stats.find(s=>s.name==='losses')||{}).displayValue||'—';
+      return{name:ath.displayName||ath.shortName||'TBD',era,record:w!=='—'?`${w}-${l}`:'—'};
+    };
+    const usPitcher=getPitcher(us);
+    const themPitcher=getPitcher(them);
+
+    // Odds
+    let mlUs='—',mlThem='—',ou='—';
+    const odds=comp.odds&&comp.odds[0];
+    if(odds){
+      mlUs=home?(odds.homeTeamOdds&&odds.homeTeamOdds.moneyLine||'—'):(odds.awayTeamOdds&&odds.awayTeamOdds.moneyLine||'—');
+      mlThem=home?(odds.awayTeamOdds&&odds.awayTeamOdds.moneyLine||'—'):(odds.homeTeamOdds&&odds.homeTeamOdds.moneyLine||'—');
+      ou=odds.overUnder||'—';
+      if(mlUs!=='—'&&mlUs>0)mlUs='+'+mlUs;
+      if(mlThem!=='—'&&mlThem>0)mlThem='+'+mlThem;
+    }
+
+    const awayTeam=home?{name:oppName,abbr:oppAbbr,record:themRecord,pitcher:themPitcher,ml:mlThem}:{name:'St. Louis Cardinals',abbr:'STL',record:usRecord,pitcher:usPitcher,ml:mlUs};
+    const homeTeam=home?{name:'St. Louis Cardinals',abbr:'STL',record:usRecord,pitcher:usPitcher,ml:mlUs}:{name:oppName,abbr:oppAbbr,record:themRecord,pitcher:themPitcher,ml:mlThem};
+
+    card.innerHTML=`
+      <div class="glance-top">
+        <div class="glance-matchup">NEXT UP &middot; ${home?'vs':'@'} ${oppName}</div>
+        <div class="glance-meta">${dateStr} &middot; ${timeStr} CT${venue?' &middot; '+venue:''}${broadcast?' &middot; '+broadcast:''}</div>
+      </div>
+      <div class="glance-grid">
+        <div class="glance-team away">
+          <div class="glance-team-name">${awayTeam.name}</div>
+          <div class="glance-team-record">${awayTeam.record}</div>
+          <div class="glance-pitcher">SP: <span>${awayTeam.pitcher.name}</span> &nbsp;${awayTeam.pitcher.record} &nbsp;${awayTeam.pitcher.era} ERA</div>
+        </div>
+        <div class="glance-vs">@</div>
+        <div class="glance-team home">
+          <div class="glance-team-name">${homeTeam.name}</div>
+          <div class="glance-team-record">${homeTeam.record}</div>
+          <div class="glance-pitcher">SP: <span>${homeTeam.pitcher.name}</span> &nbsp;${homeTeam.pitcher.record} &nbsp;${homeTeam.pitcher.era} ERA</div>
+        </div>
+      </div>
+      <div class="glance-odds">
+        <div class="glance-odd"><span class="glance-odd-label">${awayTeam.abbr} ML</span><span class="glance-odd-val">${awayTeam.ml}</span></div>
+        <div class="glance-odd"><span class="glance-odd-label">${homeTeam.abbr} ML</span><span class="glance-odd-val">${homeTeam.ml}</span></div>
+        <div class="glance-odd"><span class="glance-odd-label">O/U</span><span class="glance-odd-val">${ou}</span></div>
+        <div class="glance-odd"><span class="glance-odd-label">Venue</span><span class="glance-odd-val" style="font-size:0.75rem;text-align:center">${home?'Busch Stadium':'Away'}</span></div>
+      </div>`;
+  }catch(e){card.innerHTML='<div class="glance-loading">Game data temporarily unavailable.</div>';}
+}
+
+loadGlanceCard();
 </script>
 </body>
 </html>
