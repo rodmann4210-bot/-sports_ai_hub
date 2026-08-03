@@ -24,72 +24,64 @@
   .hub-btn.active{background:linear-gradient(160deg,var(--burgundy),var(--burgundy-deep));color:var(--gold)}
   
   /* Views & Content Panes */
-  .tab-pane { display: none; margin-top: 20px; }
-  .tab-pane.active { display: block; }
+  .tab-pane{display:none;margin-top:20px}
+  .tab-pane.active{display:block}
   
   /* Shared Dashboard Components */
-  .dashboard-header-banner { background: var(--panel); border: 1px solid var(--line); padding: 20px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
-  .dashboard-card-section { background: var(--panel); border: 1px solid var(--line); padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-  .dashboard-card-section h4 { font-family: 'Oswald'; color: var(--gold); margin-bottom: 12px; font-size: 1.2rem; }
-  .gold-action-btn { background: var(--gold); color: var(--bg); font-weight: 700; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-family: 'Oswald'; text-transform: uppercase; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
-  .gold-action-btn:hover { background: #d4af37; }
+  .dashboard-header-banner{background:var(--panel);border:1px solid var(--line);padding:20px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:15px}
+  .dashboard-card-section{background:var(--panel);border:1px solid var(--line);padding:20px;border-radius:8px;margin-bottom:20px}
+  .dashboard-card-section h4{font-family:'Oswald';color:var(--gold);margin-bottom:12px;font-size:1.2rem}
+  .gold-action-btn{background:var(--gold);color:var(--bg);font-weight:700;border:none;padding:10px 16px;border-radius:6px;cursor:pointer;font-family:'Oswald';text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+  .gold-action-btn:hover{background:#d4af37}
 
-  /* Floating Action Trays Wrapper */
-  .floating-trays-container { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; z-index: 999; }
+  /* Floating Action Trays */
+  .floating-trays-container{position:fixed;bottom:20px;right:20px;display:flex;gap:10px;z-index:999}
 
   /* Standings Toggle & Search Results */
-  .standings-toggle-bar { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
-  .standings-toggle-btn { background: var(--bg); color: var(--muted); border: 1px solid var(--line); padding: 6px 14px; border-radius: 4px; cursor: pointer; font-family: 'Oswald'; font-size: 0.9rem; }
-  .standings-toggle-btn.active { background: var(--gold); color: var(--bg); font-weight: 700; border-color: var(--gold); }
-  .standings-pane { display: none; }
-  .standings-pane.active { display: block; }
-  .search-output-box { background: rgba(0, 229, 255, 0.05); border: 1px solid var(--accent); padding: 15px; border-radius: 6px; margin-bottom: 20px; display: none; }
-  .search-output-box h4 { color: var(--accent); font-family: 'Oswald'; margin-bottom: 6px; }
+  .standings-toggle-bar{display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap}
+  .standings-toggle-btn{background:var(--bg);color:var(--muted);border:1px solid var(--line);padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'Oswald';font-size:0.9rem}
+  .standings-toggle-btn.active{background:var(--gold);color:var(--bg);font-weight:700;border-color:var(--gold)}
+  .standings-pane{display:none}
+  .standings-pane.active{display:block}
+  .search-output-box{background:rgba(0,229,255,0.05);border:1px solid var(--accent);padding:15px;border-radius:6px;margin-bottom:20px;display:none}
+  .search-output-box h4{color:var(--accent);font-family:'Oswald';margin-bottom:6px}
 
-  /* Tables & Lists */
-  .table-responsive { width: 100%; overflow-x: auto; }
-  .hub-data-table { width: 100%; border-collapse: collapse; text-align: left; }
-  .hub-data-table th, .hub-data-table td { padding: 12px; border-bottom: 1px solid var(--line); font-size: 0.95rem; }
-  .hub-data-table th { color: var(--gold); font-family: 'Oswald'; text-transform: uppercase; }
+  /* Tables */
+  .table-responsive{width:100%;overflow-x:auto}
+  .hub-data-table{width:100%;border-collapse:collapse;text-align:left}
+  .hub-data-table th,.hub-data-table td{padding:12px;border-bottom:1px solid var(--line);font-size:0.95rem}
+  .hub-data-table th{color:var(--gold);font-family:'Oswald';text-transform:uppercase}
 
-  /* NASCAR Specifics & Track Outline Graphic */
-  .nascar-hero { background: linear-gradient(135deg, #111a2e 0%, #1a2744 100%); border-left: 5px solid var(--gold); padding: 24px; border-radius: 8px; color: #fff; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
-  .nascar-hero-content { flex: 1; min-width: 280px; }
-  .track-outline-container { width: 160px; height: 90px; background: rgba(0,0,0,0.3); border: 1px solid var(--line); border-radius: 6px; display: flex; align-items: center; justify-content: center; position: relative; }
-  .track-oval { width: 120px; height: 55px; border: 3px dashed var(--gold); border-radius: 30px; position: relative; display: flex; align-items: center; justify-content: center; }
-  .track-label { font-size: 0.65rem; font-family: 'Space Mono', monospace; color: var(--muted); text-transform: uppercase; position: absolute; bottom: 4px; }
-  
-  .track-meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 16px; }
-  .meta-item { display: flex; flex-direction: column; }
-  .meta-label { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; }
-  .meta-val { font-size: 1.05rem; font-weight: 600; color: #f7fafc; }
+  /* NASCAR */
+  .nascar-hero{background:linear-gradient(135deg,#111a2e 0%,#1a2744 100%);border-left:5px solid var(--gold);padding:24px;border-radius:8px;color:#fff;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+  .nascar-hero-content{flex:1;min-width:280px}
+  .track-outline-container{width:160px;height:90px;background:rgba(0,0,0,0.3);border:1px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center;position:relative}
+  .track-oval{width:120px;height:55px;border:3px dashed var(--gold);border-radius:30px;position:relative;display:flex;align-items:center;justify-content:center}
+  .track-label{font-size:0.65rem;font-family:'Space Mono',monospace;color:var(--muted);text-transform:uppercase;position:absolute;bottom:4px}
+  .track-meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:16px}
+  .meta-item{display:flex;flex-direction:column}
+  .meta-label{font-size:0.85rem;color:var(--muted);text-transform:uppercase}
+  .meta-val{font-size:1.05rem;font-weight:600;color:#f7fafc}
 
-  /* MLS Specifics */
-  .mls-summary-grid { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
-  .half-card { flex: 1; min-width: 280px; }
-  .standings-mini-badge { display: flex; align-items: center; gap: 12px; background: rgba(243, 193, 75, 0.1); padding: 12px 16px; border-radius: 6px; border: 1px solid var(--line); margin: 12px 0; }
-  .position-num { font-size: 1.5rem; font-weight: 800; color: var(--gold); }
-  .next-match-banner { display: flex; align-items: center; justify-content: space-around; background: #1a202c; padding: 20px; border-radius: 8px; text-align: center; flex-wrap: wrap; gap: 16px; }
-  .team-block { display: flex; flex-direction: column; align-items: center; font-weight: 600; color: #fff; flex: 1; }
-  .club-logo { width: 48px; height: 48px; object-fit: contain; margin-bottom: 8px; }
-  .vs-block { display: flex; flex-direction: column; align-items: center; flex: 1; }
-  .vs-tag { font-weight: 900; color: var(--gold); font-size: 1.2rem; }
-  .match-time { font-size: 0.9rem; color: var(--ink); margin-top: 4px; }
-  .match-venue { font-size: 0.8rem; color: var(--muted); }
-  .stat-leader-list { list-style: none; }
-  .stat-leader-list li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line); }
-
-  /* SpaceX Specifics */
-  #spacexContent{font-family:'Space Mono',monospace}
-  .hero{background:#0d1525;border-top:2px solid var(--accent);padding:20px;margin-top:20px; border-radius:8px;}
-  .launch-card{background:var(--panel);border:1px solid var(--line);padding:15px;margin-top:10px;display:grid;grid-template-columns:1fr auto; border-radius:6px; align-items:center;}
-  .launch-card a { color: var(--accent); text-decoration: none; }
-  .weather-alert{color:#ff8275;font-weight:700;text-transform:uppercase}
+  /* MLS */
+  .mls-summary-grid{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+  .half-card{flex:1;min-width:280px}
+  .standings-mini-badge{display:flex;align-items:center;gap:12px;background:rgba(243,193,75,0.1);padding:12px 16px;border-radius:6px;border:1px solid var(--line);margin:12px 0}
+  .position-num{font-size:1.5rem;font-weight:800;color:var(--gold)}
+  .next-match-banner{display:flex;align-items:center;justify-content:space-around;background:#1a202c;padding:20px;border-radius:8px;text-align:center;flex-wrap:wrap;gap:16px}
+  .team-block{display:flex;flex-direction:column;align-items:center;font-weight:600;color:#fff;flex:1}
+  .club-logo{width:48px;height:48px;object-fit:contain;margin-bottom:8px}
+  .vs-block{display:flex;flex-direction:column;align-items:center;flex:1}
+  .vs-tag{font-weight:900;color:var(--gold);font-size:1.2rem}
+  .match-time{font-size:0.9rem;color:var(--ink);margin-top:4px}
+  .match-venue{font-size:0.8rem;color:var(--muted)}
+  .stat-leader-list{list-style:none}
+  .stat-leader-list li{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <!-- Permanent AI Header & Dual-Stat Engine Input -->
+  <!-- AI Header -->
   <header class="ai-header">
     <div class="ai-input-row">
       <input type="text" id="aiInput" placeholder="Ask the Stats (e.g., Cardinals HR, NASCAR points leaders, JGR drivers)...">
@@ -100,17 +92,16 @@
       <button class="hub-btn" data-league="nfl">NFL Grid</button>
       <button class="hub-btn" data-league="nascar">NASCAR</button>
       <button class="hub-btn" data-league="mls">MLS Grid</button>
-      <button class="hub-btn" data-league="space">SpaceX Launchwatch</button>
     </nav>
   </header>
 
-  <!-- Conversational Search Output Tray -->
+  <!-- Search Output -->
   <div id="searchOutputBox" class="search-output-box">
     <h4 id="searchResultTitle">Natural Language Query Result</h4>
     <p id="searchResultText">Awaiting analytical query execution...</p>
   </div>
 
-  <!-- MLB Tab Content (Cardinals Hub, Interactive Standings & Schedule Tabs) -->
+  <!-- MLB Tab -->
   <div id="mlb-tab-content" class="tab-pane active">
     <div class="dashboard-header-banner">
       <div>
@@ -122,7 +113,6 @@
       </a>
     </div>
 
-    <!-- Interactive Standings & Schedule Toggle Component -->
     <div class="dashboard-card-section">
       <h4>Interactive Matrix & Schedule Hub</h4>
       <div class="standings-toggle-bar">
@@ -132,7 +122,6 @@
         <button class="standings-toggle-btn" onclick="switchStandings('schedule', this)">Overall Schedule</button>
       </div>
 
-      <!-- NL Central Pane (Full 5 Teams) -->
       <div id="standings-central" class="standings-pane active">
         <div class="table-responsive">
           <table class="hub-data-table">
@@ -141,14 +130,13 @@
               <tr><td>Milwaukee Brewers</td><td>66</td><td>39</td><td>.629</td><td>—</td></tr>
               <tr><td>Chicago Cubs</td><td>59</td><td>46</td><td>.562</td><td>7</td></tr>
               <tr><td>Pittsburgh Pirates</td><td>54</td><td>52</td><td>.509</td><td>12½</td></tr>
-              <tr style="background: rgba(179, 18, 46, 0.15);"><td><strong>St. Louis Cardinals</strong></td><td>53</td><td>52</td><td>.505</td><td>13</td></tr>
+              <tr style="background:rgba(179,18,46,0.15)"><td><strong>St. Louis Cardinals</strong></td><td>53</td><td>52</td><td>.505</td><td>13</td></tr>
               <tr><td>Cincinnati Reds</td><td>49</td><td>55</td><td>.471</td><td>16½</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- NL Wild Card Pane (Full Contender Field) -->
       <div id="standings-wildcard" class="standings-pane">
         <div class="table-responsive">
           <table class="hub-data-table">
@@ -159,13 +147,12 @@
               <tr><td>3. Philadelphia Phillies</td><td>57</td><td>52</td><td>.523</td><td>—</td></tr>
               <tr><td>4. Washington Nationals</td><td>55</td><td>54</td><td>.505</td><td>2</td></tr>
               <tr><td>5. Pittsburgh Pirates</td><td>55</td><td>54</td><td>.505</td><td>2</td></tr>
-              <tr style="background: rgba(179, 18, 46, 0.15);"><td><strong>6. St. Louis Cardinals</strong></td><td>53</td><td>54</td><td>.495</td><td>3</td></tr>
+              <tr style="background:rgba(179,18,46,0.15)"><td><strong>6. St. Louis Cardinals</strong></td><td>53</td><td>54</td><td>.495</td><td>3</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- Overall Standings Pane -->
       <div id="standings-overallstandings" class="standings-pane">
         <div class="table-responsive">
           <table class="hub-data-table">
@@ -174,13 +161,12 @@
               <tr><td>1. Los Angeles Dodgers</td><td>67</td><td>41</td><td>.620</td><td>—</td></tr>
               <tr><td>2. Milwaukee Brewers</td><td>66</td><td>39</td><td>.629</td><td>½</td></tr>
               <tr><td>3. Philadelphia Phillies</td><td>63</td><td>42</td><td>.600</td><td>3½</td></tr>
-              <tr style="background: rgba(179, 18, 46, 0.15);"><td><strong>14. St. Louis Cardinals</strong></td><td>53</td><td>52</td><td>.505</td><td>13½</td></tr>
+              <tr style="background:rgba(179,18,46,0.15)"><td><strong>14. St. Louis Cardinals</strong></td><td>53</td><td>52</td><td>.505</td><td>13½</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- Overall Schedule Pane (Full Upcoming Cardinals Schedule) -->
       <div id="standings-schedule" class="standings-pane">
         <div class="table-responsive">
           <table class="hub-data-table">
@@ -203,7 +189,7 @@
     </div>
   </div>
 
-  <!-- NFL Tab Content -->
+  <!-- NFL Tab -->
   <div id="nfl-tab-content" class="tab-pane">
     <div class="dashboard-header-banner">
       <div>
@@ -217,140 +203,69 @@
     </div>
   </div>
 
-  <!-- NASCAR Tab Content (Joe Gibbs Racing & Track Outline Graphic) -->
+  <!-- NASCAR Tab -->
   <div id="nascar-tab-content" class="tab-pane">
     <div class="dashboard-header-banner">
       <div class="banner-titles">
         <h2>🏁 NASCAR Grid — Command Center</h2>
         <p>Joe Gibbs Racing stability, Cup Series points standings, and August schedule.</p>
       </div>
-      <div class="banner-action-group">
-        <a href="https://www.nascar.com/schedule" target="_blank" class="gold-action-btn">
-          <i class="fa-solid fa-globe"></i> Official NASCAR Schedule Hub
-        </a>
-      </div>
+      <a href="https://www.nascar.com/schedule" target="_blank" class="gold-action-btn">
+        <i class="fa-solid fa-globe"></i> Official NASCAR Schedule Hub
+      </a>
     </div>
 
-    <!-- Featured Next Race Hero Card with Track Outline -->
     <div class="nascar-hero">
       <div class="nascar-hero-content">
-        <div style="font-size:0.85rem; color:var(--gold); text-transform:uppercase; font-weight:700; margin-bottom:6px;">Next Up Series</div>
-        <h3 style="font-family:'Oswald'; font-size:1.6rem;">Iowa Corn 350 Powered by Ethanol</h3>
+        <div style="font-size:0.85rem;color:var(--gold);text-transform:uppercase;font-weight:700;margin-bottom:6px">Next Up Series</div>
+        <h3 style="font-family:'Oswald';font-size:1.6rem">Iowa Corn 350 Powered by Ethanol</h3>
         <div class="track-meta-grid">
-          <div class="meta-item">
-            <span class="meta-label">Venue</span>
-            <span class="meta-val">Iowa Speedway (Newton, IA)</span>
-          </div>
-          <div class="meta-item">
-            <span class="meta-label">Track Length</span>
-            <span class="meta-val">7/8 Mile Short Track</span>
-          </div>
-          <div class="meta-item">
-            <span class="meta-label">Green Flag</span>
-            <span class="meta-val">Sunday, Aug 9, 3:30 PM ET</span>
-          </div>
-          <div class="meta-item">
-            <span class="meta-label">Broadcast</span>
-            <span class="meta-val">USA Network / App</span>
-          </div>
+          <div class="meta-item"><span class="meta-label">Venue</span><span class="meta-val">Iowa Speedway (Newton, IA)</span></div>
+          <div class="meta-item"><span class="meta-label">Track Length</span><span class="meta-val">7/8 Mile Short Track</span></div>
+          <div class="meta-item"><span class="meta-label">Green Flag</span><span class="meta-val">Sunday, Aug 9, 3:30 PM ET</span></div>
+          <div class="meta-item"><span class="meta-label">Broadcast</span><span class="meta-val">USA Network / App</span></div>
         </div>
       </div>
       <div class="track-outline-container" title="Iowa Speedway Track Schematic">
         <div class="track-oval">
-          <i class="fa-solid fa-flag-checkered" style="color:var(--gold); font-size:1.1rem;"></i>
+          <i class="fa-solid fa-flag-checkered" style="color:var(--gold);font-size:1.1rem"></i>
         </div>
         <span class="track-label">Iowa Speedway</span>
       </div>
     </div>
 
-    <!-- JGR Driver & Crew Chief Lineup Widget -->
     <div class="dashboard-card-section">
       <h4>Joe Gibbs Racing — 2026 Cup Series Lineup</h4>
       <div class="table-responsive">
         <table class="hub-data-table">
-          <thead>
-            <tr>
-              <th>Car #</th>
-              <th>Driver</th>
-              <th>Crew Chief</th>
-              <th>Manufacturer</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Car #</th><th>Driver</th><th>Crew Chief</th><th>Manufacturer</th></tr></thead>
           <tbody>
-            <tr>
-              <td><strong>No. 11</strong></td>
-              <td>Denny Hamlin</td>
-              <td>Chris Gayle</td>
-              <td>Toyota Racing Development</td>
-            </tr>
-            <tr>
-              <td><strong>No. 19</strong></td>
-              <td>Chase Briscoe</td>
-              <td>James Small</td>
-              <td>Toyota Racing Development</td>
-            </tr>
-            <tr>
-              <td><strong>No. 20</strong></td>
-              <td>Christopher Bell</td>
-              <td>Adam Stevens</td>
-              <td>Toyota Racing Development</td>
-            </tr>
-            <tr>
-              <td><strong>No. 54</strong></td>
-              <td>Ty Gibbs</td>
-              <td>Tyler Allen</td>
-              <td>Toyota Racing Development</td>
-            </tr>
+            <tr><td><strong>No. 11</strong></td><td>Denny Hamlin</td><td>Chris Gayle</td><td>Toyota Racing Development</td></tr>
+            <tr><td><strong>No. 19</strong></td><td>Chase Briscoe</td><td>James Small</td><td>Toyota Racing Development</td></tr>
+            <tr><td><strong>No. 20</strong></td><td>Christopher Bell</td><td>Adam Stevens</td><td>Toyota Racing Development</td></tr>
+            <tr><td><strong>No. 54</strong></td><td>Ty Gibbs</td><td>Tyler Allen</td><td>Toyota Racing Development</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- Upcoming Schedule Table Widget -->
     <div class="dashboard-card-section">
       <h4>Upcoming August 2026 Cup Series Schedule</h4>
       <div class="table-responsive">
         <table class="hub-data-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Race Event</th>
-              <th>Track / Location</th>
-              <th>Network</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Date</th><th>Race Event</th><th>Track / Location</th><th>Network</th></tr></thead>
           <tbody>
-            <tr>
-              <td>Sun, Aug 9</td>
-              <td><strong>Iowa Corn 350</strong></td>
-              <td>Iowa Speedway (Newton, IA)</td>
-              <td>USA</td>
-            </tr>
-            <tr>
-              <td>Sat, Aug 15</td>
-              <td><strong>Cook Out 400</strong></td>
-              <td>Richmond Raceway (Richmond, VA)</td>
-              <td>USA</td>
-            </tr>
-            <tr>
-              <td>Sun, Aug 23</td>
-              <td><strong>Dollar Tree 301</strong></td>
-              <td>New Hampshire Motor Speedway</td>
-              <td>USA</td>
-            </tr>
-            <tr>
-              <td>Sat, Aug 29</td>
-              <td><strong>Coke Zero Sugar 400</strong></td>
-              <td>Daytona International Speedway</td>
-              <td>NBC</td>
-            </tr>
+            <tr><td>Sun, Aug 9</td><td><strong>Iowa Corn 350</strong></td><td>Iowa Speedway (Newton, IA)</td><td>USA</td></tr>
+            <tr><td>Sat, Aug 15</td><td><strong>Cook Out 400</strong></td><td>Richmond Raceway (Richmond, VA)</td><td>USA</td></tr>
+            <tr><td>Sun, Aug 23</td><td><strong>Dollar Tree 301</strong></td><td>New Hampshire Motor Speedway</td><td>USA</td></tr>
+            <tr><td>Sat, Aug 29</td><td><strong>Coke Zero Sugar 400</strong></td><td>Daytona International Speedway</td><td>NBC</td></tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- MLS Tab Content -->
+  <!-- MLS Tab -->
   <div id="mls-tab-content" class="tab-pane">
     <div class="dashboard-header-banner">
       <div>
@@ -361,26 +276,25 @@
     </div>
 
     <div class="mls-summary-grid">
-      <div class="dashboard-card-section half-card" style="margin-bottom:0;">
+      <div class="dashboard-card-section half-card" style="margin-bottom:0">
         <h4>Current 2026 Standing</h4>
         <div class="standings-mini-badge">
           <span class="position-num">7th</span>
           <span class="conference-text">Western Conference (25 PTS | 7W-4D-6L)</span>
         </div>
-        <p style="font-size:0.9rem; color:var(--muted);">In contention for playoff qualification approaching the late-summer stretch.</p>
+        <p style="font-size:0.9rem;color:var(--muted)">In contention for playoff qualification approaching the late-summer stretch.</p>
       </div>
-
-      <div class="dashboard-card-section half-card" style="margin-bottom:0;">
+      <div class="dashboard-card-section half-card" style="margin-bottom:0">
         <h4>Squad Goal Leaders</h4>
         <ul class="stat-leader-list">
-          <li><span>Marcel Hartel (MF/FW)</span> <strong>5G / 3A</strong></li>
-          <li><span>Simon Becher (FW)</span> <strong>2G / 4A</strong></li>
-          <li><span>Eduard Löwen (MF)</span> <strong>2G / 1A</strong></li>
+          <li><span>Marcel Hartel (MF/FW)</span><strong>5G / 3A</strong></li>
+          <li><span>Simon Becher (FW)</span><strong>2G / 4A</strong></li>
+          <li><span>Eduard Löwen (MF)</span><strong>2G / 1A</strong></li>
         </ul>
       </div>
     </div>
 
-    <div class="dashboard-card-section" style="margin-top:20px;">
+    <div class="dashboard-card-section" style="margin-top:20px">
       <h4>Next Match Preview</h4>
       <div class="next-match-banner">
         <div class="team-block">
@@ -399,22 +313,9 @@
       </div>
     </div>
   </div>
-
-  <!-- SpaceX Content -->
-  <div id="spacexContent" class="tab-pane">
-    <div class="dashboard-header-banner">
-      <div>
-        <h2>🚀 SpaceX Launchwatch</h2>
-        <p>Orbital telemetry and mission status tracking.</p>
-      </div>
-    </div>
-    <div id="priorLaunches"><h3>Prior Mission History</h3></div>
-    <div class="hero" id="heroSection">Acquiring upcoming launch signal...</div>
-    <div id="launchGrid"></div>
-  </div>
 </div>
 
-<!-- Linked Unified Gold Floating Action Trays -->
+<!-- Floating Action Trays -->
 <div class="floating-trays-container">
   <a href="https://www.actionnetwork.com" target="_blank" class="gold-action-btn"><i class="fa-solid fa-ticket"></i> Betting</a>
   <a href="https://www.youtube.com" target="_blank" class="gold-action-btn"><i class="fa-solid fa-video"></i> Film Room</a>
@@ -423,108 +324,72 @@
 <script>
 const $=id=>document.getElementById(id);
 
-// Unified Tab Switching Controller
-$("hubNav").addEventListener("click", e => {
-    const b = e.target.closest(".hub-btn"); 
-    if(!b) return;
-    
-    document.querySelectorAll(".hub-btn").forEach(x=>x.classList.remove("active"));
-    b.classList.add("active");
-    
-    const league = b.dataset.league;
-    
-    document.querySelectorAll(".tab-pane").forEach(pane => {
-        pane.classList.remove("active");
-    });
-    
-    if (league === "space") {
-        $("spacexContent").classList.add("active");
-        initSpaceX();
-    } else {
-        const targetPane = $(league + "-tab-content");
-        if (targetPane) {
-            targetPane.classList.add("active");
-        }
-    }
+$("hubNav").addEventListener("click",e=>{
+  const b=e.target.closest(".hub-btn");if(!b)return;
+  document.querySelectorAll(".hub-btn").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  document.querySelectorAll(".tab-pane").forEach(p=>p.classList.remove("active"));
+  const target=$(b.dataset.league+"-tab-content");
+  if(target)target.classList.add("active");
 });
 
-// Interactive Standings & Schedule Toggle Function
-function switchStandings(type, btn) {
-    document.querySelectorAll('.standings-toggle-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.standings-pane').forEach(p => p.classList.remove('active'));
-    
-    btn.classList.add('active');
-    const target = $('standings-' + type);
-    if(target) target.classList.add('active');
+function switchStandings(type,btn){
+  document.querySelectorAll('.standings-toggle-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.standings-pane').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  const target=$('standings-'+type);
+  if(target)target.classList.add('active');
 }
 
-// Fully Populated Dual-Stat Search Engine (Cardinals, MLB League-Wide, & NASCAR/JGR Support)
-function executeHubSearch() {
-    const rawQuery = $("aiInput").value.toLowerCase().trim();
-    const box = $("searchOutputBox");
-    const title = $("searchResultTitle");
-    const text = $("searchResultText");
-    
-    if(!rawQuery) return;
-    
-    box.style.display = "block";
-    
-    const isCardinalsQuery = rawQuery.includes("cardinals") || rawQuery.includes("cards") || rawQuery.includes("st. louis") || rawQuery.includes("stl");
-    const isLeagueQuery = rawQuery.includes("mlb") || rawQuery.includes("league") || rawQuery.includes("overall") || rawQuery.includes("leaders");
-    const isNascarQuery = rawQuery.includes("nascar") || rawQuery.includes("cup") || rawQuery.includes("points") || rawQuery.includes("standings") || rawQuery.includes("race");
-    const isJgrQuery = rawQuery.includes("jgr") || rawQuery.includes("gibbs") || rawQuery.includes("hamlin") || rawQuery.includes("bell") || rawQuery.includes("briscoe") || rawQuery.includes("ty gibbs");
-
-    if (isJgrQuery) {
-        title.innerText = "Query Result: Joe Gibbs Racing (JGR) Stable Spotlight";
-        text.innerHTML = "<strong>JGR Roster & Crew Chiefs (2026):</strong><br>• <strong>Denny Hamlin (#11)</strong> / Crew Chief: Chris Gayle<br>• <strong>Chase Briscoe (#19)</strong> / Crew Chief: James Small<br>• <strong>Christopher Bell (#20)</strong> / Crew Chief: Adam Stevens<br>• <strong>Ty Gibbs (#54)</strong> / Crew Chief: Tyler Allen";
-    } else if (isNascarQuery) {
-        title.innerText = "Query Result: NASCAR Cup Series Standings & Leaders (2026)";
-        text.innerHTML = "<strong>Cup Series Points Leaders:</strong><br>1. <strong>Denny Hamlin (JGR)</strong> — 886 PTS (4 Wins)<br>2. <strong>Tyler Reddick (23XI)</strong> — 802 PTS (5 Wins)<br>3. <strong>Ryan Blaney (Penske)</strong> — 766 PTS (2 Wins)<br>4. <strong>Ty Gibbs (JGR)</strong> — 751 PTS (1 Win)";
-    } else if (rawQuery.includes("hr") || rawQuery.includes("home run") || rawQuery.includes("slugging")) {
-        if (isCardinalsQuery || (!isLeagueQuery && !rawQuery.includes("all"))) {
-            title.innerText = "Query Result: St. Louis Cardinals Power Leaders (2026)";
-            text.innerHTML = "<strong>Cardinals HR Leaders:</strong><br>1. <strong>Jordan Walker (RF)</strong> — 22 HR<br>2. <strong>Alec Burleson (1B)</strong> — 15 HR<br>3. <strong>JJ Wetherholt (2B)</strong> — 15 HR";
-        } else {
-            title.innerText = "Query Result: MLB League-Wide Home Run Leaders (2026)";
-            text.innerHTML = "<strong>MLB HR Leaders:</strong><br>1. <strong>Yordan Alvarez (HOU)</strong> — 34 HR<br>2. <strong>Kyle Schwarber (PHI)</strong> — 33 HR<br>3. <strong>Hunter Goodman (COL)</strong> — 31 HR";
-        }
-    } else if (rawQuery.includes("save") || rawQuery.includes("closer")) {
-        title.innerText = "Query Result: MLB Saves Leaders (2026)";
-        text.innerHTML = "<strong>MLB Saves Leaders:</strong><br>1. <strong>Cade Smith (CLE)</strong> — 30 SV<br>2. <strong>Bryan Baker (TBR)</strong> — 28 SV<br>3. <strong>Mason Miller (SDP)</strong> — 27 SV<br>4. <strong>Riley O'Brien (STL)</strong> — 26 SV";
-    } else if (rawQuery.includes("era") || rawQuery.includes("pitching") || rawQuery.includes("strikeout")) {
-        if (isCardinalsQuery || (!isLeagueQuery && !rawQuery.includes("all"))) {
-            title.innerText = "Query Result: Cardinals Rotation & Bullpen Status";
-            text.innerHTML = "<strong>Active Staff Focus:</strong> Rotation turn rates, high-leverage bullpen arms, and team ERA baselines actively monitored.";
-        } else {
-            title.innerText = "Query Result: MLB Pitching & ERA Benchmarks";
-            text.innerHTML = "<strong>League Leaderboard:</strong> Elite starting pitchers holding sub-2.80 ERA thresholds across MLB.";
-        }
-    } else if (rawQuery.includes("winn") || rawQuery.includes("shortstop") || rawQuery.includes("roster")) {
-        title.innerText = "Query Result: Cardinals Roster Spotlight";
-        text.innerHTML = "<strong>Player Focus:</strong> <strong>Masyn Winn (SS)</strong> — Anchor telemetry tracking defensive metrics, table-setting production, and current season stats.";
+function executeHubSearch(){
+  const rawQuery=$("aiInput").value.toLowerCase().trim();
+  const box=$("searchOutputBox");
+  const title=$("searchResultTitle");
+  const text=$("searchResultText");
+  if(!rawQuery)return;
+  box.style.display="block";
+  const isCardinalsQuery=rawQuery.includes("cardinals")||rawQuery.includes("cards")||rawQuery.includes("st. louis")||rawQuery.includes("stl");
+  const isLeagueQuery=rawQuery.includes("mlb")||rawQuery.includes("league")||rawQuery.includes("overall")||rawQuery.includes("leaders");
+  const isNascarQuery=rawQuery.includes("nascar")||rawQuery.includes("cup")||rawQuery.includes("points")||rawQuery.includes("standings")||rawQuery.includes("race");
+  const isJgrQuery=rawQuery.includes("jgr")||rawQuery.includes("gibbs")||rawQuery.includes("hamlin")||rawQuery.includes("bell")||rawQuery.includes("briscoe")||rawQuery.includes("ty gibbs");
+  if(isJgrQuery){
+    title.innerText="Query Result: Joe Gibbs Racing (JGR) Stable Spotlight";
+    text.innerHTML="<strong>JGR Roster & Crew Chiefs (2026):</strong><br>• <strong>Denny Hamlin (#11)</strong> / Crew Chief: Chris Gayle<br>• <strong>Chase Briscoe (#19)</strong> / Crew Chief: James Small<br>• <strong>Christopher Bell (#20)</strong> / Crew Chief: Adam Stevens<br>• <strong>Ty Gibbs (#54)</strong> / Crew Chief: Tyler Allen";
+  } else if(isNascarQuery){
+    title.innerText="Query Result: NASCAR Cup Series Standings & Leaders (2026)";
+    text.innerHTML="<strong>Cup Series Points Leaders:</strong><br>1. <strong>Denny Hamlin (JGR)</strong> — 886 PTS (4 Wins)<br>2. <strong>Tyler Reddick (23XI)</strong> — 802 PTS (5 Wins)<br>3. <strong>Ryan Blaney (Penske)</strong> — 766 PTS (2 Wins)<br>4. <strong>Ty Gibbs (JGR)</strong> — 751 PTS (1 Win)";
+  } else if(rawQuery.includes("hr")||rawQuery.includes("home run")||rawQuery.includes("slugging")){
+    if(isCardinalsQuery||(!isLeagueQuery&&!rawQuery.includes("all"))){
+      title.innerText="Query Result: St. Louis Cardinals Power Leaders (2026)";
+      text.innerHTML="<strong>Cardinals HR Leaders:</strong><br>1. <strong>Jordan Walker (RF)</strong> — 22 HR<br>2. <strong>Alec Burleson (1B)</strong> — 15 HR<br>3. <strong>JJ Wetherholt (2B)</strong> — 15 HR";
     } else {
-        title.innerText = "Natural Language Engine Response";
-        text.innerHTML = `Processed query for: <em>"${rawQuery}"</em>. Active relational filters applied to current 2026 sports data stream.`;
+      title.innerText="Query Result: MLB League-Wide Home Run Leaders (2026)";
+      text.innerHTML="<strong>MLB HR Leaders:</strong><br>1. <strong>Yordan Alvarez (HOU)</strong> — 34 HR<br>2. <strong>Kyle Schwarber (PHI)</strong> — 33 HR<br>3. <strong>Hunter Goodman (COL)</strong> — 31 HR";
     }
+  } else if(rawQuery.includes("save")||rawQuery.includes("closer")){
+    title.innerText="Query Result: MLB Saves Leaders (2026)";
+    text.innerHTML="<strong>MLB Saves Leaders:</strong><br>1. <strong>Cade Smith (CLE)</strong> — 30 SV<br>2. <strong>Bryan Baker (TBR)</strong> — 28 SV<br>3. <strong>Mason Miller (SDP)</strong> — 27 SV<br>4. <strong>Riley O'Brien (STL)</strong> — 26 SV";
+  } else if(rawQuery.includes("era")||rawQuery.includes("pitching")||rawQuery.includes("strikeout")){
+    if(isCardinalsQuery||(!isLeagueQuery&&!rawQuery.includes("all"))){
+      title.innerText="Query Result: Cardinals Rotation & Bullpen Status";
+      text.innerHTML="<strong>Active Staff Focus:</strong> Rotation turn rates, high-leverage bullpen arms, and team ERA baselines actively monitored.";
+    } else {
+      title.innerText="Query Result: MLB Pitching & ERA Benchmarks";
+      text.innerHTML="<strong>League Leaderboard:</strong> Elite starting pitchers holding sub-2.80 ERA thresholds across MLB.";
+    }
+  } else if(rawQuery.includes("winn")||rawQuery.includes("shortstop")||rawQuery.includes("roster")){
+    title.innerText="Query Result: Cardinals Roster Spotlight";
+    text.innerHTML="<strong>Player Focus:</strong> <strong>Masyn Winn (SS)</strong> — Anchor telemetry tracking defensive metrics, table-setting production, and current season stats.";
+  } else {
+    title.innerText="Natural Language Engine Response";
+    text.innerHTML="Processed query for: <em>"+rawQuery+"</em>. Active relational filters applied to current 2026 sports data stream.";
+  }
 }
 
-async function initSpaceX() {
-    try {
-        const res = await fetch('https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=5&format=json');
-        const data = await res.json();
-        const next = data.results[0];
-        $("heroSection").innerHTML = `<strong>NEXT LAUNCH:</strong> ${next.name} <br> Time: ${next.net}`;
-        
-        let gridHtml = "<h3 style='margin:20px 0 10px; font-family:Oswald; color:var(--gold);'>Upcoming Launches</h3>";
-        data.results.forEach(l => {
-            gridHtml += `<div class="launch-card">
-                <div><strong>${l.name}</strong><br><span class="weather-alert">T-0 Forecast: Nominal</span></div>
-                <a href="${l.vidURLs[0]?.url || '#'}" target="_blank"><i class="fa-brands fa-youtube"></i> Watch</a>
-            </div>`;
-        });
-        $("launchGrid").innerHTML = gridHtml;
-    } catch(e) { $("heroSection").innerHTML = "Data offline."; }
-}
+// Enter key support
+document.getElementById("aiInput").addEventListener("keydown",e=>{
+  if(e.key==="Enter")executeHubSearch();
+});
 </script>
 </body>
 </html>
