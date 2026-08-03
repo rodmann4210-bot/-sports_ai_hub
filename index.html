@@ -453,20 +453,40 @@
 </div>
 
 <!-- Floating Action Trays -->
-<div class="floating-trays-container">
-  <a href="https://www.youtube.com/c/LockedOnCardinalsMLB" target="_blank" class="gold-action-btn"><i class="fa-brands fa-youtube"></i> Film Room</a>
+<div class="floating-trays-container" id="filmTray">
+  <a href="https://www.youtube.com/c/LockedOnCardinalsMLB" target="_blank" class="gold-action-btn" id="filmRoomBtn"><i class="fa-brands fa-youtube"></i> Film Room</a>
 </div>
 
 <script>
 const $=id=>document.getElementById(id);
+
+const FILM_ROOMS = {
+  mlb: [{label:'Film Room', url:'https://www.youtube.com/c/LockedOnCardinalsMLB'}],
+  nfl: [
+    {label:'Commanders', url:'https://www.youtube.com/@LockedOnCommanders'},
+    {label:'Chiefs', url:'https://www.youtube.com/@LockedOnChiefs'}
+  ],
+  nascar: [{label:'NASCAR on NBC', url:'https://www.youtube.com/nbcsports'}],
+  mls: [{label:'CITY SC TV', url:'https://www.youtube.com/c/stlCITYsc'}]
+};
+
+function updateFilmTray(league) {
+  const tray = $('filmTray');
+  const rooms = FILM_ROOMS[league] || FILM_ROOMS.mlb;
+  tray.innerHTML = rooms.map(r =>
+    `<a href="${r.url}" target="_blank" class="gold-action-btn"><i class="fa-brands fa-youtube"></i> ${r.label}</a>`
+  ).join('');
+}
 
 $("hubNav").addEventListener("click",e=>{
   const b=e.target.closest(".hub-btn");if(!b)return;
   document.querySelectorAll(".hub-btn").forEach(x=>x.classList.remove("active"));
   b.classList.add("active");
   document.querySelectorAll(".tab-pane").forEach(p=>p.classList.remove("active"));
-  const target=$(b.dataset.league+"-tab-content");
+  const league=b.dataset.league;
+  const target=$(league+"-tab-content");
   if(target)target.classList.add("active");
+  updateFilmTray(league);
 });
 
 function switchStandings(type,btn){
