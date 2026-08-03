@@ -254,39 +254,31 @@
       </div>
       <a href="https://www.nfl.com" target="_blank" class="gold-action-btn"><i class="fa-solid fa-football"></i> NFL.com</a>
     </div>
-    <!-- Commanders -->
+    <!-- Commanders At a Glance -->
     <div class="dashboard-card-section">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px">
         <h4 style="margin-bottom:0">🏈 Washington Commanders</h4>
-        <a href="https://www.commanders.com" target="_blank" class="gold-action-btn" style="font-size:11px;padding:7px 12px"><i class="fa-solid fa-arrow-up-right-from-square"></i> Commanders.com</a>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <a href="https://www.commanders.com" target="_blank" class="gold-action-btn" style="font-size:11px;padding:7px 12px"><i class="fa-solid fa-arrow-up-right-from-square"></i> Commanders.com</a>
+          <a href="https://www.youtube.com/@LockedOnCommanders" target="_blank" class="gold-action-btn" style="font-size:11px;padding:7px 12px;background:var(--panel);color:var(--gold);border:1px solid var(--gold)"><i class="fa-brands fa-youtube"></i> Film Room</a>
+        </div>
       </div>
-      <div class="table-responsive">
-        <table class="hub-data-table">
-          <thead><tr><th>2026 Preseason</th><th>Date</th><th>Opponent</th><th>Venue</th><th>Time (ET)</th></tr></thead>
-          <tbody>
-            <tr><td>Week 1</td><td>Thu, Aug 6</td><td>vs New England Patriots</td><td>Northwest Stadium</td><td>7:00 PM</td></tr>
-            <tr><td>Week 2</td><td>Sat, Aug 16</td><td>at Baltimore Ravens</td><td>M&T Bank Stadium</td><td>7:30 PM</td></tr>
-            <tr><td>Week 3</td><td>Fri, Aug 22</td><td>vs New York Giants</td><td>Northwest Stadium</td><td>7:30 PM</td></tr>
-          </tbody>
-        </table>
+      <div class="glance-card" id="commandersGlance">
+        <div class="glance-loading">🏈 Loading next Commanders game...</div>
       </div>
     </div>
 
-    <!-- Chiefs -->
+    <!-- Chiefs At a Glance -->
     <div class="dashboard-card-section">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px">
         <h4 style="margin-bottom:0">🏈 Kansas City Chiefs</h4>
-        <a href="https://www.chiefs.com" target="_blank" class="gold-action-btn" style="font-size:11px;padding:7px 12px"><i class="fa-solid fa-arrow-up-right-from-square"></i> Chiefs.com</a>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <a href="https://www.chiefs.com" target="_blank" class="gold-action-btn" style="font-size:11px;padding:7px 12px"><i class="fa-solid fa-arrow-up-right-from-square"></i> Chiefs.com</a>
+          <a href="https://www.youtube.com/@LockedOnChiefs" target="_blank" class="gold-action-btn" style="font-size:11px;padding:7px 12px;background:var(--panel);color:var(--gold);border:1px solid var(--gold)"><i class="fa-brands fa-youtube"></i> Film Room</a>
+        </div>
       </div>
-      <div class="table-responsive">
-        <table class="hub-data-table">
-          <thead><tr><th>2026 Preseason</th><th>Date</th><th>Opponent</th><th>Venue</th><th>Time (ET)</th></tr></thead>
-          <tbody>
-            <tr><td>Week 1</td><td>Sat, Aug 8</td><td>vs Jacksonville Jaguars</td><td>GEHA Field at Arrowhead</td><td>7:00 PM</td></tr>
-            <tr><td>Week 2</td><td>Sat, Aug 16</td><td>at Dallas Cowboys</td><td>AT&T Stadium</td><td>7:00 PM</td></tr>
-            <tr><td>Week 3</td><td>Sat, Aug 22</td><td>vs Denver Broncos</td><td>GEHA Field at Arrowhead</td><td>7:00 PM</td></tr>
-          </tbody>
-        </table>
+      <div class="glance-card" id="chiefsGlance">
+        <div class="glance-loading">🏈 Loading next Chiefs game...</div>
       </div>
     </div>
 
@@ -535,6 +527,80 @@ document.getElementById("aiInput").addEventListener("keydown",e=>{
   if(e.key==="Enter")executeHubSearch();
 });
 
+// ── NFL AT A GLANCE ──
+async function loadNFLGlance(teamAbbr, cardId) {
+  const card = document.getElementById(cardId);
+  if (!card) return;
+  try {
+    const now = new Date();
+    let nextGame = null;
+    for (let i = 0; i < 14; i++) {
+      const d = new Date(now); d.setDate(d.getDate() + i);
+      const ds = d.toISOString().slice(0,10).replace(/-/g,'');
+      const data = await fetch(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=${ds}`, {cache:'no-store'}).then(r=>r.json());
+      const events = data.events || [];
+      const game = events.find(ev => {
+        const cs = (ev.competitions&&ev.competitions[0]&&ev.competitions[0].competitors)||[];
+        return cs.some(c=>(c.team&&c.team.abbreviation||'').toUpperCase()===teamAbbr);
+      });
+      if (game) { nextGame = game; break; }
+    }
+    if (!nextGame) { card.innerHTML='<div class="glance-loading">Season starts soon — check back closer to Week 1.</div>'; return; }
+
+    const comp = (nextGame.competitions&&nextGame.competitions[0])||{};
+    const cs = comp.competitors||[];
+    const us = cs.find(c=>(c.team&&c.team.abbreviation||'').toUpperCase()===teamAbbr)||{};
+    const them = cs.find(c=>(c.team&&c.team.abbreviation||'').toUpperCase()!==teamAbbr)||{};
+    const home = us.homeAway==='home';
+    const oppName = (them.team&&(them.team.displayName||them.team.shortDisplayName))||'Opponent';
+    const oppAbbr = (them.team&&them.team.abbreviation)||'OPP';
+    const usRecord = us.records&&us.records[0]?us.records[0].summary:'—';
+    const themRecord = them.records&&them.records[0]?them.records[0].summary:'—';
+    const gameDate = new Date(nextGame.date);
+    const dateStr = gameDate.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+    const timeStr = gameDate.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+    const venue = comp.venue&&comp.venue.fullName?comp.venue.fullName:'';
+    const broadcast = (comp.broadcasts&&comp.broadcasts[0]&&comp.broadcasts[0].names&&comp.broadcasts[0].names[0])||'';
+
+    let mlUs='—',mlThem='—',ou='—';
+    const odds=(comp.odds&&comp.odds[0])||null;
+    if(odds){
+      const homeOdds=odds.homeTeamOdds&&odds.homeTeamOdds.moneyLine;
+      const awayOdds=odds.awayTeamOdds&&odds.awayTeamOdds.moneyLine;
+      if(home){mlUs=homeOdds!=null?(homeOdds>0?'+'+homeOdds:homeOdds):'—';mlThem=awayOdds!=null?(awayOdds>0?'+'+awayOdds:awayOdds):'—';}
+      else{mlUs=awayOdds!=null?(awayOdds>0?'+'+awayOdds:awayOdds):'—';mlThem=homeOdds!=null?(homeOdds>0?'+'+homeOdds:homeOdds):'—';}
+      ou=odds.overUnder!=null?odds.overUnder:'—';
+    }
+
+    const usName = us.team&&us.team.displayName||teamAbbr;
+    const awayTeam=home?{name:oppName,abbr:oppAbbr,record:themRecord,ml:mlThem}:{name:usName,abbr:teamAbbr,record:usRecord,ml:mlUs};
+    const homeTeam=home?{name:usName,abbr:teamAbbr,record:usRecord,ml:mlUs}:{name:oppName,abbr:oppAbbr,record:themRecord,ml:mlThem};
+
+    card.innerHTML=`
+      <div class="glance-top">
+        <div class="glance-matchup">NEXT UP &middot; ${home?'vs':'@'} ${oppName}</div>
+        <div class="glance-meta">${dateStr} &middot; ${timeStr} ET${venue?' &middot; '+venue:''}${broadcast?' &middot; '+broadcast:''}</div>
+      </div>
+      <div class="glance-grid">
+        <div class="glance-team away">
+          <div class="glance-team-name">${awayTeam.name}</div>
+          <div class="glance-team-record">${awayTeam.record}</div>
+        </div>
+        <div class="glance-vs">@</div>
+        <div class="glance-team home">
+          <div class="glance-team-name">${homeTeam.name}</div>
+          <div class="glance-team-record">${homeTeam.record}</div>
+        </div>
+      </div>
+      <div class="glance-odds">
+        <div class="glance-odd"><span class="glance-odd-label">${awayTeam.abbr} ML</span><span class="glance-odd-val">${awayTeam.ml}</span></div>
+        <div class="glance-odd"><span class="glance-odd-label">${homeTeam.abbr} ML</span><span class="glance-odd-val">${homeTeam.ml}</span></div>
+        <div class="glance-odd"><span class="glance-odd-label">O/U</span><span class="glance-odd-val">${ou}</span></div>
+        <div class="glance-odd"><span class="glance-odd-label">Venue</span><span class="glance-odd-val" style="font-size:0.75rem;text-align:center">${venue||'—'}</span></div>
+      </div>`;
+  } catch(e) { card.innerHTML='<div class="glance-loading">Game data temporarily unavailable.</div>'; console.error(e); }
+}
+
 // ── AT A GLANCE CARD ──
 async function loadGlanceCard(){
   const card=document.getElementById('glanceCard');
@@ -633,6 +699,8 @@ async function loadGlanceCard(){
 }
 
 loadGlanceCard();
+loadNFLGlance('WSH', 'commandersGlance');
+loadNFLGlance('KC', 'chiefsGlance');
 </script>
 </body>
 </html>
