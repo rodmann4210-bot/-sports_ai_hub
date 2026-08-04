@@ -419,20 +419,8 @@
 
     <div class="dashboard-card-section" style="margin-top:20px">
       <h4>Next Match Preview</h4>
-      <div class="next-match-banner">
-        <div class="team-block">
-          <img src="https://ssl.gstatic.com/onebox/media/sports/logos/optimized/43siA1JCgiPGGt5aFyZ8uw_500x500.png" alt="St. Louis City SC" class="club-logo">
-          <span>St. Louis CITY SC</span>
-        </div>
-        <div class="vs-block">
-          <span class="vs-tag">VS</span>
-          <span class="match-time">Saturday, Aug 1 — 7:30 PM CST</span>
-          <span class="match-venue">Energizer Park (St. Louis, MO)</span>
-        </div>
-        <div class="team-block">
-          <img src="https://ssl.gstatic.com/onebox/media/sports/logos/optimized/Vkw9peVBvSjpAwm34IEPow_500x500.png" alt="Real Salt Lake" class="club-logo">
-          <span>Real Salt Lake</span>
-        </div>
+      <div class="glance-card" id="mlsGlance">
+        <div class="glance-loading">⚽ Loading next City SC match...</div>
       </div>
     </div>
       </div><!-- end tab-main -->
@@ -621,6 +609,69 @@ async function loadNFLGlance(teamAbbr, cardId) {
   } catch(e) { card.innerHTML='<div class="glance-loading">Game data temporarily unavailable.</div>'; console.error(e); }
 }
 
+// ── MLS AT A GLANCE ──
+async function loadMLSGlance() {
+  const card = document.getElementById('mlsGlance');
+  if (!card) return;
+  const CITY_ID = '21812';
+  const MLS_SITE = 'https://site.api.espn.com/apis/site/v2/sports/soccer/usa.1';
+  try {
+    const now = new Date();
+    let nextGame = null;
+    for (let i = 0; i < 14; i++) {
+      const d = new Date(now); d.setDate(d.getDate() + i);
+      const ds = d.toISOString().slice(0,10).replace(/-/g,'');
+      const data = await fetch(`${MLS_SITE}/scoreboard?dates=${ds}`, {cache:'no-store'}).then(r=>r.json());
+      const events = data.events || [];
+      const game = events.find(ev => {
+        const cs = (ev.competitions&&ev.competitions[0]&&ev.competitions[0].competitors)||[];
+        return cs.some(c=>String(c.team&&c.team.id||'')===CITY_ID);
+      });
+      if (game) { nextGame = game; break; }
+    }
+    if (!nextGame) { card.innerHTML='<div class="glance-loading">No upcoming match in the next 14 days.</div>'; return; }
+
+    const comp = (nextGame.competitions&&nextGame.competitions[0])||{};
+    const cs = comp.competitors||[];
+    const us = cs.find(c=>String(c.team&&c.team.id||'')===CITY_ID)||{};
+    const them = cs.find(c=>String(c.team&&c.team.id||'')!==CITY_ID)||{};
+    const home = us.homeAway==='home';
+    const oppName = (them.team&&(them.team.displayName||them.team.shortDisplayName))||'Opponent';
+    const oppLogo = them.team&&them.team.logos&&them.team.logos[0]?them.team.logos[0].href:'';
+    const cityLogo = us.team&&us.team.logos&&us.team.logos[0]?us.team.logos[0].href:'';
+    const gameDate = new Date(nextGame.date);
+    const dateStr = gameDate.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+    const timeStr = gameDate.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+    const venue = comp.venue&&comp.venue.fullName?comp.venue.fullName:'';
+
+    const awayName = home ? oppName : 'St. Louis CITY SC';
+    const homeName = home ? 'St. Louis CITY SC' : oppName;
+    const awayLogo = home ? oppLogo : cityLogo;
+    const homeLogo = home ? cityLogo : oppLogo;
+
+    card.innerHTML=`
+      <div class="glance-top">
+        <div class="glance-matchup">NEXT MATCH &middot; ${home?'vs':'@'} ${oppName}</div>
+        <div class="glance-meta">${dateStr} &middot; ${timeStr} CT${venue?' &middot; '+venue:''}</div>
+      </div>
+      <div class="next-match-banner" style="margin-top:12px">
+        <div class="team-block">
+          ${awayLogo?`<img src="${awayLogo}" alt="${awayName}" class="club-logo">`:''}
+          <span>${awayName}</span>
+        </div>
+        <div class="vs-block">
+          <span class="vs-tag">VS</span>
+          <span class="match-time">${dateStr}</span>
+          <span class="match-venue">${timeStr} CT${venue?' &middot; '+venue:''}</span>
+        </div>
+        <div class="team-block">
+          ${homeLogo?`<img src="${homeLogo}" alt="${homeName}" class="club-logo">`:''}
+          <span>${homeName}</span>
+        </div>
+      </div>`;
+  } catch(e) { card.innerHTML='<div class="glance-loading">Match data temporarily unavailable.</div>'; console.error(e); }
+}
+
 // ── AT A GLANCE CARD ──
 async function loadGlanceCard(){
   const card=document.getElementById('glanceCard');
@@ -721,6 +772,7 @@ async function loadGlanceCard(){
 loadGlanceCard();
 loadNFLGlance('WSH', 'commandersGlance');
 loadNFLGlance('KC', 'chiefsGlance');
+loadMLSGlance();
 </script>
 </body>
 </html>
